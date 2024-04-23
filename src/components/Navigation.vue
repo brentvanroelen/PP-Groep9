@@ -2,10 +2,12 @@
   <nav class="Main_nav">
     <ul class="Main_nav_links">
       <li><router-link  to="/"><img src="../assets/erasmuslogo.jpg" alt=""></router-link></li>
+    <div id="links">
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/">My products</router-link></li>
       <li><router-link class="link" to="/contact">Contact</router-link></li>
-      <li><router-link class="link" to="/">Cart</router-link></li>
+      <li><router-link class="link" to="/calendar">Cart</router-link></li>
+    </div>
     </ul>
   </nav>
 </template>
@@ -28,20 +30,28 @@ export default {
 }
 .Main_nav_links li img{
   max-width: 75px;
-  height: 78px;
+  height: 75px;
 }
 .Main_nav_links{
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   align-items: center;
   width:100%;
   height:75px;
   background:crimson ;
   list-style: none;
+  justify-content: space-between;
 }
 .link{
   color: white;
   text-decoration: none;
+  padding: 0 1em 0 1em;
+}
+#links{
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  width: 80%;
 }
 </style>

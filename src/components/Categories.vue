@@ -1,11 +1,11 @@
 <template>
     <h2>Categories</h2>
-    <ul id="Categories">
-        <li><router-link to="#"></router-link><img src="../assets/Audio.jpg" alt=""></li>
-        <li><router-link to="#"></router-link><img src="../assets/Lighting.jpg" alt=""></li>
-        <li><router-link to="#"></router-link><img src="../assets/Varia.jpg" alt=""></li>
-        <li><router-link to="#"></router-link><img src="../assets/video.png" alt=""></li>
-        <li><router-link to="#"></router-link><img src="../assets/XR.jpg" alt=""></li>
+    <ul id="Categories" >
+        <li><router-link to="/productscreen"><img src="../assets/Audio.jpg" alt=""></router-link></li>
+        <li><router-link to="/productscreen"><img src="../assets/Lighting.jpg" alt=""></router-link></li>
+        <li><router-link to="/productscreen"><img src="../assets/Varia.jpg" alt=""></router-link></li>
+        <li><router-link to="/productscreen"><img src="../assets/video.png" alt=""></router-link></li>
+        <li><router-link to="/productscreen"><img src="../assets/XR.jpg" alt=""></router-link></li>
     </ul>
     <ul id="Names">
         <li>Audio</li>
@@ -32,7 +32,6 @@ export default {
         list-style-type: none;
         align-items: center;
         padding: 0.5em;
-        
     }
     
     img{
@@ -42,6 +41,9 @@ export default {
     #Names{
         display: flex;
         justify-content: space-around;
-        list-style: none;
+        list-style-type: none;
+        align-items: center;
+        padding: 0.5em;
     }
+    
 </style>

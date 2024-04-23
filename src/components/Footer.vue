@@ -30,7 +30,6 @@ export default {
         height: 75px;
         display: flex;
         justify-content: center;
-        border: 2px solid black;
     }
     .Footer{
         display: flex;

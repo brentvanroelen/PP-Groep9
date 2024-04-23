@@ -12,7 +12,7 @@
     <section class="itemslisting">
         <div class="item" v-for="item in Items" :key="item.id" :class="{available: item.beschikbaar === true}">
             <h3>{{item.Name}}</h3>
-            <img :src="item.Picture" alt="">
+            <img :src="item.Image" alt="">
             <p>Categorie: {{item.Category}}</p>
             <p v-if="item.beschikbaar">Beschikbaarheid: Morgen afhaalbaar
                 <br>
@@ -24,42 +24,38 @@
     </section>
   </div>
     <Categories></Categories>
-  <Footer></Footer>
+
 </template>
 
 <script setup>
-
-
-
-
-
-
 import { onMounted, ref } from "vue";
-import {collection, getDocs} from  'firebase/firestore'
 import {db} from "../Firebase/Index.js"
 import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
+import { collection, getDocs } from "firebase/firestore";
 
 const Items = ref([
 
 ])
 
 onMounted( async () => {
-    const querySnapshot = await getDocs(collection(db, "Items"))
-    querySnapshot.forEach((doc) => {
-    const  Item = {
-        id: doc.id,
+        const querySnapshot = await getDocs(collection(db, "Items"))
+        querySnapshot.forEach((doc) => {
+        const  Item = {
         Name: doc.data().Name,
-        Picture: doc.data().Picture,
-        beschikbaar: doc.data().Available,
-        Category: doc.data().Category
-    }
-    Items.value.push(Item);
-    })
+        Image: doc.data().Image,
+        Category: doc.data().Category,
+        Merk: doc.data().Merk,
+        Omschrijving: doc.data().Omschrijving
+        }
+        Items.value.push(Item);
+        })
     console.log(Items)
+});
 
-})
+
+
 
 
 </script>
@@ -107,7 +103,7 @@ onMounted( async () => {
     flex-wrap: wrap;
 }
 .item{
-    border: solid 2px  black;
+    border-radius: 1em;
     margin: 6px;
     padding: 30px;
     background: crimson;

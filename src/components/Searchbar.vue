@@ -26,7 +26,7 @@
   .search-bar {
     display: flex;
     align-items: center;
-    margin-right: auto;
+    
   }
   
   .search-bar input {
@@ -44,7 +44,6 @@
     border-radius: 4px;
     
   }
-  
   
   </style>
   
