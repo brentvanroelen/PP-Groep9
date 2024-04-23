@@ -1,9 +1,12 @@
 <template>
   <div class="searchcontainer">
-    <div class="overlay"></div>
     <img src="../assets/Flavor.jpg" alt="">
-    <input class="searchbar" type="text" placeholder="Search..."/>
+    <div class="searchbar-overlay"></div>
+    <div class="searchbar">
+      <SearchBar @search="handleSearch" />
+    </div>
   </div>
+  
   <div class="most_leased_items">
     <h1>Most leased items</h1>
     <section class="itemslisting">
@@ -23,9 +26,16 @@
 </template>
 
 <script setup>
+
+
+
+
+
+
 import { onMounted, ref } from "vue";
 import {collection, getDocs} from  'firebase/firestore'
-import {db} from "../Firebase/Index.js"
+import {db} from "../Firebase/Index.js";
+import SearchBar from '../components/SearchbarB.vue';
 
 
 
@@ -75,14 +85,15 @@ onMounted( async () => {
     z-index: -2;
 }
 .searchbar{
+    align-content: center;
     position: absolute;
     top: 205px;
     left: 40%;
     width: 250px;
     height: 30px;
-    border-radius: 30px;
+    
     font-size: 18px;
-    background-color: #ddd;
+    
 }
 .most_leased_items{
     background: #2c3e50 ;
