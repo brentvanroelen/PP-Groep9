@@ -23,6 +23,8 @@
         </div>   
     </section>
   </div>
+    <Categories></Categories>
+  <Footer></Footer>
 </template>
 
 <script setup>
@@ -34,10 +36,10 @@
 
 import { onMounted, ref } from "vue";
 import {collection, getDocs} from  'firebase/firestore'
-import {db} from "../Firebase/Index.js";
-import SearchBar from '../components/SearchbarB.vue';
-
-
+import {db} from "../Firebase/Index.js"
+import Footer from "../components/Footer.vue"
+import Categories from "../components/Categories.vue"
+import SearchBar from "../components/Searchbar.vue"
 
 const Items = ref([
 
