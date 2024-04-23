@@ -1,7 +1,7 @@
 <template>
   <nav class="Main_nav">
     <ul class="Main_nav_links">
-      <li><router-link  to="/"><img src="../assets/erasmuslogo.jpg" alt=""></router-link></li>
+      <li><router-link  to="/"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/">My products</router-link></li>
       <li><router-link class="link" to="/contact">Contact</router-link></li>
@@ -37,11 +37,15 @@ export default {
   align-items: center;
   width:100%;
   height:75px;
-  background:crimson ;
+  background: #2c3e50;
   list-style: none;
 }
 .link{
   color: white;
   text-decoration: none;
+}
+.img{
+  width: 20px;
+  height: 20px;
 }
 </style>
