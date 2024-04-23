@@ -22,10 +22,18 @@
             <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
         </div>   
     </section>
+
+    <!-- Kits -->
+    <div>
+    <Kits />
+  </div>
+  <br>
+  <br>
+  <!-- Categories -->
   </div>
     <Categories></Categories>
   <Footer></Footer>
-</template>
+  </template>
 
 <script setup>
 
@@ -40,6 +48,7 @@ import {db} from "../Firebase/Index.js"
 import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
+import Kits from "../components/Kits.vue"
 
 const Items = ref([
 

@@ -26,7 +26,8 @@
   .search-bar {
     display: flex;
     align-items: center;
-    margin-right: auto;
+    margin-top: 0%;
+    
   }
   
   .search-bar input {

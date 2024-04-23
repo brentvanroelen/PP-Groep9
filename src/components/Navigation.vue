@@ -5,7 +5,7 @@
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/">My products</router-link></li>
       <li><router-link class="link" to="/contact">Contact</router-link></li>
-      <li><router-link class="link" to="/">Cart</router-link></li>
+      <li><router-link class="link" to="/ItemScreen">Cart</router-link></li>
     </ul>
   </nav>
 </template>
