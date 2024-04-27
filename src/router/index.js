@@ -4,6 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import Contact from '../views/Contact.vue'
 import ProductScreen from '../views/ProductScreen.vue'
 import Calendar from '../components/Calendar.vue'
+import ItemScreen from '../views/ItemScreen.vue'
 
 const routes = [
   {
@@ -20,17 +21,8 @@ const routes = [
     path: '/contact',
     name: 'contact',
     component: Contact
-  },
-  {
-    path: '/productscreen',
-    name: 'productscreen',
-    component: ProductScreen
-  },
-  {
-    path: '/calendar',
-    name: 'calendar',
-    component: Calendar
   }
+
 ]
 
 const router = createRouter({
