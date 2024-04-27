@@ -10,11 +10,15 @@
     import {ref} from '../main.js'
     import {Firestore,collection,orderBy,where,db,query,startAt,endAt} from '../Firebase/Index.js'
     import router from '@/router';
+    import { useStore } from '../main.js';
     import ItemScreen from '@/views/ItemScreen.vue';
 
     const querystring = ref('');
+    const store = useStore();
 
     const search = async() => {
+      let results = [];
+      store.updateResults([]);
       const itemquery = query(collection(db, "Items"), 
         where('SubStrings', 'array-contains', querystring.value.toLowerCase())
       );
@@ -22,8 +26,12 @@
       const querySnapshot = await getDocs(itemquery);
         querySnapshot.forEach((snap) =>{
           console.log(snap.data())
+          results.push(snap.data())
       })
-      router.push({name: "ItemScreen"})
+      console.log(results)
+      store.updateResults(results);
+      router.push({name: "productscreen"})
+
       
     };
   </script>

@@ -27,8 +27,8 @@ const routes = [
   {
     path: '/productscreen',
     name: 'productscreen',
-    component: ProductScreen
-  
+    component: ProductScreen,
+    props: true
   },
   {
     path: '/calendar',

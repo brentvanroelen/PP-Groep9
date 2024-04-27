@@ -2,10 +2,12 @@
     <div class="items">
     <h1>Product Screen</h1>
     <section class="itemslisting">
-        <div class="item" v-for="item in Items" :key="item.id" :class="{available: item.beschikbaar === true}">
+        <div class="item" v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
             <h3>{{item.Name}}</h3>
+            <img :src="item.Image" alt="">
+            <p>{{ item.Brand }}</p>
+            <p>{{item.Description}}</p>
             <br>
-            <img :src="item.Picture" alt="">
             <p>Categorie: {{item.Category}}</p>
             <p v-if="item.beschikbaar">Beschikbaarheid: Morgen afhaalbaar
                 <br>
@@ -21,38 +23,23 @@
 
 <script setup>
 
-import { onMounted, ref } from "vue";
-import {collection, getDocs} from  'firebase/firestore'
-import {db} from "../Firebase/Index.js"
+import { useStore } from "../main.js";
+import { computed } from "../main.js";
 
-const Items = ref([
+const store = useStore();
+const results = computed(() => store.results);
 
-])
 
-onMounted( async () => {
-    const querySnapshot = await getDocs(collection(db, "Items"))
-    querySnapshot.forEach((doc) => {
-    const  Item = {
-        id: doc.id,
-        Name: doc.data().Name,
-        Picture: doc.data().Picture,
-        beschikbaar: doc.data().Available,
-        Category: doc.data().Category
-    }
-    Items.value.push(Item);
-    })
-    console.log(Items)
 
-})
 
 </script>
 
-<style scoped>
+<style>
 .itemslisting{
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    max-width: 100%;
     flex-wrap: wrap;
-    padding: 0em 10em 0em 10em;
 }
 p{
     padding: 0.5em;

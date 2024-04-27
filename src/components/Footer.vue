@@ -1,18 +1,20 @@
 <template>
-    <ul class="Footer">
-        <li id="Logo"><img src="../assets/erasmuslogo.jpg" alt=""></li>
-    <div id="Info">
-        <div id="Contacts">
-        <li>Contacts:</li>
-        <li>Phone: 02 523 37 37</li>
-        <li>Email:info@ehb.be</li>
+    <div class="footercontainer">
+        <ul class="Footer">
+            <li id="Logo"><img src="../assets/erasmuslogo.jpg" alt=""></li>
+        <div id="Info">
+            <div id="Contacts">
+            <li>Contacts:</li>
+            <li>Phone: 02 523 37 37</li>
+            <li>Email:info@ehb.be</li>
+            </div>
+            <div id="Adres">
+            <li>Adres:</li>
+            <li>Nijverheidkaai 170, 1070 Anderlecht</li>
+            </div>
         </div>
-        <div id="Adres">
-        <li>Adres:</li>
-        <li>Nijverheidkaai 170, 1070 Anderlecht</li>
-        </div>
+        </ul>
     </div>
-    </ul>
 </template>
 
 <script>
@@ -25,6 +27,11 @@ export default {
 </script>
 
 <style scoped>
+    .footercontainer{
+        position: fixed;
+        bottom: 0;
+        width: 100%;	
+    }
     #Logo img{
         max-width: 75px;
         height: 75px;

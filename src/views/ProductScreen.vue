@@ -6,14 +6,11 @@
 </template>
 
 <script setup>
-
-import { onMounted, ref } from "vue";
-import {collection, getDocs} from  'firebase/firestore'
-import {db} from "../Firebase/Index.js"
-import Footer from "../components/Footer.vue"
-import Navigation from "../components/Navigation.vue"
 import Searchbar from "@/components/Searchbar.vue";
 import ProductItems from "@/components/ProductItems.vue";
+import {useRoute} from "../main.js";
+import {ref,watch} from "../main.js"; 
+
 
 </script>
 

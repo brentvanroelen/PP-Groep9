@@ -6,69 +6,18 @@
       <SearchBar/>
     </div>
   </div>
-  
-  <div class="most_leased_items">
-    <h1>Most leased items</h1>
-    <section class="itemslisting">
-        <div class="item" v-for="item in Items" :key="item.id" :class="{available: item.beschikbaar === true}">
-            <h3>{{item.Name}}</h3>
-            <img :src="item.Image" alt="">
-            <p>Categorie: {{item.Category}}</p>
-            <p v-if="item.beschikbaar">Beschikbaarheid: Morgen afhaalbaar
-                <br>
-                <br>
-                <a v-if="item.beschikbaar">add to Cart</a>
-            </p>
-            <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
-        </div>   
-    </section>
-
-    <!-- Kits -->
-    <div>
-    <Kits />
-  </div>
+  <Kits />
   <br>
   <br>
   <!-- Categories -->
-  </div>
-    <Categories></Categories>
+  <Categories></Categories>
   <Footer></Footer>
   </template>
 
 <script setup>
-
-
-
-
-
-
-import { db,collection,getDocs } from "../Firebase/Index.js";
-import { ref,onMounted } from "../main.js";
 import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
-
-const Items = ref([
-
-])
-
-onMounted( async () => {
-        const querySnapshot = await getDocs(collection(db, "Items"))
-        querySnapshot.forEach((doc) => {
-        const  Item = {
-        Name: doc.data().Name,
-        Image: doc.data().Image,
-        Category: doc.data().Category,
-        Merk: doc.data().Merk,
-        Omschrijving: doc.data().Omschrijving
-        }
-        Items.value.push(Item);
-        })
-    console.log(Items)
-});
-
-
-
 
 
 </script>
@@ -110,18 +59,13 @@ onMounted( async () => {
     background: #2c3e50 ;
 }
 
-.itemslisting{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
 .item{
     border-radius: 1em;
     margin: 6px;
-    padding: 30px;
+    padding: 10px;
     background: crimson;
     text-align: center;
-    width: 240px;
+    width: 200px;
 }
 .item img{
     width: 150px;

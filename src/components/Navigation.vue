@@ -1,7 +1,7 @@
 <template>
   <nav class="Main_nav">
     <ul class="Main_nav_links">
-      <li><router-link  to="/"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
+      <li id='img'><router-link  to="/"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
     <div id="links">
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/">My products</router-link></li>
@@ -29,11 +29,11 @@ export default {
 
 <style>
 .Main_nav{
-  background: #3c94e6;
+  background: crimson;
 }
 .Main_nav_links li img{
   max-width: 75px;
-  height: 75px;
+  height: 71px;
 }
 .Main_nav_links{
   display: flex;
@@ -41,7 +41,6 @@ export default {
   align-items: center;
   width:100%;
   height:75px;
-  background: #2c3e50;
   list-style: none;
   justify-content: space-between;
 }
@@ -56,6 +55,9 @@ export default {
   justify-content: end;
   align-items: center;
   width: 80%;
+}
+#img{
+  background-color: white;
 }
 .img{
   width: 20px;
