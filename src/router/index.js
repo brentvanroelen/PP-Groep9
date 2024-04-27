@@ -5,6 +5,8 @@ import Contact from '../views/Contact.vue'
 import ProductScreen from '../views/ProductScreen.vue'
 import Calendar from '../components/Calendar.vue'
 import ItemScreen from '../views/ItemScreen.vue'
+import Additem from '../views/Additem.vue'
+
 const routes = [
   {
     path: '/',
@@ -37,6 +39,11 @@ const routes = [
     path: '/item',
     name: 'item',
     component: ItemScreen
+  },
+  {
+    path: '/Additem',
+    name: "Additem",
+    component: Additem
   }
 
 ]

@@ -3,7 +3,7 @@
     <img src="../assets/Flavor.jpg" alt="">
     <div class="searchbar-overlay"></div>
     <div class="searchbar">
-      <SearchBar @search="handleSearch" />
+      <SearchBar/>
     </div>
   </div>
   
@@ -36,8 +36,14 @@
   </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import {db} from "../Firebase/Index.js"
+
+
+
+
+
+
+import { db,collection,getDocs } from "../Firebase/Index.js";
+import { ref,onMounted } from "../main.js";
 import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
