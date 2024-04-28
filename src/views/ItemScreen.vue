@@ -35,10 +35,32 @@
   
   
   <script setup>
-      import SearchBar from "../components/Searchbar.vue"
-      import Footer from "../components/Footer.vue"
-      
+  import SearchBar from "../components/Searchbar.vue"
+  import Footer from "../components/Footer.vue"
+  import { onMounted, useStore } from "../main.js";
+  import { computed } from "../main.js";
+  import { useRouter } from 'vue-router';
   
+  const store = useStore();
+  const results = computed(() => store.results);
+  const router = useRouter();
+  const params = router.currentRoute.value.params;
+
+  
+  onMounted(() => {
+    const foundItem = results.value.find(item => item.Name === params);
+    results.value.forEach(item => {
+      if (item.Name === params) {
+        console.log(item);
+      }
+    });
+  });
+
+  console.log(params);
+
+
+  
+
   </script>
   <style scoped>
   #photo {

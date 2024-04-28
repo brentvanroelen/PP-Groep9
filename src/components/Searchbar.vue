@@ -33,6 +33,7 @@
       router.push({name: "productscreen"})
 
       
+      
     };
   </script>
   

@@ -51,7 +51,7 @@
         }
       },
       nextMonth() {
-        this.currentMonth = (this.currentMonth + 1) % 12;
+        this.currentMonth = (this.currentMonth + 1) % 12 ;
       if (this.currentMonth === 0) {
         this.currentYear++;
       }
@@ -84,6 +84,7 @@
       submitDateRange() {
         // Send selectedStartDate and selectedEndDate to your backend for database storage
         // Example: Make an API call to save the date range
+        
         console.log('Submitting date range:', this.selectedStartDate, this.selectedEndDate);
       },
       getMonthName(monthIndex) {
@@ -135,7 +136,7 @@
         border: 1px solid lightgray;
     }
   .selected {
-    background-color: #f0f0f0;
+    background-color: lightgreen;
   }
   </style>
   

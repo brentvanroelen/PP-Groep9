@@ -37,9 +37,10 @@ const routes = [
     component: Calendar
   },
   {
-    path: '/item',
+    path: '/item/:Name',
     name: 'item',
-    component: ItemScreen
+    component: ItemScreen,
+    props: true
   },
   {
     path: '/Additem',

@@ -2,7 +2,9 @@
     <div class="items">
     <h1>Product Screen</h1>
     <section class="itemslisting">
-        <div class="item" v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
+        <router-link :to="'/item/' + item.Name"  v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
+        <div class="item">
+         
             <h3>{{item.Name}}</h3>
             <img :src="item.Image" alt="">
             <p>{{ item.Brand }}</p>
@@ -15,7 +17,9 @@
                 <a v-if="item.beschikbaar">add to Cart</a>
             </p>
             <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
+    
         </div>   
+    </router-link>
     </section>
   </div>
 
