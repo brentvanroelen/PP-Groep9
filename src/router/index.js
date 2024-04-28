@@ -37,8 +37,8 @@ const routes = [
     component: Calendar
   },
   {
-    path: '/item/:Name',
-    name: 'item',
+    path: '/ItemScreen/:Name',
+    name: 'ItemScreen',
     component: ItemScreen,
     props: true
   },

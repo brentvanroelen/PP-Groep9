@@ -2,23 +2,8 @@
     <div class="items">
     <h1>Product Screen</h1>
     <section class="itemslisting">
-        <router-link :to="'/item/' + item.Name"  v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
-        <div class="item">
-         
-            <h3>{{item.Name}}</h3>
-            <img :src="item.Image" alt="">
-            <p>{{ item.Brand }}</p>
-            <p>{{item.Description}}</p>
-            <br>
-            <p>Categorie: {{item.Category}}</p>
-            <p v-if="item.beschikbaar">Beschikbaarheid: Morgen afhaalbaar
-                <br>
-                <br>
-                <a v-if="item.beschikbaar">add to Cart</a>
-            </p>
-            <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
-    
-        </div>   
+        <router-link :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
+           <Items :item="item"></Items>
     </router-link>
     </section>
   </div>
@@ -29,6 +14,7 @@
 
 import { useStore } from "../main.js";
 import { computed } from "../main.js";
+import Items from "@/components/Items.vue";
 
 const store = useStore();
 const results = computed(() => store.results);
@@ -38,7 +24,7 @@ const results = computed(() => store.results);
 
 </script>
 
-<style>
+<style scoped>
 .itemslisting{
     display: flex;
     flex-direction: row;
@@ -48,8 +34,27 @@ const results = computed(() => store.results);
 p{
     padding: 0.5em;
 }
-
-
-
-
+.item{
+    border-radius: 1em;
+    margin: 6px;
+    padding: 10px;
+    background: crimson;
+    text-align: center;
+    width: 200px;
+}
+.item img{
+    width: 150px;
+}
+.item a{
+    width: 25px;
+    border: #333 solid 2px;
+    margin-top: 4px;
+    background: #333;
+}
+.item a:hover{
+    cursor: pointer;
+}
+.available{
+    background: rgb(82, 129, 12);
+}
 </style>
