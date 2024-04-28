@@ -7,8 +7,6 @@
       <li><router-link class="link" to="/">My products</router-link></li>
       <li><router-link class="link" to="/contact">Contact</router-link></li>
       <li><router-link class="link" to="/calendar">Cart</router-link></li>
-    
-      <li><router-link class="link" to="/">Cart</router-link></li>
       <li><router-link class="link" to="/Additem">Additem</router-link></li>
     </div>
     </ul>

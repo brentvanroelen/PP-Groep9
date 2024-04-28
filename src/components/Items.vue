@@ -1,20 +1,14 @@
 <template>
-    <div class="item" v-if="item">
-         
-         <h3>{{item.Name}}</h3>
-         <br>
-         <img :src="item.Image" alt="">
-         <p>{{ item.Brand }}</p>
-         <p>{{item.Description}}</p>
-         <br>
-         <p>Categorie: {{item.Category}}</p>
-         <p v-if="item.beschikbaar">Beschikbaarheid: Morgen afhaalbaar
-             <br>
-             <br>
-             <a v-if="item.beschikbaar">add to Cart</a>
-         </p>
-         <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
- 
+    <div class="item" v-if="item" :class="{available: item.Available === true}">
+        <h3>{{item.Name}}</h3>
+        <br>
+        <img :src="item.Image" alt="">
+        <p>{{ item.Brand }}</p>
+        <p>{{item.Description}}</p>
+        <p>Categorie: {{item.Category}}</p>
+        <p v-if="item.Available">Beschikbaarheid: Available
+        </p>
+        <p v-else>Beschikbaarheid: Item niet beschikbaar</p>
      </div>
 </template>
 
@@ -23,6 +17,7 @@ import { defineProps } from 'vue'
 
 const {item} = defineProps({
     item: Object
+    
 })
 
 </script>

@@ -1,4 +1,8 @@
 /* Stuff for items */
+.routerlink{
+    text-decoration: none;
+    color: #fafafa;
+}
 .item{
     border-radius: 1em;
     margin: 6px;

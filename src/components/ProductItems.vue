@@ -2,7 +2,7 @@
     <div class="items">
     <h1>Product Screen</h1>
     <section class="itemslisting">
-        <router-link :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id" :class="{available: item.beschikbaar === true}">
+        <router-link class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
            <Items :item="item"></Items>
     </router-link>
     </section>
