@@ -107,7 +107,7 @@
   .calendar {
     background-color: white;
     color: black;
-    width: 25%;
+    width: 300px;
     margin: auto;
 }
 

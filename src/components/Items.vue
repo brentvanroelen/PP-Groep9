@@ -2,6 +2,7 @@
     <div class="item" v-if="item">
          
          <h3>{{item.Name}}</h3>
+         <br>
          <img :src="item.Image" alt="">
          <p>{{ item.Brand }}</p>
          <p>{{item.Description}}</p>
@@ -27,5 +28,14 @@ const {item} = defineProps({
 </script>
  
 <style scoped>
-
+h3{
+    font-size: 2em;
+   
+}
+.item{
+    background-color: #2c3e50;
+    width: 100%;
+    height: auto;
+    padding: 2em;
+  }
 </style>
