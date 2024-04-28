@@ -4,11 +4,14 @@
     <div class="searchbar-overlay"></div>
     <div class="searchbar">
       <SearchBar/>
+
+      
     </div>
   </div>
   <Kits />
   <br>
   <br>
+  <button><router-link class="link" to="/HomeAdmin"></router-link>Admin</button>
   <!-- Categories -->
   <Categories></Categories>
   <Footer></Footer>
