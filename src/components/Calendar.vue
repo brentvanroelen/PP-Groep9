@@ -125,7 +125,7 @@
 
       const submitDateRange = () => {
         useDates().updateStartDate(selectedStartDate.value);
-        useDates().updateendDate(selectedEndDate.value);
+        useDates().updateEndDate(selectedEndDate.value);
         console.log(useDates().startDate)
         console.log(useDates().endDate)
       };
