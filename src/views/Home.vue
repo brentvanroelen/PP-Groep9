@@ -23,6 +23,7 @@ import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
 
 
+
 </script>
 
 <style>

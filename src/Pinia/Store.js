@@ -22,7 +22,7 @@ export const useDates = defineStore({
     updateStartDate(startDate) {
       this.startDate = startDate;
     },
-    updateendDate(endDate) {
+    updateEndDate(endDate) {
       this.endDate = endDate;
     }
   }

@@ -37,5 +37,7 @@ h3{
     width: 100%;
     height: auto;
     padding: 2em;
+
   }
+  
 </style>
