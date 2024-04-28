@@ -2,7 +2,7 @@
     <div class="searchcontainer">
         <div class="searchbar-overlay"></div>
         <div class="searchbar">
-          
+          <searchbar></searchbar>
         </div>
     </div>
     <div id="box">
@@ -51,11 +51,16 @@
   </script>
   <style scoped>
   
-  
-  #box{
+  #box {
     display: flex;
-    justify-content: space-around;
-    
-    
+    justify-content: space-evenly;
   }
+  #Search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    }
+  
+  
   </style>

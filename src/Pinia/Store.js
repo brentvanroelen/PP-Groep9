@@ -12,3 +12,19 @@ export const useStore = defineStore({
     }
   }
 });
+export const useDates = defineStore({
+  id: 'Dates',
+  state: () => ({
+    startDate: '',
+    endDate: ''
+  }),
+  actions: {
+    updateStartDate(startDate) {
+      this.startDate = startDate;
+    },
+    updateendDate(endDate) {
+      this.endDate = endDate;
+    }
+  }
+
+});
