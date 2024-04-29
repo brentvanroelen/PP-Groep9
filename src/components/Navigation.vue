@@ -27,11 +27,12 @@ export default {
 
 <style>
 .Main_nav{
-  background: crimson;
+  background-color: #c1c1c1;
 }
 .Main_nav_links li img{
-  max-width: 75px;
-  height: 71px;
+  max-width: 80px;
+  height: auto;
+  margin-left: 0.5em;
 }
 .Main_nav_links{
   display: flex;
@@ -43,7 +44,6 @@ export default {
   justify-content: space-between;
 }
 .link{
-  color: white;
   text-decoration: none;
   padding: 0 1em 0 1em;
 }
@@ -53,9 +53,6 @@ export default {
   justify-content: end;
   align-items: center;
   width: 80%;
-}
-#img{
-  background-color: white;
 }
 .img{
   width: 20px;

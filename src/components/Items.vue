@@ -2,7 +2,7 @@
     <div class="item" v-if="item" :class="{available: item.Available === true}">
         <h3>{{item.Name}}</h3>
         <br>
-        <img :src="item.Image" alt="">
+        <img :src="item.Image" alt="" id="img">
         <p>{{ item.Brand }}</p>
         <p>{{item.Description}}</p>
         <p>Categorie: {{item.Category}}</p>
@@ -28,11 +28,16 @@ h3{
    
 }
 .item{
-    background-color: #2c3e50;
+    background-color: white;
     width: 100%;
     height: auto;
     padding: 2em;
+    
 
+  }
+  #img{
+    max-width: 200px;
+    max-height: 200px;
   }
   
 </style>

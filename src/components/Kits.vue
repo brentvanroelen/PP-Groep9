@@ -51,6 +51,7 @@ export default {
     img{
         width: 8em;
         background-color: white;
+        border: 1px solid black;
     }
     #KitsTags{
         display: flex;

@@ -152,7 +152,7 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 10px;
-    background-color: lightgray;
+    background-color: #c1c1c1;
     font-weight: bold;
     text-align: center;
     margin-bottom: 1em;
@@ -166,26 +166,26 @@
 .days div {
   text-align: center;
   padding: 10px;
-  border: 1px solid lightgray;
+  border: 1px solid #c1c1c1;
 }
 .selected {
-   background-color: lightgreen;
+   background-color: #52810c;
 }
 .weekdays {
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  background-color: lightgray;
+  background-color: #c1c1c1;
   font-weight: bold;
 }
 button {
-  background-color: lightgray;
+  background-color: #c1c1c1;
   border: none;
   padding: 10px;
   cursor: pointer;
 }
 .grayedOut {
-  background-color: lightgray;
+  background-color: #c1c1c1;
 }
 </style>
   

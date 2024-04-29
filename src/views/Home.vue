@@ -1,6 +1,6 @@
 <template>
   <div class="searchcontainer">
-    <img src="../assets/Flavor.jpg" alt="">
+    <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
     <div class="searchbar-overlay"></div>
     <div class="searchbar">
       <SearchBar/>
@@ -27,6 +27,11 @@ import SearchBar from "../components/Searchbar.vue"
 </script>
 
 <style>
+.searchcontainer {
+  position: relative;
+  background: url("../assets/Campus-Kaai.jpg") no-repeat center center/cover;
+}
+
 
 
 

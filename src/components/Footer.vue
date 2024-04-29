@@ -1,7 +1,7 @@
 <template>
     <div class="footercontainer">
         <ul class="Footer">
-            <li id="Logo"><img src="../assets/erasmuslogo.jpg" alt=""></li>
+            <li id="Logo"><img src="../assets/EhB-logo-transparant.png" alt=""></li>
         <div id="Info">
             <div id="Contacts">
             <li>Contacts:</li>
@@ -33,10 +33,11 @@ export default {
         width: 100%;	
     }
     #Logo img{
-        max-width: 75px;
-        height: 75px;
+        width: 80px;
+        height: auto;
         display: flex;
         justify-content: center;
+        margin-left: 0.5em;
     }
     .Footer{
         display: flex;
@@ -44,7 +45,7 @@ export default {
         align-items: center;
         width:100%;
         height:75px;
-        background:crimson ;
+        background:#c1c1c1 ;
         list-style: none;
         justify-content: space-between;
     }

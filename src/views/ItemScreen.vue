@@ -42,17 +42,22 @@
   <style scoped>
     #box {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-left: 10%;
-    margin-right: 10%;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: aqua;
+    width: 70%;
+    margin: auto;
+    height: 500px;
+  }
+  #itemBox{
+    padding: 1em;
   }
   #photo {
     max-width: 200px;
     max-height: 200px;
-  }
+  } 
   
-  #pfotoDiv {
+   #pfotoDiv {
     display: flex;
     justify-content: center;
     margin-top: 20px;
