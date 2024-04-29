@@ -18,6 +18,7 @@
   </template>
 
 <script setup>
+import Navigation from '../components/Navigation.vue'
 import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"

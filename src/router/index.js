@@ -7,6 +7,7 @@ import Calendar from '../components/Calendar.vue'
 import ItemScreen from '../views/ItemScreen.vue'
 import Additem from '../views/Additem.vue'
 import HomeAdmin from '../views/HomeAdmin.vue'
+import ItemPreparationScreen from '../views/ItemPreparationScreen.vue'
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
   { path: '/HomeAdmin',
     name: 'HomeAdmin',
     component: HomeAdmin
+  },
+  {
+    path: '/ItemPreparationScreen',
+    name: 'ItemPreparationScreen',
+    component: ItemPreparationScreen
   }
 
 ]

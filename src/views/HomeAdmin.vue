@@ -1,18 +1,27 @@
 <template>
 
-<!--Navigation-->
-
+<!--Navigation  => is gemaakt binnen components enkel nog op de pagina's zetten en linken-->
+<NavigationAdmin></NavigationAdmin>
 
 <div class="scheduledLoans">
 
     data uit datebase
 
+    <button>Picked up</button>
+    <button>Discard</button>
+    <br>
+
+    <button><router-link class="link" to="/ItemPreparationScreen">Item Prep Screen</router-link></button>
+   
 
 </div>
 
 <div class="scheduledReturns">
 
     data uit datebase
+
+    <button>Return + check</button>
+    <button>Returned</button>
 
 </div>
 
@@ -45,6 +54,12 @@
 
 
 <script>
+import router from '@/router';
+import NavigationAdmin from '../components/navigationAdmin.vue';
+        
+
+
+
 
 </script>
 
