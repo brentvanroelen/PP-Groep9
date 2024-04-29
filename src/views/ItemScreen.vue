@@ -44,7 +44,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: aqua;
+   
     width: 70%;
     margin: auto;
     height: 500px;

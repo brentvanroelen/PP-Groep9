@@ -27,7 +27,7 @@ export default {
 
 <style>
 .Main_nav{
-  background-color: #c1c1c1;
+  background-color: #D9D9D9;
 }
 .Main_nav_links li img{
   max-width: 80px;
