@@ -25,10 +25,9 @@
           {{ day }}
         </div>
       </div>
-      <button @click="submitDateRange">Submit</button>
       <p v-if="selectedStartDate && selectedEndDate">
-        Selected Date Range: {{ selectedStartDate }} to {{ selectedEndDate }}
-      </p>
+        Selected Date Range: {{ displayDate[0] }}/{{ String(displayDate[1]).padStart(2, '0') }} to {{ displayDate[2] }}/{{ String(displayDate[3]).padStart(2, '0') }}
+            </p>
     </div>
   </template>
   
@@ -44,6 +43,7 @@
       const days = ref([]);
       const selectedStartDate = ref(null);
       const selectedEndDate = ref(null);
+      const displayDate = ref('');
       const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       const monthName = ref('');
       const monthNames = [
@@ -88,6 +88,9 @@
           currentYear.value++;
         }
         generateDays();
+        /*selectedStartDate.value = null;
+        selectedEndDate.value = null;
+        useDates().$reset()*/
       };
 
       const previousMonth = () => {
@@ -97,44 +100,39 @@
           currentYear.value--;
         }
         generateDays();
+        /*selectedStartDate.value = null;
+        selectedEndDate.value = null;
+        useDates().$reset()*/
       };
 
-      const selectDay = (day) => {
-        if(day >= currentDate.getDate() && currentMonth.value 
-        >= currentDate.getMonth() ||  currentMonth.value > 
-        currentDate.getMonth() ){
-          if (!selectedStartDate.value) {
-            selectedStartDate.value = day;
-          } else if (!selectedEndDate.value && day >= selectedStartDate.value) {
-            selectedEndDate.value = day;
-          } else {
-            // Reset selection if both start and end dates are already set
-            selectedStartDate.value = day;
-            selectedEndDate.value = null;
-          }
-        }
-      console.log(day)
-      };
-
-      const isSelected = (day) => {
-        return (
-          (selectedStartDate.value && day === selectedStartDate.value) ||
-          (selectedEndDate.value && day === selectedEndDate.value)
-        );
-      };
-
-      const submitDateRange = () => {
-        useDates().updateStartDate(selectedStartDate.value);
-        useDates().updateEndDate(selectedEndDate.value);
-        console.log(useDates().startDate)
-        console.log(useDates().endDate)
-      };
-
-
-      
+  const selectDay = (day) => {
+    const selectedDate = new Date(currentYear.value, currentMonth.value, day);
+    currentDate.setHours(0, 0, 0, 0);
+    if (selectedDate >= currentDate) {
+      if (!selectedStartDate.value) {
+        selectedStartDate.value = selectedDate;
+      } else if (!selectedEndDate.value && selectedDate >= selectedStartDate.value) {
+        selectedEndDate.value = selectedDate;
+        useDates().updateStartDate(selectedStartDate.value.getDate());
+        useDates().updateEndDate(selectedEndDate.value.getDate());
+        displayDate.value = [selectedStartDate.value.getDate(),selectedStartDate.value.getMonth() + 1, selectedEndDate.value.getDate(),selectedEndDate.value.getMonth() + 1]
+      } else {
+        selectedStartDate.value = selectedDate;
+        selectedEndDate.value = null;
+        useDates().$reset()
+      }
+    }
+  };
+  const isSelected = (day) => {
+    const date = new Date(currentYear.value, currentMonth.value, day);
+    return (
+      (selectedStartDate.value && date.getTime() === selectedStartDate.value.getTime()) ||
+      (selectedEndDate.value && date.getTime() === selectedEndDate.value.getTime())
+    );
+};
     onMounted(() =>{
-      generateDays();
       monthName.value = setCurrentMonth();
+      generateDays();
     });
     
   </script>
