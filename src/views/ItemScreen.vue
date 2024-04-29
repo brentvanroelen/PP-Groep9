@@ -1,17 +1,18 @@
 <template v-if="Item">
-    <div class="searchcontainer">
+    <div id="box">
+      <div class="searchcontainer">
         <div class="searchbar-overlay"></div>
         <div class="searchbar">
-          <searchbar></searchbar>
+          <SearchBar></SearchBar>
         </div>
     </div>
-    <div id="box">
-  <div id="itemBox">
+    <div id="itemBox">
       <Items :item="Item"></Items>
     </div>
     <div  id="calendarBox">
       <Calendar></Calendar>
     </div>
+    <ReservationHandler :item="Item"></ReservationHandler>
   </div>
         
         <Footer></Footer>
@@ -21,7 +22,8 @@
   <script setup>
   import SearchBar from "../components/Searchbar.vue"
   import Footer from "../components/Footer.vue"
-  import { onMounted, useStore } from "../main.js";
+  import ReservationHandler from "@/components/ReservationHandler.vue";
+  import { useStore } from "@/Pinia/Store.js";
   import { computed } from "../main.js";
   import { useRouter } from 'vue-router';
   import Items from "@/components/Items.vue";
@@ -42,6 +44,7 @@
   <style scoped>
     #box {
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     background-color: aqua;
@@ -78,7 +81,6 @@
   }
   
   .searchbar {
-    position: relative;
     z-index: 1; /* Ensure searchbar stays on top of overlay */
     display: flex;
     align-items: center;

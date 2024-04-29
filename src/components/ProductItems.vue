@@ -3,7 +3,7 @@
     <h1>Product Screen</h1>
     <section class="itemslisting">
         <router-link class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
-           <Items :item="item"></Items>
+           <Items :item="item" ></Items>
     </router-link>
     </section>
   </div>
@@ -12,7 +12,7 @@
 
 <script setup>
 
-import { useStore } from "../main.js";
+import { useStore } from "@/Pinia/Store.js";
 import { computed } from "../main.js";
 import Items from "@/components/Items.vue";
 

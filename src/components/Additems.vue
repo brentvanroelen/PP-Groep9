@@ -1,9 +1,11 @@
 <template>
     <div>
-        <h1>Voeg items toe</h1>
-        <form>
+        <label for="instance">check for instances</label>
+        <input type="checkbox" name="instance" id="instance" v-model="instance">
+        <h1 v-if="!instance">Voeg items toe</h1>
+        <form v-if="!instance">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" v-model="docdata.Name">
+            <input type="text" id="name" name="name"  v-model="docdata.Name">
             <label for="category">Category</label>
             <input type="text" id="category" name="category" v-model="docdata.Category">
             <label for="brand">Brand</label>
@@ -14,31 +16,26 @@
             <input type="text" id="image" name="image" v-model="docdata.Image">
             <label for="image">Serialseries</label>
             <input type="text" id="Serial" name="Serial" v-model="docdata.SerialSeries">
-            <button @click="UpdateDoc">Update doc</button>
             <button @click="Makenewdoc">Make new doc</button>
         </form>
     </div>
     <div>
-        <h1>Voeg instances toe</h1>
+        <h1 v-if="instance">Voeg instances toe</h1>
+        <form v-if="instance">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" v-model="instancedata.Name">
             <label for="category">Serial</label>
             <input type="text" id="Serie" name="Serie" v-model="instancedata.Serial">
-            <label for="brand">Brand</label>
-            <input type="text" id="brand" name="brand" v-model="instancedata.Brand">
-            <input type="text" id="image" name="image" v-model="docdata.Image">
-            <label for="image">Serialseries</label>
-            <input type="text" id="Serial" name="Serial" v-model="docdata.SerialSeries">
-            <button @click="UpdateDoc, instance = true">Update instance</button>
-            <button @click="Makenewdoc, instance = true">Make new instance</button>
+            <button @click="Makenewdoc">Make new instance</button>
+        </form>
     </div>
 </template>
 
 <script setup>
     import {ref} from "../main.js"
-    import {Firestore,db,addDoc,setDoc,updateDoc,doc} from "../Firebase/Index.js"
+    import {db,setDoc,updateDoc,doc,increment} from "../Firebase/Index.js"
 
-    let instance = false;
+    let instance = ref(false);
     const docdata = ref({
         Name: '',
         Category: '',
@@ -65,7 +62,7 @@
         },
         Reserved: false,
     })
-    const UpdateDoc = async() => {
+    const Makenewdoc = async() => {
             event.preventDefault();
             if(!instance){
                 await setDoc(doc(db, "Items",`${docdata.value.Name.toString()}`), {
@@ -82,29 +79,19 @@
                     SerialSeries: docdata.value.SerialSeries
                 });
             }else{
+                let queryname = instancedata.value.Name
+                await setDoc(doc(db, `Items/${queryname}/${queryname} items/`,`${instancedata.value.Serial.toString()}`), {
+                    Name: instancedata.value.Name.toLowerCase(),
+                    Serial: instancedata.value.Serial,
+                    HasIssues: instancedata.value.HasIssues,
+                    Issues: instancedata.value.Issues,
+                    SubStrings: generateSubstrings(instancedata.value.Serial.toLowerCase()),
+                    Reserved: instancedata.value.Reserved
+                }).then(changeAmountAvailable)
                 
             }
             
         };
-    
-    const Makenewdoc = async() => {
-                event.preventDefault();
-                if(!instance){ 
-                await setDoc(doc(db, "Items",`${docdata.value.Name}`), {
-                Name: docdata.value.Name.toLowerCase(),
-                Category: docdata.value.Category,
-                Brand: docdata.value.Brand,
-                Description: docdata.value.Description,
-                Image: docdata.value.Image,
-                DamagedItems: docdata.value.DamagedItems,
-                IsInKit: docdata.value.IsInKit,
-                Quantity: docdata.value.Quantity,
-                SubStrings: generateSubstrings(docdata.value.Name.toLowerCase())
-            });
-        }else{
-
-        }
-    }
     const generateSubstrings = (str) => {
         const substrings = [];
         for (let i = 0; i < str.length; i++) {
@@ -114,7 +101,12 @@
         }
         return substrings;
     };
-
+    const changeAmountAvailable = async() => {
+    const docRef = doc(db, `Items/${instancedata.value.Name}`);
+    await updateDoc(docRef, {
+        AvailableAmount: increment(1)
+    });
+}
 
 
 </script>

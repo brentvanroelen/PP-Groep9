@@ -8,9 +8,9 @@
   <script setup>
     import { getDocs, getFirestore } from 'firebase/firestore';
     import {ref} from '../main.js'
-    import {Firestore,collection,orderBy,where,db,query,startAt,endAt} from '../Firebase/Index.js'
+    import {collection,where,db,query} from '../Firebase/Index.js'
     import router from '@/router';
-    import { useStore } from '../main.js';
+    import { useStore } from '@/Pinia/Store.js';
     import ItemScreen from '@/views/ItemScreen.vue';
 
     const querystring = ref('');

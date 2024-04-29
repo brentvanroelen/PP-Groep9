@@ -6,7 +6,6 @@ import {ref,onMounted,watch,computed} from 'vue'
 import App from './App.vue'
 import router from './router'
 import { useRoute } from 'vue-router'
-import { useStore} from './Pinia/Store'
 
 
 
@@ -18,4 +17,4 @@ app.use(router)
 
 app.mount('#app')
 
-export {ref,onMounted,useRoute ,watch,useStore,computed}
+export {ref,onMounted,useRoute ,watch,computed}
