@@ -8,6 +8,11 @@
         </li>
     </ul>
   </div>
+
+  <div>
+    <router-link to="/Popup">Open Popup</router-link>
+  </div>
+
 </template>
 
 <script>

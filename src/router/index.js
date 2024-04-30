@@ -13,6 +13,7 @@ import UserExtensions from '../views/UserExtensions.vue'
 import ManageItems from '../views/ManageItems.vue'
 import modifyItemScreen from '../views/modifyItemScreen.vue'
 import addKitScreen from '../views/addKitScreen.vue'
+import Popup from '../components/Popup.vue'
 
 const routes = [
   {
@@ -87,6 +88,13 @@ const routes = [
       name: 'addKitScreen',
       component: addKitScreen,
     },
+
+    {
+    path: '/Popup',
+    name: 'Popup',
+    component: Popup
+    },
+
    
 
 ]
