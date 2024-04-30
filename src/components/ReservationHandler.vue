@@ -16,6 +16,7 @@ defineProps({
 const store = useStore();
 const dates = useDates();
 const cart = useCart();
+const items = []
 
 
 const handleReservation = async(item) => {
@@ -28,7 +29,7 @@ const handleReservation = async(item) => {
             console.log(item)
             if(item.Available){
                 getItems(item.Name)
-                .then(() =>MakeReservation(item.Name))
+                .then(() =>makeItemMap(item.Name))
                 .then(() =>markInstanceAsUnavailable(item.Name))
                 .then(() => changeAmountAvailable(item.Name));
             }else{
@@ -68,17 +69,30 @@ const changeAmountAvailable = async(name) => {
         AvailableAmount: increment(-1)
     });
 }
+const makeItemMap = (name) =>{
+    const item1 = {
+        ItemName: name,
+        Serial: chosenitem.value.Serial,
+        Issues:
+        {
+            Issue: "None"
+        }
+
+    }
+    items.push(item1);
+
+
+}
 const MakeReservation = async(name) => {
     const docRef = doc(db, "Reservations", name + " " + "Tester" + " " + dates.startDate + " " + dates.endDate);
     await setDoc(docRef, {
-        ItemName: name,
         StartDate: dates.startDate,
         EndDate: dates.endDate,
         User: "Tester",
-        Serial: chosenitem.value.Serial,
         ForProject: false,
         Extended: false,
-        CurrentlyWithUser: false
+        CurrentlyWithUser: false,
+        
     });
 }
 </script>
