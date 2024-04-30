@@ -45,7 +45,7 @@ export default {
         align-items: center;
         width:100%;
         height:75px;
-        background:#c1c1c1 ;
+        background:#D9D9D9 ;
         list-style: none;
         justify-content: space-between;
     }

@@ -21,5 +21,4 @@ import {ref,watch} from "../main.js";
     align-items: center;
     padding: 1em;
     }
-
 </style>
