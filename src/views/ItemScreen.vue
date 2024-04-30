@@ -25,8 +25,8 @@
   </div>
   
   <div id="buttons">
-      <button @click="addItemToCart">Add to cart</button>
-      <button>Loan immediately</button>
+      <button @click="addItemToCart()">Add to cart</button>
+      <ReservationHandler></ReservationHandler>
   </div>
 
         <Footer></Footer>
@@ -41,11 +41,10 @@
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
   import {ref, reactive} from 'vue';
-  import { useStore,useDates,useCart } from '@/Pinia/Store';
+  import { useStore,useCart } from '@/Pinia/Store';
 
   const props = defineProps({
-    Name: String,
-    item: Object
+    Name: String
   });
   const check = ref(false);
   const selectedOption = ref(null);
@@ -64,8 +63,9 @@
   const params = router.currentRoute.value.params;
   const Item = results.value.find(item => item.Name === params.Name);
 
-  const addItemToCart = (item) => {
-    cart.addItem(item);
+  const addItemToCart = () => {
+    console.log(Item)
+    cart.addItem(Item);
     console.log(cart.items);
   }
 
