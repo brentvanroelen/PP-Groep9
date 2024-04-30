@@ -13,6 +13,7 @@ import UserExtensions from '../views/UserExtensions.vue'
 import ManageItems from '../views/ManageItems.vue'
 import modifyItemScreen from '../views/modifyItemScreen.vue'
 import addKitScreen from '../views/addKitScreen.vue'
+import options from '../views/options.vue'
 
 const routes = [
   {
@@ -87,6 +88,11 @@ const routes = [
       name: 'addKitScreen',
       component: addKitScreen,
     },
+    {
+      path: '/options',
+      name: 'options',
+      component: options,
+    }
    
 
 ]

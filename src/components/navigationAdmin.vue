@@ -19,7 +19,7 @@
           <option value="/UserExtensions">User requests</option>
         </select></li>
       
-        <li><router-link class="link" to="">Options</router-link></li>
+        <li><router-link class="link" to="/options">Options</router-link></li>
     </div>
     </ul>
   </nav>
