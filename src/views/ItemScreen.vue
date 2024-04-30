@@ -6,14 +6,35 @@
         </div>
     </div>
     <div id="box">
-  <div id="itemBox">
-      <Items :item="Item"></Items>
-    </div>
     <div  id="calendarBox">
       <Calendar></Calendar>
     </div>
+    <div id="itemBox">
+      <Items :item="Item"></Items>
+      <div id="extraInfo">
+  <div id="quantity">
+    <p><b>Quantity:</b></p>
+    <select v-model="selectedOption">
+      <option v-for="option in options" :key="option.value" :value="option.value">
+         {{ option.text }}
+      </option>
+    </select>
   </div>
-        
+
+  <div id="checkbox">
+    <label for="checkbox1"><b>For project:</b></label>
+    <input type="checkbox" id="checkbox1" v-model="checked">
+    <a href="">&#9432;</a>
+  </div>
+</div>
+    </div>
+  </div>
+  
+  <div id="buttons">
+      <button>Add to cart</button>
+      <button>Loan immediately</button>
+  </div>
+
         <Footer></Footer>
   </template>
   
@@ -26,10 +47,20 @@
   import { useRouter } from 'vue-router';
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
+  import {ref, reactive} from 'vue';
 
   const props = defineProps({
     Name: String
   });
+  const check = ref(false);
+  const selectedOption = ref(null);
+  const options = reactive([
+    {value: '1', text: '1'},
+    {value: '2', text: '2'},
+    {value: '3', text: '3'},
+    {value: '4', text: '4'},
+    {value: '5', text: '5'}
+  ])
   
   const store = useStore();
   const results = computed(() => store.results);
@@ -42,16 +73,59 @@
   <style scoped>
     #box {
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-   
-    width: 70%;
-    margin: auto;
-    height: 500px;
+    flex-direction: row;
+    justify-content: center; 
+    flex-wrap: wrap;
   }
   #itemBox{
+    width: 600px;
+    margin: 2em;
+    background-color: #D9D9D9;
     padding: 1em;
   }
+  #calendarBox{
+    width: 500px;
+    margin: 2em;
+  }
+  button{
+    background-color: #FF0000;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 1em;
+    color: white;
+    border-radius: .5em;
+    width: 300px;
+    height: 50px;
+  }
+  #quantity{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 120px;
+  }
+  #checkbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 140px;
+  }
+  #buttons{
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
+  .item{
+    width: 500px;
+    background-color: white;
+  }
+ #extraInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 300px;
+ }
   #photo {
     max-width: 200px;
     max-height: 200px;
