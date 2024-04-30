@@ -14,6 +14,7 @@ import ManageItems from '../views/ManageItems.vue'
 import modifyItemScreen from '../views/modifyItemScreen.vue'
 import addKitScreen from '../views/addKitScreen.vue'
 import Popup from '../components/Popup.vue'
+import options from '../views/options.vue'
 
 const routes = [
   {
@@ -95,6 +96,11 @@ const routes = [
     component: Popup
     },
 
+    {
+      path: '/options',
+      name: 'options',
+      component: options,
+    }
    
 
 ]
