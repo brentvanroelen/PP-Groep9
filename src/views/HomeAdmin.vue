@@ -1,7 +1,8 @@
 <template>
 
 <!--Navigation  => is gemaakt binnen components enkel nog op de pagina's zetten en linken-->
-<NavigationAdmin></NavigationAdmin>
+<!-- <Admin></Admin> -->
+
 
 <div class="scheduledLoans">
 
@@ -11,7 +12,7 @@
     <button>Discard</button>
     <br>
 
-    <button><router-link class="link" to="/ItemPreparationScreen">Item Prep Screen</router-link></button>
+    <!-- <button><router-link class="link" to="/ItemPreparationScreen">Item Prep Screen</router-link></button> --> 
    
 
 </div>
@@ -53,9 +54,9 @@
 
 
 
-<script>
-import router from '@/router';
-import NavigationAdmin from '../components/navigationAdmin.vue';
+<script setup>
+import Searchbar from "../components/Searchbar.vue"
+import Admin from "../components/navigationAdmin.vue"
         
 
 
