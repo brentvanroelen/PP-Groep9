@@ -6,7 +6,7 @@
       <li><router-link class="link" to="/HomeAdmin">Home</router-link></li>
         <li><select name="dropdownNav" id="dropdownNav" @change="navigateToRoute">
           <option disabled selected>Select an option</option>
-          <option value="/Manageitems">Manage items</option>
+          <option value="/ManageItems">Manage items</option>
           <option value="/ItemPreparationScreen">Item preparation</option>
           <option value="/Scheduleditems">Scheduled items</option>
         </select></li>
