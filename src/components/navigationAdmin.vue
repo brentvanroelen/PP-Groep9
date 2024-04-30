@@ -1,22 +1,22 @@
 <template>
  <nav class="navAdmin">
     <ul class="navAdminLinks">
-      <li id='img'><router-link  to=""><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
+      <li id='img'><router-link class="link" to="/HomeAdmin"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
     <div id="links">
-      <li><router-link class="link" to="">Home</router-link></li>
-        <li><select name="dropdownNav" id="dropdownNav">
-            <option value="Manage items">Manage items</option>
-             <router-link class="link" to="/ItemPreparationScreen"> <option value="Item preparation">Item preparation</option></router-link>
-            <option value="Scheduled items">Scheduled items</option>
+      <li><router-link class="link" to="/HomeAdmin">Home</router-link></li>
+        <li><select name="dropdownNav" id="dropdownNav" @change="navigateToRoute">
+          <option disabled selected>Select an option</option>
+          <option value="/Manageitems">Manage items</option>
+          <option value="/ItemPreparationScreen">Item preparation</option>
+          <option value="/Scheduleditems">Scheduled items</option>
         </select></li>
       
         
-        <li><select>
-            <option value="Users">Users</option>
-            <option value="Blacklist">Blacklist</option>
-            <option value="User requests ">User requests</option>
-
-            
+        <li><select @change="navigateToRoute">
+          <option disabled selected>Select an option</option>
+          <option value="/Users">Users</option>
+          <option value="/Blacklist">Blacklist</option>
+          <option value="/UserRequests">User requests</option>
         </select></li>
       
         <li><router-link class="link" to="">Options</router-link></li>
@@ -24,27 +24,30 @@
     </ul>
   </nav>
 </template>
-<script>
+<script setup lang="ts">
+  import { useRouter } from 'vue-router';
 
-export default {
-  name: 'NavigationAdmin',
-  components: {
+  const router = useRouter();
 
+  const navigateToRoute = (event) => {
+    const selectedRoute = event.target.value;
+    if (selectedRoute) {
+      router.push(selectedRoute);
+    }
   }
-}
-
 </script>
 
+
 <style>
-.Main_nav{
+.navAdmin{
   background-color: #c1c1c1;
 }
-.Main_nav_links li img{
+.navAdminLinks li img{
   max-width: 80px;
   height: auto;
   margin-left: 0.5em;
 }
-.Main_nav_links{
+.navAdminLinks{
   display: flex;
   flex-direction: row;
   align-items: center;

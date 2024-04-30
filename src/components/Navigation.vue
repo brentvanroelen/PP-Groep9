@@ -18,7 +18,7 @@
 
 
 export default {
-  name: 'HomeView',
+  name: 'Navigation',
   components: {
 
   }
