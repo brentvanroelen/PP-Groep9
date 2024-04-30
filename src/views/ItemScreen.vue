@@ -15,7 +15,7 @@
     <ReservationHandler :item="Item"></ReservationHandler>
   </div>
         
-        <Footer></Footer>
+<Footer></Footer>
   </template>
   
   
