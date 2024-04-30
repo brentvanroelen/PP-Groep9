@@ -1,12 +1,5 @@
 <template v-if="Item">
     <div id="box">
-      <div class="searchcontainer">
-        <div class="searchbar-overlay"></div>
-        <div class="searchbar">
-          <SearchBar></SearchBar>
-        </div>
-    </div>
-    <div id="box">
     <div  id="calendarBox">
       <Calendar></Calendar>
     </div>
@@ -32,7 +25,7 @@
   </div>
   
   <div id="buttons">
-      <button>Add to cart</button>
+      <button @click="addItemToCart">Add to cart</button>
       <button>Loan immediately</button>
   </div>
 
@@ -41,18 +34,18 @@
   
   
   <script setup>
-  import SearchBar from "../components/Searchbar.vue"
   import Footer from "../components/Footer.vue"
   import ReservationHandler from "@/components/ReservationHandler.vue";
-  import { useStore } from "@/Pinia/Store.js";
   import { computed } from "../main.js";
   import { useRouter } from 'vue-router';
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
   import {ref, reactive} from 'vue';
+  import { useStore,useDates,useCart } from '@/Pinia/Store';
 
   const props = defineProps({
-    Name: String
+    Name: String,
+    item: Object
   });
   const check = ref(false);
   const selectedOption = ref(null);
@@ -64,11 +57,17 @@
     {value: '5', text: '5'}
   ])
   
+  const cart = useCart();
   const store = useStore();
   const results = computed(() => store.results);
   const router = useRouter();
   const params = router.currentRoute.value.params;
   const Item = results.value.find(item => item.Name === params.Name);
+
+  const addItemToCart = (item) => {
+    cart.addItem(item);
+    console.log(cart.items);
+  }
 
   </script>
 
