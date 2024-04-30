@@ -40,7 +40,7 @@ p{
     padding: 10px;
     background: crimson;
     text-align: center;
-    width: 200px;
+    width: 500px;
 }
 .item img{
     width: 150px;

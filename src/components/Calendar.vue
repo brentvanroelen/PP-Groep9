@@ -150,7 +150,7 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 10px;
-    background-color: #c1c1c1;
+    background-color: #D9D9D9;
     font-weight: bold;
     text-align: center;
     margin-bottom: 1em;
@@ -164,7 +164,7 @@
 .days div {
   text-align: center;
   padding: 10px;
-  border: 1px solid #c1c1c1;
+  border: 1px solid #D9D9D9;
 }
 .selected {
    background-color: #52810c;
@@ -173,17 +173,17 @@
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  background-color: #c1c1c1;
+  background-color: #D9D9D9;
   font-weight: bold;
 }
 button {
-  background-color: #c1c1c1;
+  background-color: #D9D9D9;
   border: none;
   padding: 10px;
   cursor: pointer;
 }
 .grayedOut {
-  background-color: #c1c1c1;
+  background-color: #D9D9D9;
 }
 </style>
   
