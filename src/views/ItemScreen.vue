@@ -8,10 +8,8 @@
       <div id="extraInfo">
   <div id="quantity">
     <p><b>Quantity:</b></p>
-    <select v-model="selectedOption">
-      <option v-for="option in options" :key="option.value" :value="option.value">
-         {{ option.text }}
-      </option>
+    <select>
+      <option v-for="value in test" :key="value"> {{ test[value-1] }}</option>
     </select>
   </div>
 
@@ -48,23 +46,27 @@
   });
   const check = ref(false);
   const selectedOption = ref(null);
-  const options = reactive([
-    {value: '1', text: '1'},
-    {value: '2', text: '2'},
-    {value: '3', text: '3'},
-    {value: '4', text: '4'},
-    {value: '5', text: '5'}
-  ])
-  
+  const test = ref([]);
+  const test2 = ref(1)
   const cart = useCart();
-  const store = useStore();
-  const results = computed(() => store.results);
   const router = useRouter();
   const params = router.currentRoute.value.params;
+  const store = useStore();
+  const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
+  console.log(Item);
+
+  for (let i = 1; i <= Item.AvailableAmount; i++) {
+    test.value.push(i);
+  }
+
+
+  
+  
+
 
   const addItemToCart = () => {
-    console.log(Item)
+    console.log(Item);
     cart.addItem(Item);
     console.log(cart.items);
   }
@@ -83,6 +85,7 @@
     margin: 2em;
     background-color: #D9D9D9;
     padding: 1em;
+    border-radius: .5em;
   }
   #calendarBox{
     width: 500px;
@@ -95,7 +98,7 @@
     cursor: pointer;
     margin: 1em;
     color: white;
-    border-radius: .5em;
+    border-radius: 1em;
     width: 300px;
     height: 50px;
   }
@@ -183,40 +186,3 @@
     }
   }
   </style>
-  
-  <!-- <style scoped>
-
-  #photo {
-    max-width: 200px;
-    max-height: 200px;
-  }
-
-  #pfotoDiv {
-    display: flex;
-    justify-content: right;
-    margin-left: 70%;
-    margin-right: 30%;
-
-  }
-
-  .searchbar{
-    display: flex;
-    align-items: center;
-    margin-bottom: 100%;
-    
-    
-  }
-
-  h1 {
-    text-align: center;
-    font-size: 30px;
-    margin-top: 5%;
-  }
-
-    .itemDescription {
-       display: flex;
-       justify-content: center;
-    }
-  
-  
-  </style>  -->

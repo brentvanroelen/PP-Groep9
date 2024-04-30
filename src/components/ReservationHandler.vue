@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleReservation(itemObject)">submit</button>
+    <button @click="handleReservation(item)">Loan now</button>
 </template>
 <script setup>
 import { useStore,useDates,useCart } from '@/Pinia/Store';
