@@ -16,7 +16,7 @@
           <option disabled selected>Select an option</option>
           <option value="/Users">Users</option>
           <option value="/Blacklist">Blacklist</option>
-          <option value="/UserRequests">User requests</option>
+          <option value="/UserExtensions">User requests</option>
         </select></li>
       
         <li><router-link class="link" to="">Options</router-link></li>

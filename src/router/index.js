@@ -8,7 +8,8 @@ import ItemScreen from '../views/ItemScreen.vue'
 import Additem from '../views/Additem.vue'
 import HomeAdmin from '../views/HomeAdmin.vue'
 import ItemPreparationScreen from '../views/ItemPreparationScreen.vue'
-
+import Blacklist from '../views/Blacklist.vue'
+import UserExtensions from '../views/UserExtensions.vue'
 const routes = [
   {
     path: '/',
@@ -56,6 +57,17 @@ const routes = [
     path: '/ItemPreparationScreen',
     name: 'ItemPreparationScreen',
     component: ItemPreparationScreen
+  },
+  {
+    path: '/Blacklist',
+    name: 'Blacklist',
+    component: Blacklist
+  },
+  {
+    path: '/UserExtensions',
+    name: 'UserExtensions',
+    component: UserExtensions
+  
   }
 
 ]

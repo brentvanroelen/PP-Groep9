@@ -2,8 +2,7 @@
 
 
 
-        <!--Navigation  => is gemaakt binnen components enkel nog op de pagina's zetten en linken-->
-        <NavigationAdmin></NavigationAdmin>
+        
 
         <div class ="title1">
             <h2>User extension requests</h2>
@@ -116,9 +115,7 @@
 
 <script></script>
 
-<style>body {
-    font-family: Arial, Helvetica, sans-serif;
-}
+<style>
 
 .title1 {
     text-align: center;

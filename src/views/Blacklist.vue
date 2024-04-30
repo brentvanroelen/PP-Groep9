@@ -1,5 +1,5 @@
 <template>
-<NavigationAdmin></NavigationAdmin>
+
 
         <h1 class="title">User blacklist</h1>
         <div class="actions">
@@ -141,12 +141,12 @@
 </script>
 
 <style>
-body {
+/* body {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px; 
-}
+} */
 
 .title {
     text-align: center;
