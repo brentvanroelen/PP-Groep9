@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleReservation(item)">submit</button>
+    <button @click="handleReservation(itemObject)">submit</button>
 </template>
 <script setup>
 import { useStore,useDates,useCart } from '@/Pinia/Store';
@@ -10,7 +10,7 @@ const data = ref([]);
 const chosenitem = ref();
 
 defineProps({
-    item: Object
+    itemObject: Object
 })
 
 const store = useStore();
@@ -19,23 +19,32 @@ const cart = useCart();
 let  items = []
 let itemMaps = [];
 let promises = [];
+let checkUserCart = false
 
 
-
-const handleReservation = async(item) => {
-    store.updateResults(item);
-    cart.emptyCart();
-    cart.addItem(item)
-    console.log(cart.items)
-    if(dates.startDate != "" && dates.endDate != ""){
-        for(item of cart.items){
-            console.log(item)
-            if(item.Available){
-                const promise = getItems(item.Name).then(() =>markInstanceAsUnavailable(item.Name))
-                .then(() => changeAmountAvailable(item.Name));
+const handleReservation = async(itemObject = 0) => {
+    store.updateResults(itemObject);
+    if(!checkUserCart){
+        if(dates.startDate != "" && dates.endDate != ""){
+            if(itemObject.Available){
+                const promise = getItems(itemObject.Name).then(() =>markInstanceAsUnavailable(itemObject.Name))
+                .then(() => changeAmountAvailable(itemObject.Name));
                 promises.push(promise);
             }else{
                 console.log("Hoo boy i'm not looking forward to this")
+            }
+        }
+    }else if(checkUserCart){
+        if(dates.startDate != "" && dates.endDate != ""){
+            for(let item of cart.items){
+                console.log(item)
+                if(item.Available){
+                    const promise = getItems(item.Name).then(() =>markInstanceAsUnavailable(item.Name))
+                    .then(() => changeAmountAvailable(item.Name));
+                    promises.push(promise);
+                }else{
+                    console.log("Hoo boy i'm not looking forward to this")
+                }
             }
         }
         Promise.all(promises)
