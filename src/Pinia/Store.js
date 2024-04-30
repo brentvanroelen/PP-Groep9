@@ -28,3 +28,18 @@ export const useDates = defineStore({
   }
 
 });
+export const useCart = defineStore({
+  id: 'Cart',
+  state: () => ({
+    items: [],
+  }),
+  actions: {
+    addItem(item){
+      this.items.push(item)
+    },
+    emptyCart(){
+      this.items = []
+    }
+  }
+
+});
