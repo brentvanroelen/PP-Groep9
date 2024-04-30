@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleReservation(item)">submit</button>
+    <button @click="handleReservation(item)">Loan now</button>
 </template>
 <script setup>
 import { useStore,useDates,useCart } from '@/Pinia/Store';
@@ -20,10 +20,12 @@ const items = []
 
 
 const handleReservation = async(item) => {
+    console.log(item)
     store.updateResults(item);
     cart.emptyCart();
     cart.addItem(item)
     console.log(cart.items)
+
     if(dates.startDate != "" && dates.endDate != ""){
         for(item of cart.items){
             console.log(item)
