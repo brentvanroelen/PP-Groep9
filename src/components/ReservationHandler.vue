@@ -98,7 +98,8 @@ const makeItemMap = (items) =>{
                 Description: "",
                 Image: "",
                 IssueType: "",
-            }
+            },
+            ItemPrepared: false
         }
     }));
 
@@ -113,6 +114,7 @@ const MakeReservation = async() => {
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
+        ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
 }
