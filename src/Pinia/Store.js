@@ -43,3 +43,14 @@ export const useCart = defineStore({
   }
 
 });
+export const useOptions = defineStore({
+  id: 'Options',
+  state: () => ({
+    options: []
+  }),
+  actions: {
+    updateOptions(options){
+      this.options = options
+    }
+  }
+})
