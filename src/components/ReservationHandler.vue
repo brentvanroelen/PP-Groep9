@@ -1,45 +1,45 @@
 <template>
-    <button @click="handleReservation(item)">Loan now</button>
+    <button @click="handleReservation()">Loan now</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart } from '@/Pinia/Store';
+import { useStore,useDates,useCart, useQuantity, useChoiceOfItems } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
+import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
+
 
 const data = ref([]);
 const chosenitem = ref();
-
-defineProps({
-    itemObject: Object
-})
-
 const store = useStore();
 const dates = useDates();
 const cart = useCart();
+const quantity = useQuantity();
+const availableInstances = useChoiceOfItems();
+
 let  items = []
 let itemMaps = [];
 let promises = [];
 let checkUserCart = false
 
 
-const handleReservation = async(itemObject = 0) => {
-    store.updateResults(itemObject);
+const handleReservation = async() => {
     if(!checkUserCart){
         if(dates.startDate != "" && dates.endDate != ""){
-            if(itemObject.Available){
-                const promise = getItems(itemObject.Name).then(() =>markInstanceAsUnavailable(itemObject.Name))
-                .then(() => changeAmountAvailable(itemObject.Name));
+            for(let i = 0; i < quantity.quantity; i++){
+                console.log(availableInstances.items)
+                const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
+                .then(changeAmountAvailable(chosenitem.value.Name));
                 promises.push(promise);
-            }else{
-                console.log("Hoo boy i'm not looking forward to this")
             }
+            console.log(items)
+            console.log(promises)
         }
     }else if(checkUserCart){
         if(dates.startDate != "" && dates.endDate != ""){
             for(let item of cart.items){
                 console.log(item)
                 if(item.Available){
-                    const promise = getItems(item.Name).then(() =>markInstanceAsUnavailable(item.Name))
+                    const promise = getItem(item.Name).then(() =>markInstancesAsUnavailable(item.Name))
                     .then(() => changeAmountAvailable(item.Name));
                     promises.push(promise);
                 }else{
@@ -47,32 +47,24 @@ const handleReservation = async(itemObject = 0) => {
                 }
             }
         }
-        Promise.all(promises)
-        .then(() => {
-            makeItemMap(items);
-        })
-        .then(() => MakeReservation())
-    }else{
-        alert("Please select a date range")
     }
-   
+    console.log("We got here")
+    Promise.all(promises)
+    .then(() => {
+        makeItemMap(items);
+    })
+    .then(() => MakeReservation())
 }
-const getItems = async(name) => {
-    const creference = collection(db, `Items/${name.charAt(0).toUpperCase() 
-                    + name.slice(1)}/${name.charAt(0).toUpperCase() 
-                    + name.slice(1)} items`);
-            console.log(creference);
-            const reservedQuery = query(creference,where("Reserved", "==", false));
-            const reservedSnapshot = await getDocs(reservedQuery);
-            reservedSnapshot.forEach((doc) => {
-                data.value.push(doc.data());
-            });
-            chosenitem.value = data.value[0];
-            console.log(chosenitem.value.Serial);
-            items.push(chosenitem.value);
-            console.log(items);
+const getItem = async() => {
+    chosenitem.value = availableInstances.items[0];
+    console.log(chosenitem.value)
+    availableInstances.items.shift();
+    console.log(availableInstances.items)
+    items.push(chosenitem.value);
+    console.log(items)
+    console.log(chosenitem.value)
 }
-const markInstanceAsUnavailable = async(name) => {
+const markInstancesAsUnavailable = async(name) => {
     const docRef = doc(db, `Items/${name.charAt(0).toUpperCase() 
                     + name.slice(1)}/${name.charAt(0).toUpperCase() 
                     + name.slice(1)} items/${chosenitem.value.Serial}`);
@@ -108,6 +100,7 @@ const makeItemMap = (items) =>{
 const MakeReservation = async() => {
     const docRef = doc(db, "Reservations", "Tester" + " " + dates.startDate + " " + dates.endDate);
     await setDoc(docRef, {
+        ItemSerials: items.map(item => item.Serial),
         StartDate: dates.startDate,
         EndDate: dates.endDate,
         User: "Tester",

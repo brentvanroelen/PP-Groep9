@@ -8,7 +8,7 @@
       <div id="extraInfo">
   <div id="quantity">
     <p><b>Quantity:</b></p>
-    <select>
+    <select @change="setQuantity" v-model="selectedOption">
       <option v-for="value in test" :key="value"> {{ test[value-1] }}</option>
     </select>
   </div>
@@ -24,7 +24,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler :itemObject="Item"></ReservationHandler>
+      <ReservationHandler></ReservationHandler>
   </div>
 
         <Footer></Footer>
@@ -39,31 +39,29 @@
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
   import {ref, reactive} from 'vue';
-  import { useStore,useCart } from '@/Pinia/Store';
+  import { useStore,useCart,useQuantity } from '@/Pinia/Store';
 
   const props = defineProps({
     Name: String
   });
-  const check = ref(false);
-  const selectedOption = ref(null);
+  const selectedOption = ref(1);
   const test = ref([]);
-  const test2 = ref(1)
   const cart = useCart();
+  const checked = ref(false);
   const router = useRouter();
   const params = router.currentRoute.value.params;
   const store = useStore();
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
+  const quantity = useQuantity();
   console.log(Item);
 
   for (let i = 1; i <= Item.AvailableAmount; i++) {
     test.value.push(i);
   }
-
-
-  
-  
-
+  const setQuantity = () => {
+    quantity.setQuantity(selectedOption.value);
+  }
 
   const addItemToCart = () => {
     console.log(Item);

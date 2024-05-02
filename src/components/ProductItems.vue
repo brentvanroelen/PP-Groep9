@@ -2,7 +2,7 @@
     <div class="items">
     <h1>Product Screen</h1>
     <section class="itemslisting">
-        <router-link class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
+        <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
            <Items :item="item" ></Items>
     </router-link>
     </section>
@@ -20,6 +20,9 @@ const store = useStore();
 const results = computed(() => store.results);
 
 
+const updateStore = (item) => {
+    store.updateResults([item]);
+}
 
 
 </script>

@@ -28,53 +28,58 @@
       <p v-if="selectedStartDate && selectedEndDate">
         Selected Date Range: {{ displayDate[0] }}/{{ String(displayDate[1]).padStart(2, '0') }} to {{ displayDate[2] }}/{{ String(displayDate[3]).padStart(2, '0') }}
             </p>
+      <AvailabilityHandler></AvailabilityHandler>
     </div>
   </template>
   
   <script setup>
-  import { ref } from 'vue';
+  import { ref  } from 'vue';
   import { computed } from 'vue';
-  import { onMounted } from 'vue';
-  import { useDates } from '@/Pinia/Store';
+  import { onMounted} from 'vue';
+  import { useDates, useTrigger } from '@/Pinia/Store';
+  import AvailabilityHandler from './AvailabilityHandler.vue';
 
-  
-      let currentMonth = ref(0);
-      const currentYear = ref(0);
-      const days = ref([]);
-      const selectedStartDate = ref(null);
-      const selectedEndDate = ref(null);
-      const displayDate = ref('');
-      const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const monthName = ref('');
-      const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
-      const currentDate = new Date();
+    let currentMonth = ref(0);
+    const currentYear = ref(0);
+    const days = ref([]);
+    const selectedStartDate = ref(null);
+    const selectedEndDate = ref(null);
+    const displayDate = ref('');
+    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const monthName = ref('');
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const currentDate = new Date();
+    const trigger = useTrigger();
 
-      const setCurrentMonth = () => {
-        currentMonth.value = currentDate.getMonth();
-        currentYear.value = currentDate.getFullYear();
+
+
+
+    const setCurrentMonth = () => {
+      currentMonth.value = currentDate.getMonth();
+      currentYear.value = currentDate.getFullYear();
         
-        console.log(currentMonth.value)
-        return monthNames[currentMonth.value];
-      };
+      console.log(currentMonth.value)
+      return monthNames[currentMonth.value];
+    };
 
-      const generateDays = () => {
-        const daysInMonth = new Date(currentYear.value, currentMonth.value + 1, 0).getDate();
-        days.value = [];
-        for (let i = 1; i <= daysInMonth; i++) {
-          days.value.push(i);
-        }
-      };
-      const grayedOut = (day) => {
-        if(day < currentDate.getDate() && currentMonth.value <= currentDate.getMonth() && currentYear.value === currentDate.getFullYear() ||  currentMonth.value < currentDate.getMonth() ){
-          return true;
-        }else{
-          return false;
-        }
+    const generateDays = () => {
+      const daysInMonth = new Date(currentYear.value, currentMonth.value + 1, 0).getDate();
+      days.value = [];
+      for (let i = 1; i <= daysInMonth; i++) {
+        days.value.push(i);
+      }
+    };
+    const grayedOut = (day) => {
+      if(day < currentDate.getDate() && currentMonth.value <= currentDate.getMonth() && currentYear.value === currentDate.getFullYear() ||  currentMonth.value < currentDate.getMonth() ){
+        return true;
+      }else{
+        return false;
+      }
         
-      };
+    };
 
       const blanks = () => {
         const firstDayOfMonth = new Date(currentYear.value, currentMonth.value, 0);
@@ -113,8 +118,9 @@
         selectedStartDate.value = selectedDate;
       } else if (!selectedEndDate.value && selectedDate >= selectedStartDate.value) {
         selectedEndDate.value = selectedDate;
-        useDates().updateStartDate(selectedStartDate.value.getDate());
-        useDates().updateEndDate(selectedEndDate.value.getDate());
+        useDates().updateStartDate(selectedStartDate.value.getDate(), selectedStartDate.value.getMonth() + 1);
+        useDates().updateEndDate(selectedEndDate.value.getDate(), selectedEndDate.value.getMonth() + 1);
+        useTrigger().fireTrigger();
         displayDate.value = [selectedStartDate.value.getDate(),selectedStartDate.value.getMonth() + 1, selectedEndDate.value.getDate(),selectedEndDate.value.getMonth() + 1]
       } else {
         selectedStartDate.value = selectedDate;
