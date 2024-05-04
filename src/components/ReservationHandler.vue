@@ -85,6 +85,7 @@ const makeItemMap = (items) =>{
     itemMaps = items.map((item, index) => ({
         [`Item${index + 1}`]: {
             ItemName: item.Name,
+            ItemImage: item.Image,
             Serial: item.Serial,
             issues:{
                 User: "",
@@ -93,6 +94,7 @@ const makeItemMap = (items) =>{
                 IssueType: "",
             },
             ItemPrepared: false
+
         }
     }));
 

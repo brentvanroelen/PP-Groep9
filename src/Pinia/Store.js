@@ -51,7 +51,7 @@ export const useCart = defineStore({
 export const useQuantity = defineStore({
   id: 'Quantity',
   state: () => ({
-    quantity: 0,
+    quantity: 1,
     available: 0
   }),
   actions: {

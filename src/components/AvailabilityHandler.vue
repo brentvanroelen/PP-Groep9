@@ -13,7 +13,6 @@ const availableInstances = useChoiceOfItems();
 const trigger = useTrigger(); 
 const triggergetter = computed(() => trigger.trigger);
 let arraynumber = 1;
-let parcoudedAllItems = false;
 let Nonconflictingreserveditems = [];
 
 watch(triggergetter, async() => {

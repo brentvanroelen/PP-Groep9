@@ -33,7 +33,7 @@
 
 <script setup>
     import {ref} from "../main.js"
-    import {db,setDoc,updateDoc,doc,increment} from "../Firebase/Index.js"
+    import {db,setDoc,updateDoc,doc,increment,getDoc} from "../Firebase/Index.js"
 
     let instance = ref(false);
     const docdata = ref({
@@ -86,7 +86,8 @@
                     HasIssues: instancedata.value.HasIssues,
                     Issues: instancedata.value.Issues,
                     SubStrings: generateSubstrings(instancedata.value.Serial.toLowerCase()),
-                    Reserved: instancedata.value.Reserved
+                    Reserved: instancedata.value.Reserved,
+                    Image: await getImage()
                 }).then(changeAmountAvailable)
                 
             }
@@ -106,7 +107,18 @@
     await updateDoc(docRef, {
         AvailableAmount: increment(1)
     });
-}
+    }
+
+    const getImage = async() => {
+        const docRef = doc(db, `Items/${instancedata.value.Name}`);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return docSnap.data().Image;
+        } else {
+            console.log("No such document!");
+        }
+    }
+
 
 
 </script>

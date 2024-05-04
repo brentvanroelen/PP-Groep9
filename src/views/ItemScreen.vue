@@ -56,11 +56,11 @@
   const Item = results.value.find(item => item.Name === params.Name);
   const quantity = useQuantity();
   let options = computed(() => {
-  let amountAvailable = [];
-  for (let i = 1; i <= availableInstances.getInstance(1).length ; i++) {
-    amountAvailable.push(i);
-  }
-  return amountAvailable;
+    let amountAvailable = [];  
+    for (let i = 1; i <= availableInstances.getInstance(1).length ; i++) {
+      amountAvailable.push(i);
+    }
+    return amountAvailable;
   });
 
   for (let i = 1; i <= Item.AvailableAmount; i++) {
