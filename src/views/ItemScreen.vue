@@ -9,7 +9,7 @@
   <div id="quantity">
     <p><b>Quantity:</b></p>
     <select @change="setQuantity" v-model="selectedOption">
-      <option v-for="value in test" :key="value"> {{ test[value-1] }}</option>
+      <option v-for="value in options" :key="value"> {{ options[value-1] }}</option>
     </select>
   </div>
 
@@ -39,7 +39,7 @@
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
   import {ref, reactive} from 'vue';
-  import { useStore,useCart,useQuantity } from '@/Pinia/Store';
+  import { useStore,useCart,useQuantity,useChoiceOfItems } from '@/Pinia/Store';
 
   const props = defineProps({
     Name: String
@@ -47,6 +47,7 @@
   const selectedOption = ref(1);
   const test = ref([]);
   const cart = useCart();
+  const availableInstances = useChoiceOfItems();
   const checked = ref(false);
   const router = useRouter();
   const params = router.currentRoute.value.params;
@@ -54,7 +55,13 @@
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
   const quantity = useQuantity();
-  console.log(Item);
+  let options = computed(() => {
+  let amountAvailable = [];
+  for (let i = 1; i <= availableInstances.getInstance(1).length ; i++) {
+    amountAvailable.push(i);
+  }
+  return amountAvailable;
+  });
 
   for (let i = 1; i <= Item.AvailableAmount; i++) {
     test.value.push(i);
