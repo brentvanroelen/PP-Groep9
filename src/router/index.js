@@ -15,6 +15,7 @@ import modifyItemScreen from '../views/modifyItemScreen.vue'
 import addKitScreen from '../views/addKitScreen.vue'
 import Popup from '../components/Popup.vue'
 import options from '../views/options.vue'
+import Cart from '../views/Cart.vue'
 
 const routes = [
   {
@@ -40,9 +41,9 @@ const routes = [
     props: true
   },
   {
-    path: '/calendar',
-    name: 'calendar',
-    component: Calendar
+    path: '/cart',
+    name: 'cart',
+    component: Cart
   },
   {
     path: '/ItemScreen/:Name',

@@ -1,14 +1,11 @@
 <template>
-    <!-- Navbar inserten -->
-    <nav> </nav>
-
     <div class="container">
         <div class="cart-title">CART</div>
         <div class="cart-container">
             <div class="cart-items">
                 <!-- Item 1 -->
                 <div class="item-container">
-                    <img src="googleglasses.jpg" alt="Google glasses">
+                    <img src="#googleglasses.jpg" alt="Google glasses">
                     <div class="item-info">
                         <div class="item-title">Google glasses - <span style="font-size: 12px;">GO-12</span></div>
                         <div class="item-description">Blabla</div>
@@ -23,13 +20,13 @@
                     </div>
                    
                     <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
+                        <img src="#trashcan-icon.png" alt="Delete">
                     </div>
                 </div>
 
                 <!-- Item 2 -->
                 <div class="item-container">
-                    <img src="item2.jpg" alt="Item 2">
+                    <img src="#item2.jpg" alt="Item 2">
                     <div class="item-info">
                         <div class="item-title">Item 2 - <span style="font-size: 12px;">seriecode</span></div>
                         <div class="item-description">Short description of item 2</div>
@@ -44,13 +41,13 @@
                     </div>
                     
                     <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
+                        <img src="#trashcan-icon.png" alt="Delete">
                     </div>
                 </div>
 
                 <!-- Item 3 -->
                 <div class="item-container">
-                    <img src="item3.jpg" alt="Item 3">
+                    <img src="#item3.jpg" alt="Item 3">
                     <div class="item-info">
                         <div class="item-title">Item 3 - <span style="font-size: 12px;">seriecode</span></div>
                         <div class="item-description">Short description of item 3</div>
@@ -65,13 +62,13 @@
                     </div>
                     
                     <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
+                        <img src="#trashcan-icon.png" alt="Delete">
                     </div>
                 </div>
 
                 <!-- Item 4 -->
                 <div class="item-container">
-                    <img src="item4.jpg" alt="Item 4">
+                    <img src="#item4.jpg" alt="Item 4">
                     <div class="item-info">
                         <div class="item-title">Item 4 - <span style="font-size: 12px;">seriecode</span></div>
                         <div class="item-description">Short description of item 4</div>
@@ -86,7 +83,7 @@
                     </div>
                     
                     <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
+                        <img src="#trashcan-icon.png" alt="Delete">
                     </div>
                 </div>
 
@@ -98,14 +95,10 @@
 
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script setup>
+    import Navigation from "../components/Navigation.vue"
 
-export default defineComponent({
-    setup() {
-        
-    },
-})
+
 </script>
 
 <style scoped>
