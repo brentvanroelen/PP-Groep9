@@ -1,18 +1,21 @@
 <template>
 
-<!--Navigation  => is gemaakt binnen components enkel nog op de pagina's zetten en linken-->
-<!-- <Admin></Admin> -->
+
 
 
 <div class="scheduledLoans">
 
-    data uit datebase
-
+    <div v-if="loading">Bezig met laden...</div>
+    <div v-else>
+      <!-- Hier worden de gegevens weergegeven -->
+      <ul>
+        <li v-for="item in items" :key="item.id">{{ item.Name }}</li>
+      </ul>
+    </div>
     <button>Picked up</button>
     <button>Discard</button>
     <br>
 
-    <!-- <button><router-link class="link" to="/ItemPreparationScreen">Item Prep Screen</router-link></button> --> 
    
 
 </div>
@@ -57,6 +60,28 @@
 <script setup>
 import Searchbar from "../components/Searchbar.vue"
 import Admin from "../components/navigationAdmin.vue"
+import { useStore } from "@/Pinia/Store.js";
+import { computed } from "../main.js";
+import Items from "@/components/Items.vue";
+
+
+    
+
+    let items = [];
+    
+  
+  const created = ()=> {
+    this.loadItems();
+  }
+ 
+    let loadItems=() => {
+      // Hier zou je de logica plaatsen om gegevens uit de database op te halen op basis van de huidige datum
+    
+      const today = new Date().toISOString().slice(0, 10); // Huidige datum in het formaat "YYYY-MM-DD"
+      
+      
+    }
+
         
 
 
