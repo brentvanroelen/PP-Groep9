@@ -24,7 +24,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler></ReservationHandler>
+      <ReservationHandler :itemObject="Item"></ReservationHandler>
   </div>
 
         <Footer></Footer>

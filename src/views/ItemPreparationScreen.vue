@@ -6,7 +6,7 @@
             <h2>Items to prepare:</h2>
             <div class="studentInfo"><!--Dit komt per student 1x voor-->
                 <label for="Student">Student: </label> <!--Data uit database-->
-                <label for="PickUpDate">Pick-up date: </label><!--Data uit database-->  <button>X</button> 
+                <label for="PickUpDate">Pick-up date: </label><!--Data uit database--> <input type="time" name="" id="">  <button>X</button> 
             
             <div class="items"> <!--Dit kan voor meerdere keren tergkomen per student, indien meerdere orders-->
                 <label for="Item">Name: </label><br> <!--Data uit database (vb camera)-->

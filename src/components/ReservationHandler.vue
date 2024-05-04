@@ -10,34 +10,48 @@ const data = ref([]);
 const chosenitem = ref();
 
 defineProps({
-    item: Object
+    itemObject: Object
 })
 
 const store = useStore();
 const dates = useDates();
 const cart = useCart();
-const items = []
+let  items = []
+let itemMaps = [];
+let promises = [];
+let checkUserCart = false
 
 
-const handleReservation = async(item) => {
-    console.log(item)
-    store.updateResults(item);
-    cart.emptyCart();
-    cart.addItem(item)
-    console.log(cart.items)
-
-    if(dates.startDate != "" && dates.endDate != ""){
-        for(item of cart.items){
-            console.log(item)
-            if(item.Available){
-                getItems(item.Name)
-                .then(() =>makeItemMap(item.Name))
-                .then(() =>markInstanceAsUnavailable(item.Name))
-                .then(() => changeAmountAvailable(item.Name));
+const handleReservation = async(itemObject = 0) => {
+    store.updateResults(itemObject);
+    if(!checkUserCart){
+        if(dates.startDate != "" && dates.endDate != ""){
+            if(itemObject.Available){
+                const promise = getItems(itemObject.Name).then(() =>markInstanceAsUnavailable(itemObject.Name))
+                .then(() => changeAmountAvailable(itemObject.Name));
+                promises.push(promise);
             }else{
                 console.log("Hoo boy i'm not looking forward to this")
             }
         }
+    }else if(checkUserCart){
+        if(dates.startDate != "" && dates.endDate != ""){
+            for(let item of cart.items){
+                console.log(item)
+                if(item.Available){
+                    const promise = getItems(item.Name).then(() =>markInstanceAsUnavailable(item.Name))
+                    .then(() => changeAmountAvailable(item.Name));
+                    promises.push(promise);
+                }else{
+                    console.log("Hoo boy i'm not looking forward to this")
+                }
+            }
+        }
+        Promise.all(promises)
+        .then(() => {
+            makeItemMap(items);
+        })
+        .then(() => MakeReservation())
     }else{
         alert("Please select a date range")
     }
@@ -55,6 +69,8 @@ const getItems = async(name) => {
             });
             chosenitem.value = data.value[0];
             console.log(chosenitem.value.Serial);
+            items.push(chosenitem.value);
+            console.log(items);
 }
 const markInstanceAsUnavailable = async(name) => {
     const docRef = doc(db, `Items/${name.charAt(0).toUpperCase() 
@@ -71,22 +87,26 @@ const changeAmountAvailable = async(name) => {
         AvailableAmount: increment(-1)
     });
 }
-const makeItemMap = (name) =>{
-    const item1 = {
-        ItemName: name,
-        Serial: chosenitem.value.Serial,
-        Issues:
-        {
-            Issue: "None"
+const makeItemMap = (items) =>{
+    console.log(items)
+    itemMaps = items.map((item, index) => ({
+        [`Item${index + 1}`]: {
+            ItemName: item.Name,
+            Serial: item.Serial,
+            issues:{
+                User: "",
+                Description: "",
+                Image: "",
+                IssueType: "",
+            },
+            ItemPrepared: false
         }
-
-    }
-    items.push(item1);
+    }));
 
 
 }
-const MakeReservation = async(name) => {
-    const docRef = doc(db, "Reservations", name + " " + "Tester" + " " + dates.startDate + " " + dates.endDate);
+const MakeReservation = async() => {
+    const docRef = doc(db, "Reservations", "Tester" + " " + dates.startDate + " " + dates.endDate);
     await setDoc(docRef, {
         StartDate: dates.startDate,
         EndDate: dates.endDate,
@@ -94,7 +114,8 @@ const MakeReservation = async(name) => {
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
-        
+        ReservationPrepared: false,
+        ...Object.assign({}, ...itemMaps)
     });
 }
 </script>

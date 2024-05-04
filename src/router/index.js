@@ -10,6 +10,12 @@ import HomeAdmin from '../views/HomeAdmin.vue'
 import ItemPreparationScreen from '../views/ItemPreparationScreen.vue'
 import Blacklist from '../views/Blacklist.vue'
 import UserExtensions from '../views/UserExtensions.vue'
+import ManageItems from '../views/ManageItems.vue'
+import modifyItemScreen from '../views/modifyItemScreen.vue'
+import addKitScreen from '../views/addKitScreen.vue'
+import Popup from '../components/Popup.vue'
+import options from '../views/options.vue'
+
 const routes = [
   {
     path: '/',
@@ -67,8 +73,35 @@ const routes = [
     path: '/UserExtensions',
     name: 'UserExtensions',
     component: UserExtensions
-  
-  }
+  },
+  {
+    path: '/ManageItems',
+    name: 'ManageItems',
+    component: ManageItems
+    },
+    {
+      path: '/modifyItemScreen',
+      name: 'modifyItemScreen',
+      component: modifyItemScreen,
+    },
+    {
+      path: '/addKitScreen',
+      name: 'addKitScreen',
+      component: addKitScreen,
+    },
+
+    {
+    path: '/Popup',
+    name: 'Popup',
+    component: Popup
+    },
+
+    {
+      path: '/options',
+      name: 'options',
+      component: options,
+    }
+   
 
 ]
 
