@@ -5,27 +5,27 @@
         <div class="pickUp">
             <div class="availableDays">
             <h3>Edit available pickup time</h3>
-            <h5>Start time: </h5><input type="time" name="" id=""> <h5>End time: </h5><input type="time" name="" id="">
+            <h5>Start time: </h5><input type="time" name="" id="" v-model="startPickupTime"> <h5>End time: </h5><input type="time" name="" id="" v-model="endPickupTime">
             <h5>Available days: </h5>
                 <div class="dayContainer">
                     <label for="switch" class="days">Monday</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="monday">
                         <span class="slider round"></span>
                     </label>
                     <label for="switch" class="days">Tuesday</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="tuesday">
                         <span class="slider round"></span>
                     </label>
                     <label for="switch" class="days">Wednesday</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="wednesday">
                         <span class="slider round"></span>
                     </label>
                     <label for="switch" class="days">Thursday</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="thursday">
                         <span class="slider round"></span>
                     </label>
                     <label for="switch" class="days">Friday</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="friday">
                         <span class="slider round"></span>
                     </label></div>
         </div>
@@ -33,18 +33,18 @@
         <div class="loanDuration">
             <h3>Edit loan duration</h3>
             <h4>Loan duration: </h4>
-            <label for="student">Student: </label> <select name="weken" id="wekenSelect">
-                <option value="1">1 week</option>
-                <option value="2">2 weeks</option>
-                <option value="3">3 weeks</option>
-                <option value="4">4 weeks</option>
+            <label for="student">Student: </label> <select name="weken" id="wekenSelect" v-model="student">
+                <option value=1>1 week</option>
+                <option value=2>2 weeks</option>
+                <option value=3>3 weeks</option>
+                <option value=4>4 weeks</option>
 
             </select>
-            <label for="Teacher">Teacher: </label> <select name="weken" id="wekenSelect">
-                <option value="1">1 week</option>
-                <option value="2">2 weeks</option>
-                <option value="3">3 weeks</option>
-                <option value="4">4 weeks</option>
+            <label for="Teacher">Teacher: </label> <select name="weken" id="wekenSelect" v-model="teacher">
+                <option value=1>1 week</option>
+                <option value=2>2 weeks</option>
+                <option value=3>3 weeks</option>
+                <option value=4>4 weeks</option>
                 
             </select>
             </div></div>
@@ -54,7 +54,7 @@
             <div class="warningSystem">
                 <h3>Edit warning system</h3>
                     <h5>Overdue time till warning?</h5>
-                        <select name="" id="minutesOvertime">
+                        <select name="" id="minutesOvertime" v-model="overdueTimeTillWarning">
                             <option value="5">5 minutes</option>
                             <option value="10">10 minutes</option>
                             <option value="15">15 minutes</option>
@@ -74,7 +74,7 @@
 
                 <div class="blacklistWarnings">
                 <h5>Required warnings to blacklist: </h5>
-                <select name="" id="blacklistSelect">
+                <select name="" id="blacklistSelect" v-model="requiredWarningsToBlacklist">
                     <option value="1">1 warning</option>
                     <option value="2">2 warnings</option>
                     <option value="3">3 warnings</option>
@@ -85,33 +85,27 @@
                 <h5>Project requests: </h5>
                 <div class="dayContainer">
                     <label for="switch" class="days">Allow</label><label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" v-model="allowRequests">
                         <span class="slider round"></span>
                     </label>
                 </div>
-
-
-            
             </div>
-
-
-
             <div class="returns">
                 <div class="editReturns">
                     <h3>Edit returns</h3>
                     <h5>Sudden returns: </h5>
                         <div class="dayContainer">
                             <label for="switch" class="days">Allow</label><label class="switch">
-                                <input type="checkbox">
+                                <input type="checkbox" v-model="allowSuddenReturns">
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                    <h5> Return start time: </h5><input type="time" name="" id=""> <h5>Return end time: </h5><input type="time" name="" id="">
+                    <h5> Return start time: </h5><input type="time" name="" id="" v-model="returnStartTime"> <h5>Return end time: </h5><input type="time" name="" id="" v-model="returnEndTime">
                     <div class="editLoaning">
                         <h3>Edit loaning</h3>
                             <h5>User loan limit</h5>
-                            <select name="" id="loanLimit">
-                                <option value="1">1 item</option>
+                            <select name="" id="loanLimit" v-model="userLoanLimit">
+                                <option value="1" >1 item</option>
                                 <option value="2">2 items</option>
                                 <option value="3">3 items</option>
                                 <option value="4">4 items</option>
@@ -123,7 +117,7 @@
                                 <option value="10">10 items</option></select>
                                 
                             <h5>User kit limit</h5>
-                            <select name="" id="kitLimit">
+                            <select name="" id="kitLimit" v-model="userKitLimit">
                                 <option value="1">1 kit</option>
                                 <option value="2">2 kits</option>
                                 <option value="3">3 kits</option>
@@ -134,21 +128,76 @@
                                 <option value="8">8 kits</option>
                                 <option value="9">9 kits</option>
                                 <option value="10">10 kits</option></select>
-
-
                     </div>
-
-
                 </div>
-
-
-
             </div>
     </section>
+    <button @click="update()">Update Options</button>
+
+    
 
 
 
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import { useOptions } from '@/Pinia/Store.js';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/Firebase/Index.js';
+
+const startPickupTime = ref("");
+const endPickupTime = ref("");
+const monday = ref(false);
+const tuesday = ref(false);
+const wednesday = ref(false);
+const thursday = ref(false);
+const friday = ref(false);
+const student = ref(1);
+const teacher = ref(1);
+const overdueTimeTillWarning = ref(30);
+const requiredWarningsToBlacklist = ref(3);
+const allowRequests = ref(false);
+const allowSuddenReturns = ref(false);
+const returnStartTime = ref("");
+const returnEndTime = ref("");
+const userLoanLimit = ref(10);
+const userKitLimit = ref(5);
+
+const update = () => {
+    const options = useOptions();
+    const optionsdata = {
+        startPickupTime: startPickupTime.value,
+        endPickupTime: endPickupTime.value,
+        monday: monday.value,
+        tuesday: tuesday.value,
+        wednesday: wednesday.value,
+        thursday: thursday.value,
+        friday: friday.value,
+        student: parseInt(student.value),
+        teacher: parseInt(teacher.value),
+        overdueTimeTillWarning: parseInt(overdueTimeTillWarning.value),
+        requiredWarningsToBlacklist: parseInt(requiredWarningsToBlacklist.value),
+        allowRequests: allowRequests.value,
+        allowSuddenReturns: allowSuddenReturns.value,
+        returnStartTime: returnStartTime.value,
+        returnEndTime: returnEndTime.value,
+        userLoanLimit: parseInt(userLoanLimit.value),
+        userKitLimit: parseInt(userKitLimit.value)
+    };
+    //update pinia
+    options.updateOptions(optionsdata);
+
+    //update firebase databank
+    const docRef = doc(db, "Settings", "Options");
+    setDoc(docRef, optionsdata);
+
+    //test
+    console.log(options.options);
+}
+
+
+</script>
 
 
 <style>
