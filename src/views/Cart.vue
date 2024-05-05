@@ -11,7 +11,7 @@
             <!-- Item 1 -->
             <article class="item-container">
                 <!-- Item details -->
-                <img src="googleglasses.jpg" alt="Google glasses">
+                <img src="" alt="Google glasses"> <!-- juiste img src nog toevoegen -->
                 <div class="item-info">
                     <h2 class="item-title">Google glasses - <span style="font-size: 12px;">GO-12</span></h2>
                     <p class="item-description">Blabla</p>
@@ -25,14 +25,14 @@
                     <span class="calendar-icon">📅</span>
                 </div>
                 <div class="item-trash">
-                    <img src="trashcan-icon.png" alt="Delete">
+                    <button class="trash-button"></button>
                 </div>
             </article>
 
             <!-- Item 2 -->
             <article class="item-container">
                 <!-- Item details -->
-                <img src="item2.jpg" alt="Item 2">
+                <img src="" alt="Item 2"> <!-- juiste img src nog toevoegen -->
                 <div class="item-info">
                     <h2 class="item-title">Item 2 - <span style="font-size: 12px;">seriecode</span></h2>
                     <p class="item-description">Short description of item 2</p>
@@ -46,14 +46,14 @@
                     <span class="calendar-icon">📅</span>
                 </div>
                 <div class="item-trash">
-                    <img src="trashcan-icon.png" alt="Delete">
+                    <button class="trash-button"></button>
                 </div>
             </article>
 
             <!-- Item 3 -->
             <article class="item-container">
                 <!-- Item details -->
-                <img src="item3.jpg" alt="Item 3">
+                <img src="" alt="Item 3"> <!-- juiste img src nog toevoegen -->
                 <div class="item-info">
                     <h2 class="item-title">Item 3 - <span style="font-size: 12px;">seriecode</span></h2>
                     <p class="item-description">Short description of item 3</p>
@@ -67,14 +67,14 @@
                     <span class="calendar-icon">📅</span>
                 </div>
                 <div class="item-trash">
-                    <img src="trashcan-icon.png" alt="Delete">
+                    <button class="trash-button"></button>
                 </div>
             </article>
 
             <!-- Item 4 -->
             <article class="item-container">
                 <!-- Item details -->
-                <img src="item4.jpg" alt="Item 4">
+                <img src="" alt="Item 4"> <!-- juiste img src nog toevoegen -->
                 <div class="item-info">
                     <h2 class="item-title">Item 4 - <span style="font-size: 12px;">seriecode</span></h2>
                     <p class="item-description">Short description of item 4</p>
@@ -87,8 +87,8 @@
                     <span>End date: 20/05/24</span>
                     <span class="calendar-icon">📅</span>
                 </div>
-                <div class="item-trash">
-                    <img src="trashcan-icon.png" alt="Delete">
+               <div class="item-trash">
+                    <button class="trash-button"></button>
                 </div>
             </article>
         </section>
@@ -186,10 +186,16 @@
             cursor: pointer;
         }
 
-        .item-trash {
-            margin-left: auto;
+        .trash-button {
+        background: none;
+        border: none;
+        cursor: pointer;
         }
 
+        .trash-button::before {
+            content: '🗑️'; /* of je kan ook URL voor icon gebruiken */
+            font-size: 20px;
+        }
         hr {
             margin: 20px 0;
             width: 80%;
