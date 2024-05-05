@@ -116,3 +116,14 @@ export const useArraynumber = defineStore({
   }
 
 });
+export const useOptions = defineStore({
+  id: 'Options',
+  state: () => ({
+    options: []
+  }),
+  actions: {
+    updateOptions(options){
+      this.options = options
+    }
+  }
+})
