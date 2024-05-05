@@ -6,28 +6,34 @@
             <div class="availableDays">
             <h3>Edit available pickup time</h3>
             <h5>Start time: </h5><input type="time" name="" id="" v-model="startPickupTime"> <h5>End time: </h5><input type="time" name="" id="" v-model="endPickupTime">
+            <div id="days">
             <h5>Available days: </h5>
                 <div class="dayContainer">
                     <label for="switch" class="days">Monday</label><label class="switch">
                         <input type="checkbox" v-model="monday">
                         <span class="slider round"></span>
                     </label>
+                    <br>
                     <label for="switch" class="days">Tuesday</label><label class="switch">
                         <input type="checkbox" v-model="tuesday">
                         <span class="slider round"></span>
                     </label>
+                    <br>
                     <label for="switch" class="days">Wednesday</label><label class="switch">
                         <input type="checkbox" v-model="wednesday">
                         <span class="slider round"></span>
                     </label>
+                    <br>
                     <label for="switch" class="days">Thursday</label><label class="switch">
                         <input type="checkbox" v-model="thursday">
                         <span class="slider round"></span>
                     </label>
+                    <br>
                     <label for="switch" class="days">Friday</label><label class="switch">
                         <input type="checkbox" v-model="friday">
                         <span class="slider round"></span>
-                    </label></div>
+                    </label></div></div>
+
         </div>
 
         <div class="loanDuration">
@@ -40,14 +46,15 @@
                 <option value=4>4 weeks</option>
 
             </select>
+            <br>
             <label for="Teacher">Teacher: </label> <select name="weken" id="wekenSelect" v-model="teacher">
                 <option value=1>1 week</option>
                 <option value=2>2 weeks</option>
                 <option value=3>3 weeks</option>
                 <option value=4>4 weeks</option>
-                
             </select>
-            </div></div>
+        </div>
+            </div>
             
             
         <div class="warningSys">
@@ -81,9 +88,9 @@
                     <option value="4">4 warnings</option>
                     <option value="5">5 warnings</option></select>
                 </div>
-
-                <h5>Project requests: </h5>
                 <div class="dayContainer">
+                <h5>Project requests: </h5>
+                
                     <label for="switch" class="days">Allow</label><label class="switch">
                         <input type="checkbox" v-model="allowRequests">
                         <span class="slider round"></span>
@@ -141,28 +148,57 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useOptions } from '@/Pinia/Store.js';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 
-const startPickupTime = ref("");
-const endPickupTime = ref("");
-const monday = ref(false);
-const tuesday = ref(false);
-const wednesday = ref(false);
-const thursday = ref(false);
-const friday = ref(false);
-const student = ref(1);
-const teacher = ref(1);
-const overdueTimeTillWarning = ref(30);
-const requiredWarningsToBlacklist = ref(3);
-const allowRequests = ref(false);
-const allowSuddenReturns = ref(false);
-const returnStartTime = ref("");
-const returnEndTime = ref("");
-const userLoanLimit = ref(10);
-const userKitLimit = ref(5);
+const fetchData = async () => {
+ const docRef = doc(db, "Settings", "Options");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        startPickupTime.value = data.startPickupTime;
+        endPickupTime.value = data.endPickupTime;
+        monday.value = data.monday;
+        tuesday.value = data.tuesday;
+        wednesday.value = data.wednesday;
+        thursday.value = data.thursday;
+        friday.value = data.friday;
+        student.value = data.student;
+        teacher.value = data.teacher;
+        overdueTimeTillWarning.value = data.overdueTimeTillWarning;
+        requiredWarningsToBlacklist.value = data.requiredWarningsToBlacklist;
+        allowRequests.value = data.allowRequests;
+        allowSuddenReturns.value = data.allowSuddenReturns;
+        returnStartTime.value = data.returnStartTime;
+        returnEndTime.value = data.returnEndTime;
+        userLoanLimit.value = data.userLoanLimit;
+        userKitLimit.value = data.userKitLimit;
+    }else{
+        console.log("There is no data");
+    }
+}
+onMounted(fetchData);
+
+const startPickupTime = ref();
+const endPickupTime = ref();
+const monday = ref();
+const tuesday = ref();
+const wednesday = ref();
+const thursday = ref();
+const friday = ref();
+const student = ref();
+const teacher = ref();
+const overdueTimeTillWarning = ref();
+const requiredWarningsToBlacklist = ref();
+const allowRequests = ref();
+const allowSuddenReturns = ref();
+const returnStartTime = ref();
+const returnEndTime = ref();
+const userLoanLimit = ref();
+const userKitLimit = ref();
 
 const update = () => {
     const options = useOptions();
@@ -197,44 +233,60 @@ const update = () => {
 }
 
 
+
 </script>
 
 
-<style>
+<style scoped>
+h1{
+    padding: 2em;
+}
  .options{
         display: flex;
         justify-content: space-evenly;
-        flex-direction: row;
-
-
+        align-items: center;
+        margin-top: 50px;
+        margin: auto;
+        width: 1500px;
+}
+button{
+    background-color: #FF0000;
+    padding: 10px;
+    cursor: pointer;
+    margin: 2em;
+    color: white;
+    border-radius: 1em;
+    width: 300px;
+    height: 50px;
+    border: none;
 }
  .pickUp {
-        
-        
-        width: 400px;
-        height: 800px;
-        margin-top: 0px;
-        margin-bottom: 0px;
+        padding-top: 1em;
+        height: 500px;
+        width: 300px;
+        background-color: #c1c1c1;
+        border-radius: 1em;
     }
-
-    .pickUp h3 {
-        margin-top: 0;
-    }
+#days{
+    margin: 1em;
+}
+.editLoaning{
+    margin: 1em;
+}
 
     .availableDays label,
-    .availableDays select {
+    .availableDays select  {
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
     .availableDays label {
     display: inline-block;
-    margin-right: 10px; 
+    margin-right: 5px; 
 }
 
 .availableDays .switch {
     display: inline-block;
     vertical-align: middle; 
-    
 }
 
 /* W³ School */
@@ -260,7 +312,7 @@ const update = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color:#909090;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -301,22 +353,19 @@ input:checked + .slider:before {
 }
 
 .warningSys {
-    
-    align-items: center;
-    margin-right: 400px;
-    margin-left: 400px;
-    width: 400px;
-    height: 800px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    width: 300px;
+    height: 500px;
+    background-color: #c1c1c1;
+    padding-top: 1em;
+    border-radius: 1em;
 }
 
 .returns{
-    
-    width: 400px;
-    height: 800px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    width: 300px;
+    height: 500px;
+    background-color: #c1c1c1;
+    padding-top: 1em;
+    border-radius: 1em;
 }
 
 
