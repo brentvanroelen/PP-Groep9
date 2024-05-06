@@ -1,5 +1,5 @@
 <template>
-      <div class="card">
+      <div class="card" v-if="!discarded">
         <div v-if="isScheduledLoanDefined" class="card-body">
           <div v-if="isScheduledLoanDefined" class="card-content">
             <div v-if="isScheduledLoanDefined">
@@ -18,8 +18,8 @@
               <p v-else>Status: Loading...</p>
             </div>
             <div class="card-actions">
-              <button class="btn">Picked Up</button>
-              <button class="btn">Discard</button>
+              <button @click="markAsPickedUp(isScheduledLoanDefined)" class="btn">Picked Up</button>
+              <button @click="discardReservation(isScheduledLoanDefined)" class="btn">Discard</button>
             </div>
           </div>
         </div>
@@ -30,10 +30,15 @@
 
 <script setup>
 import {computed, onMounted, ref,watchEffect} from 'vue';
+import {reservationReturnedOrCanceled} from "../js/functions.js"
+import { updateDoc,doc,db } from '../Firebase/Index.js';
 
 const props = defineProps({
     scheduledLoan: Object
 });
+
+let discarded = ref(false);
+
 let scheduledloan = computed(() => {
     console.log(props.scheduledLoan)
     return props.scheduledLoan;
@@ -42,14 +47,29 @@ let scheduledloan = computed(() => {
 let isScheduledLoanDefined = computed(() => {
     if(scheduledloan.value === undefined){
         return "loading...";
-    }else{
-        return scheduledloan.value[0];
+    }else if(scheduledloan.value.CurrentlyWithUser === true){
+        discarded.value = true;
+        return "Item is currently with user";
+    }
+    else{
+        return scheduledloan.value;
     }	
 });
 
 onMounted(() => {
-    console.log(scheduledloan.value[0])
+    console.log(scheduledloan.value)
 })
+
+const discardReservation = async (reservation) => {
+    await reservationReturnedOrCanceled(reservation);
+    discarded.value = true;
+};
+const markAsPickedUp = async (reservation) => {
+    await updateDoc(doc(db, `Reservations/Tester ${reservation.StartDate} ${reservation.EndDate}`), {
+        CurrentlyWithUser: true
+    });
+    discarded.value = true;
+};
 
 </script>
 

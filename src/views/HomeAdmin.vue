@@ -7,12 +7,12 @@
     <div class="box-container">
       <div class="box scheduledLoans">
         <h2>Scheduled loans</h2>
-        <ScheduledLoan v-if="scheduledLoans != undefined" :scheduled-loan="scheduledLoans"></ScheduledLoan>
+        <ScheduledLoan v-for="(scheduledloan, index) in scheduledLoans" :key="index" :scheduled-loan="scheduledloan"></ScheduledLoan>
       </div>
 
       <div class="box scheduledReturns">
         <h2>Scheduled returns</h2>
-        <ScheduledReturn :scheduled-return="scheduledReturns"></ScheduledReturn>
+        <ScheduledReturn v-for="(scheduledreturn, index) in scheduledReturns" :key="index" :scheduled-return="scheduledreturn"></ScheduledReturn>
       </div>
     </div>
   </div>
