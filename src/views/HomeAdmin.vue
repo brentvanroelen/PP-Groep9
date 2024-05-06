@@ -25,7 +25,7 @@
       <label for="returnTime">Return time: </label><input type="time">
       <button>Complete loan</button>
   </div>
-
+</div>
   <div class="box earlyReturns">
       <h2>Early Returns</h2>
       <label>User: </label> <input type="text" name="" id=""><br>
