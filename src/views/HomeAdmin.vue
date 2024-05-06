@@ -5,11 +5,11 @@
 
 <div class="scheduledLoans">
 
-    <div v-if="loading">Bezig met laden...</div>
-    <div v-else>
-      <!-- Hier worden de gegevens weergegeven -->
+    
+    <div >
+      
       <ul>
-        <li v-for="item in items" :key="item.id">{{ item.Name }}</li>
+        <ProductItems></ProductItems>
       </ul>
     </div>
     <button>Picked up</button>
@@ -49,7 +49,7 @@
       <button>Everything returned</button>
       <button>Everything returned + check</button>
   </div>
-</div>
+
 </template>
 
 
@@ -59,7 +59,8 @@
 import Admin from "../components/navigationAdmin.vue"
 import { useStore } from "@/Pinia/Store.js";
 import { computed } from "../main.js";
-import Items from "@/components/Items.vue";
+import Items from "@/components/Items.vue";*/
+import ProductItems from "@/components/ProductItems.vue";
 
 
     
