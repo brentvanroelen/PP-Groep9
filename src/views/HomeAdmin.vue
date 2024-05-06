@@ -5,13 +5,11 @@
 
 <div class="scheduledLoans">
 
-    <div v-if="loading">Bezig met laden...</div>
-    <div v-else>
-      <!-- Hier worden de gegevens weergegeven -->
-      <ul>
-        <li v-for="item in items" :key="item.id">{{ item.Name }}</li>
-      </ul>
+    <div>
+      <ProductItems></ProductItems>
     </div>
+    
+    
     <button>Picked up</button>
     <button>Discard</button>
     <br>
@@ -24,8 +22,8 @@
 
     data uit datebase
 
-    <button>Return + check</button>
-    <button>Returned</button>
+   <!--  <button>Return + check</button>
+    <button>Returned</button> -->
 
 </div>
 
@@ -58,29 +56,17 @@
 
 
 <script setup>
-import Searchbar from "../components/Searchbar.vue"
+/* import Searchbar from "../components/Searchbar.vue"
 import Admin from "../components/navigationAdmin.vue"
-import { useStore } from "@/Pinia/Store.js";
-import { computed } from "../main.js";
-import Items from "@/components/Items.vue";
+import { getDocs, getFirestore } from 'firebase/firestore';
+import {ref} from '../main.js'
+import {collection,where,db,query} from '../Firebase/Index.js'
+import router from '@/router';
+import { useStore } from '@/Pinia/Store.js'; */
+import ProductItems from "@/components/ProductItems.vue";
 
 
-    
 
-    let items = [];
-    
-  
-  const created = ()=> {
-    this.loadItems();
-  }
- 
-    let loadItems=() => {
-      // Hier zou je de logica plaatsen om gegevens uit de database op te halen op basis van de huidige datum
-    
-      const today = new Date().toISOString().slice(0, 10); // Huidige datum in het formaat "YYYY-MM-DD"
-      
-      
-    }
 
         
 
