@@ -45,5 +45,8 @@ const adminButton = ref(false)
 
 
 <style>
+body{
+  background-color: has-background-light;
+}
 
 </style>

@@ -1,118 +1,129 @@
 <template>
-    <!-- Navbar inserten -->
-    <nav> </nav>
 
-    <div class="container">
-        <div class="cart-title">CART</div>
-        <div class="cart-container">
-            <div class="cart-items">
-                <!-- Item 1 -->
-                <div class="item-container">
-                    <img src="googleglasses.jpg" alt="Google glasses">
-                    <div class="item-info">
-                        <div class="item-title">Google glasses - <span style="font-size: 12px;">GO-12</span></div>
-                        <div class="item-description">Blabla</div>
-                     </div>
-                    <div class="item-date">
-                            <span>Start date: 01/05/24</span> 
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    <div class="item-date">
-                            <span>End date: 10/05/24</span>
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                   
-                    <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
-                    </div>
+    <header>
+        <h1 class="cart-title">CART</h1>
+    </header>
+    
+    <main>
+        <section class="cart-items">
+            <!-- Item containers -->
+            
+            <!-- Item 1 -->
+            <article class="item-container">
+                <!-- Item details -->
+                <img src="" alt="Google glasses"> <!-- juiste img src nog toevoegen -->
+                <div class="item-info">
+                    <h2 class="item-title">Google glasses - <span style="font-size: 12px;">GO-12</span></h2>
+                    <p class="item-description">Blabla</p>
                 </div>
-
-                <!-- Item 2 -->
-                <div class="item-container">
-                    <img src="item2.jpg" alt="Item 2">
-                    <div class="item-info">
-                        <div class="item-title">Item 2 - <span style="font-size: 12px;">seriecode</span></div>
-                        <div class="item-description">Short description of item 2</div>
-                        </div>
-                    <div class="item-date">
-                            <span>Start date: 15/05/24</span> 
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    <div class="item-date">
-                            <span>End date: 20/05/24</span>
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    
-                    <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
-                    </div>
+                <div class="item-date">
+                    <span>Start date: 01/05/24</span> 
+                    <span class="calendar-icon">📅</span>
                 </div>
-
-                <!-- Item 3 -->
-                <div class="item-container">
-                    <img src="item3.jpg" alt="Item 3">
-                    <div class="item-info">
-                        <div class="item-title">Item 3 - <span style="font-size: 12px;">seriecode</span></div>
-                        <div class="item-description">Short description of item 3</div>
-                        </div>
-                    <div class="item-date">
-                            <span>Start date: 15/05/24</span> 
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    <div class="item-date">
-                            <span>End date: 20/05/24</span>
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    
-                    <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
-                    </div>
+                <div class="item-date">
+                    <span>End date: 10/05/24</span>
+                    <span class="calendar-icon">📅</span>
                 </div>
-
-                <!-- Item 4 -->
-                <div class="item-container">
-                    <img src="item4.jpg" alt="Item 4">
-                    <div class="item-info">
-                        <div class="item-title">Item 4 - <span style="font-size: 12px;">seriecode</span></div>
-                        <div class="item-description">Short description of item 4</div>
-                        </div>
-                    <div class="item-date">
-                            <span>Start date: 15/05/24</span> 
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    <div class="item-date">
-                            <span>End date: 20/05/24</span>
-                            <div class="calendar-icon">📅</div>
-                    </div>
-                    
-                    <div class="item-trash">
-                        <img src="trashcan-icon.png" alt="Delete">
-                    </div>
+                <div class="item-trash">
+                    <button class="trash-button"></button>
                 </div>
+            </article>
 
+            <!-- Item 2 -->
+            <article class="item-container">
+                <!-- Item details -->
+                <img src="" alt="Item 2"> <!-- juiste img src nog toevoegen -->
+                <div class="item-info">
+                    <h2 class="item-title">Item 2 - <span style="font-size: 12px;">seriecode</span></h2>
+                    <p class="item-description">Short description of item 2</p>
+                </div>
+                <div class="item-date">
+                    <span>Start date: 15/05/24</span> 
+                    <span class="calendar-icon">📅</span>
+                </div>
+                <div class="item-date">
+                    <span>End date: 20/05/24</span>
+                    <span class="calendar-icon">📅</span>
+                </div>
+                <div class="item-trash">
+                    <button class="trash-button"></button>
+                </div>
+            </article>
+
+            <!-- Item 3 -->
+            <article class="item-container">
+                <!-- Item details -->
+                <img src="" alt="Item 3"> <!-- juiste img src nog toevoegen -->
+                <div class="item-info">
+                    <h2 class="item-title">Item 3 - <span style="font-size: 12px;">seriecode</span></h2>
+                    <p class="item-description">Short description of item 3</p>
+                </div>
+                <div class="item-date">
+                    <span>Start date: 15/05/24</span> 
+                    <span class="calendar-icon">📅</span>
+                </div>
+                <div class="item-date">
+                    <span>End date: 20/05/24</span>
+                    <span class="calendar-icon">📅</span>
+                </div>
+                <div class="item-trash">
+                    <button class="trash-button"></button>
+                </div>
+            </article>
+
+            <!-- Item 4 -->
+            <article class="item-container">
+                <!-- Item details -->
+                <img src="" alt="Item 4"> <!-- juiste img src nog toevoegen -->
+                <div class="item-info">
+                    <h2 class="item-title">Item 4 - <span style="font-size: 12px;">seriecode</span></h2>
+                    <p class="item-description">Short description of item 4</p>
+                </div>
+                <div class="item-date">
+                    <span>Start date: 15/05/24</span> 
+                    <span class="calendar-icon">📅</span>
+                </div>
+                <div class="item-date">
+                    <span>End date: 20/05/24</span>
+                    <span class="calendar-icon">📅</span>
+                </div>
+               <div class="item-trash">
+                    <button class="trash-button"></button>
+                </div>
+            </article>
+        </section>
+
+        <hr>
+
+        <!-- Selected items en confirm order button container -->
+        <section class="selected-items-container">
+            <div class="selected-items">
+                <strong>Selected items:</strong>
+                <span id="item-count">0</span>
             </div>
-        </div>
-    </div>
-
-    <!-- Selected items + button nog -->
+            <button class="confirm-button">Confirm order</button>
+        </section>
+    </main>
 
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script setup>
+    import Navigation from "../components/Navigation.vue"
 
-export default defineComponent({
-    setup() {
-        
-    },
-})
+
 </script>
 
 <style scoped>
-    body {
+          body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .cart-title {
@@ -121,18 +132,12 @@ export default defineComponent({
             text-align: center;
         }
 
-        .cart-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
         .cart-items {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
-            width: 100%;
+            width: 80%;
         }
 
         .item-container {
@@ -142,14 +147,13 @@ export default defineComponent({
             border: 1px solid #ddd;
             margin-bottom: 20px;
             padding: 10px;
-            width: 80%;
+            width: 100%;
         }
 
-.item-container > * {
-    flex: 1; 
-    margin: 0 10px; 
-}
-
+        .item-container > * {
+            flex: 1; 
+            margin: 0 10px; 
+        }
 
         .item img {
             height: auto;
@@ -171,9 +175,9 @@ export default defineComponent({
         }
 
         .item-date {
-        display: flex;
-        align-items: center;
-        margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
         }
 
         .calendar-icon {
@@ -182,9 +186,48 @@ export default defineComponent({
             cursor: pointer;
         }
 
-
-        .item-trash {
-            margin-left: auto;
+        .trash-button {
+        background: none;
+        border: none;
+        cursor: pointer;
         }
 
+        .trash-button::before {
+            content: '🗑️'; /* of je kan ook URL voor icon gebruiken */
+            font-size: 20px;
+        }
+        hr {
+            margin: 20px 0;
+            width: 80%;
+            border: 0;
+            border-top: 1px solid #ccc;
+        }
+
+        .selected-items-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #item-count {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .confirm-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .confirm-button:hover {
+            background-color: darkred;
+        }
 </style>

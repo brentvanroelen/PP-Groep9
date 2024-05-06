@@ -2,7 +2,7 @@
     <button @click="handleReservation()">Loan now</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart, useQuantity, useChoiceOfItems } from '@/Pinia/Store';
+import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useArraynumber } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
@@ -15,6 +15,7 @@ const dates = useDates();
 const cart = useCart();
 const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
+const arraynumber = useArraynumber();
 
 let  items = []
 let itemMaps = [];
@@ -26,7 +27,7 @@ const handleReservation = async() => {
     if(!checkUserCart){
         if(dates.startDate != "" && dates.endDate != ""){
             for(let i = 0; i < quantity.quantity; i++){
-                console.log(availableInstances.items)
+                availableInstances.getInstance(arraynumber.arraynumber);
                 const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
                 .then(changeAmountAvailable(chosenitem.value.Name));
                 promises.push(promise);
@@ -56,10 +57,10 @@ const handleReservation = async() => {
     .then(() => MakeReservation())
 }
 const getItem = async() => {
-    chosenitem.value = availableInstances.items[0];
+    chosenitem.value = availableInstances.getInstance(arraynumber.arraynumber)[0];
     console.log(chosenitem.value)
-    availableInstances.items.shift();
-    console.log(availableInstances.items)
+    availableInstances.getInstance(arraynumber.arraynumber).shift();
+    availableInstances.getInstance(arraynumber.arraynumber);
     items.push(chosenitem.value);
     console.log(items)
     console.log(chosenitem.value)
@@ -84,6 +85,7 @@ const makeItemMap = (items) =>{
     itemMaps = items.map((item, index) => ({
         [`Item${index + 1}`]: {
             ItemName: item.Name,
+            ItemImage: item.Image,
             Serial: item.Serial,
             issues:{
                 User: "",
@@ -92,6 +94,7 @@ const makeItemMap = (items) =>{
                 IssueType: "",
             },
             ItemPrepared: false
+
         }
     }));
 
@@ -100,9 +103,11 @@ const makeItemMap = (items) =>{
 const MakeReservation = async() => {
     const docRef = doc(db, "Reservations", "Tester" + " " + dates.startDate + " " + dates.endDate);
     await setDoc(docRef, {
-        ItemSerials: items.map(item => item.Serial),
+        ItemSerials: items.map(item => item.Serial.split("-")[0]),
         StartDate: dates.startDate,
         EndDate: dates.endDate,
+        StartMonth: dates.startMonth,
+        EndMonth: dates.endMonth,
         User: "Tester",
         ForProject: false,
         Extended: false,
