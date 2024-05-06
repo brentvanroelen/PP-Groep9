@@ -1,24 +1,20 @@
 <template>
 
-
-
-
-<div class="scheduledLoans">
-
-    
-    <div >
-      
+<div>
+    <h2>Reservations</h2>
+    <div v-for="(reservations, date) in reservationData" :key="date">
+      <h3>{{date}}</h3>
       <ul>
-        <ProductItems></ProductItems>
+        <li v-for="reservation in reservations" :key="reservation.serial">
+          <img :src="reservation.itemImage" alt="Item Image">
+          <p>{{ reservation.itemName }}</p>
+          <p>Startdate: {{ reservation.startDate }}/{{ reservation.startMonth }}</p>
+          <p>Einddate: {{ reservation.endDate }}/{{ reservation.endMonth }}</p>
+          
+        </li>
       </ul>
     </div>
-    <button>Picked up</button>
-    <button>Discard</button>
-    <br>
-
-   
-
-</div>
+  </div>
 
 <div class="scheduledReturns">
 
@@ -29,12 +25,12 @@
 
 </div>
 
-<div class="spontaneousLoans">
+<!-- <div class="spontaneousLoans">
     <h2>Spontaneous Loans</h2>
 
     <label>User: </label> <input type="text" name="" id=""><br>
     <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-    <label for="calender">Return date: </label> <!--calender--><br>
+    <label for="calender">Return date: </label> calender<br>
     <label for="returnTime">Return time: </label><input type="time">
     <button>Complete loan</button>
 </div>
@@ -43,46 +39,45 @@
       <h2>Early Returns</h2>
       <label>User: </label> <input type="text" name="" id=""><br>
       <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-      <label for="borrowedItems">Borrowed items: </label> <!--borrowed Items--><br>
+      <label for="borrowedItems">Borrowed items: </label> borrowed Items<br>
       <button>Selection returned</button>
       <button>Selection returned + check</button>
       <button>Everything returned</button>
       <button>Everything returned + check</button>
-  </div>
+  </div> -->
 
 </template>
 
 
 
 <script setup>
-/* import Searchbar from "../components/Searchbar.vue"
-import Admin from "../components/navigationAdmin.vue"
-import { useStore } from "@/Pinia/Store.js";
-import { computed } from "../main.js";
-import Items from "@/components/Items.vue";*/
-import ProductItems from "@/components/ProductItems.vue";
+ import { getDocs, getFirestore } from 'firebase/firestore';
+  import {ref} from '../main.js'
+  import {collection,where,db,query} from '../Firebase/Index.js'
 
-
-    
-
-    let items = [];
-    
   
-  const created = ()=> {
-    this.loadItems();
-  }
- 
-    let loadItems=() => {
-      // Hier zou je de logica plaatsen om gegevens uit de database op te halen op basis van de huidige datum
-    
-      const today = new Date().toISOString().slice(0, 10); // Huidige datum in het formaat "YYYY-MM-DD"
-      
-      
+  const created = () => {
+    this.fetchReservations(); 
+  };
+  
+    const fetchReservations =() => {
+      const db = firebase.firestore(); 
+      db.collection('reservations').get() // Verkrijg de collectie met reservaties
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            const reservation = doc.data(); // Verkrijg de data van elke reservatie
+            const dateKey = `${reservation.startDate}/${reservation.startMonth}`; // Combineer startdatum en startmaand als sleutel
+            if (!this.reservationData[dateKey]) {
+              this.reservationData[dateKey] = []; // Initialiseer een lege array als er nog geen reservaties zijn voor deze datum
+            }
+            this.reservationData[dateKey].push(reservation); // Voeg de reservatie toe aan de juiste datum
+          });
+        })
+        .catch(error => {
+          console.error('Error getting reservations:', error);
+        });
     }
-
-        
-
-
+   
 
 
 </script>
