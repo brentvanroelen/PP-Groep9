@@ -70,6 +70,7 @@ const getAvailableItems = async(name,serial) => {
 }
 const getNonConflictingReservedItems = async(serialseries) => {
     Nonconflictingreserveditems = [];
+    let blacklist = []
     const Userdates = dateifierUser(dates.startDate, dates.startMonth, dates.endDate, dates.endMonth);
     const creference = collection(db, "Reservations");
     const reservedQuery = query(creference,where("ItemSerials", "array-contains" , serialseries));
@@ -79,17 +80,25 @@ const getNonConflictingReservedItems = async(serialseries) => {
         if( Userdates[1] <= Resdates[0] || Userdates[0] >= Resdates[1]){
             for(let i = 1; i <= 10; i++){
                 if(doc.data()[`Item${i}`] != undefined){
-                    if(doc.data()[`Item${i}`].Serial.split("-")[0] == serialseries){
+                    if(doc.data()[`Item${i}`].Serial.split("-")[0] == serialseries && !Nonconflictingreserveditems.includes(doc.data()[`Item${i}`].Serial)){
                         Nonconflictingreserveditems.push(doc.data()[`Item${i}`].Serial)
                     };
                 }else{
                     break;
                 }
             }
-            
         }else{
-            availableInstances.getInstance(arraynumber);
+            for(let i = 1; i <= 10; i++){
+                if(doc.data()[`Item${i}`] != undefined){
+                    if(doc.data()[`Item${i}`].Serial.split("-")[0] == serialseries){
+                        blacklist.push(doc.data()[`Item${i}`].Serial)
+                    };
+                }else{
+                    break;
+                }
+            }
         }
+        Nonconflictingreserveditems = Nonconflictingreserveditems.filter(item => !blacklist.includes(item));
     });
 }
 

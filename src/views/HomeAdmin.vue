@@ -1,43 +1,30 @@
 <template>
 
-
-
-
-<div class="scheduledLoans">
-
-    
-    <div >
-      
-      <ul>
-        <ProductItems></ProductItems>
-      </ul>
+<div class="container">
+    <div class="date-marker">
+      <p>{{ new Date().toLocaleDateString() }}</p>
     </div>
-    <button>Picked up</button>
-    <button>Discard</button>
-    <br>
+    <div class="box-container">
+      <div class="box scheduledLoans">
+        <h2>Scheduled loans</h2>
+        <ScheduledLoan v-if="scheduledLoans != undefined" :scheduled-loan="scheduledLoans"></ScheduledLoan>
+      </div>
 
-   
-
-</div>
-
-<div class="scheduledReturns">
-
-    data uit datebase
-
-    <button>Return + check</button>
-    <button>Returned</button>
-
-</div>
-
-<div class="spontaneousLoans">
-    <h2>Spontaneous Loans</h2>
-
-    <label>User: </label> <input type="text" name="" id=""><br>
-    <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-    <label for="calender">Return date: </label> <!--calender--><br>
-    <label for="returnTime">Return time: </label><input type="time">
-    <button>Complete loan</button>
-</div>
+      <div class="box scheduledReturns">
+        <h2>Scheduled returns</h2>
+        <ScheduledReturn :scheduled-return="scheduledReturns"></ScheduledReturn>
+      </div>
+    </div>
+  </div>
+<div class="containe-">
+  <div class="box spontaneousLoans">
+      <h2>Spontaneous Loans</h2>
+      <label>User: </label> <input type="text" name="" id=""><br>
+      <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
+      <label for="calender">Return date: </label> <!--calender--><br>
+      <label for="returnTime">Return time: </label><input type="time">
+      <button>Complete loan</button>
+  </div>
 
   <div class="box earlyReturns">
       <h2>Early Returns</h2>
@@ -55,34 +42,71 @@
 
 
 <script setup>
-/* import Searchbar from "../components/Searchbar.vue"
-import Admin from "../components/navigationAdmin.vue"
 import { useStore } from "@/Pinia/Store.js";
-import { computed } from "../main.js";
-import Items from "@/components/Items.vue";*/
-import ProductItems from "@/components/ProductItems.vue";
+import Reservation from "@/components/Reservation.vue";
+import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
+import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
+import ScheduledReturn from "@/components/ScheduledReturn.vue";
+import ScheduledLoan from "@/components/ScheduledLoan.vue";
+
+let currentDate = ref(new Date());
+let unssub = false;
+
+const reservationslist = ref([]);
+let amountLeftToPrepare = ref(0);
+
+const scheduledLoans = computed(() => {
+  console.log(reservationslist.value.filter(reservation => 
+    reservation.StartDate === currentDate.value.getDate() && 
+    (reservation.StartMonth - 1)  === currentDate.value.getMonth()
+  ))
+  return reservationslist.value.filter(reservation => 
+    reservation.StartDate === currentDate.value.getDate() && 
+    (reservation.StartMonth - 1)  === currentDate.value.getMonth()
+  );
+});
+const scheduledReturns = computed(() => {
+    
+  return reservationslist.value.filter(reservation => 
+    reservation.EndDate === currentDate.value.getDate() && 
+    (reservation.EndMonth - 1)  === currentDate.value.getMonth()
+  );
+});
 
 
-    
-
-    let items = [];
-    
-  
-  const created = ()=> {
-    this.loadItems();
-  }
- 
-    let loadItems=() => {
-      // Hier zou je de logica plaatsen om gegevens uit de database op te halen op basis van de huidige datum
-    
-      const today = new Date().toISOString().slice(0, 10); // Huidige datum in het formaat "YYYY-MM-DD"
-      
-      
+watchEffect(() => {
+  amountLeftToPrepare.value = 0
+  const q = collection(db, "Reservations");
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const reservations = [];
+    querySnapshot.forEach((doc) => {
+        const reservation = doc.data();
+        reservation.amountLeftToPrepare = 0;
+        reservation.allItemSerials = [];
+        reservation.allItemNames = [];
+        for(let i = 1; i <= 10; i++){
+            if(doc.data()[`Item${i}`] != undefined){
+                reservation.allItemSerials.push(doc.data()[`Item${i}`].Serial);
+                reservation.allItemNames.push(doc.data()[`Item${i}`].ItemName);
+                if(doc.data()[`Item${i}`].ItemPrepared == false){
+                    reservation.amountLeftToPrepare += 1;
+                };
+            }else{
+                break;
+            }
+        }
+        reservations.push(reservation);
+    });
+    reservationslist.value = reservations;
+    if (unssub) {
+      unsubscribe();
     }
+  });
+});
 
-        
-
-
+onUnmounted(() => {
+    unssub = true;
+});
 
 
 </script>
@@ -140,30 +164,5 @@ import ProductItems from "@/components/ProductItems.vue";
   height: calc(100% - 38px); /* Height of the divider minus twice the padding */
   background-color: #000; /* Color of the divider */
 }
-  .box {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    overflow-y: auto; /* Enable scrolling for overflow content */
-    max-height: 400px; /* Set a maximum height for the scrolling area */
-  }
-
-  /* Styling for the buttons */
-  button {
-    margin-right: 10px;
-    background-color: #FF0000;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin: 1em;
-    color: white;
-    border-radius: 1em;
-    width: 300px;
-    height: 50px;
-  
-  }
-
-
 
 </style>
