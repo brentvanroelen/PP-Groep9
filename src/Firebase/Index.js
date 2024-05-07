@@ -5,7 +5,8 @@ import {Firestore,collection,
   where,CollectionReference,
   query,startAt,endAt,
   setDoc,updateDoc,doc,
- addDoc, increment,getDoc,onSnapshot} from  'firebase/firestore'
+ addDoc, increment,getDoc,onSnapshot,
+deleteDoc} from  'firebase/firestore'
 
 
 const firebaseConfig = {
@@ -25,6 +26,7 @@ const app = initializeApp(firebaseConfig);
 const db =  getFirestore(app)
 export {
     db,collection,getDocs,Firestore,orderBy,where,CollectionReference,
-    query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot
+    query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot,
+    deleteDoc
 }
 
