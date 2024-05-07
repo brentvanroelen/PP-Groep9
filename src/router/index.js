@@ -18,6 +18,10 @@ import options from '../views/options.vue'
 import Cart from '../views/Cart.vue'
 import MyProducts from '@/views/MyProducts.vue'
 import PopupManageItemsScreen from '../components/PopupManageItemsScreen.vue'
+import ExtensionPage from '@/views/ExtensionPage.vue'
+
+
+
 
 const routes = [
   {
@@ -110,6 +114,7 @@ const routes = [
       name: 'Myproducts',
       component: MyProducts
     },
+
     {
       path: '/PopupManageItemsScreen',
       name: 'PopupManageItemsScreen',
@@ -118,7 +123,14 @@ const routes = [
     {
       path: '/ManageItems',
       name: 'ManageItems',
-      component: ManageItems,
+      component: ManageItems,},
+
+    
+    {
+      path: '/ExtensionPage',
+      name: 'ExtensionPage',
+      component: ExtensionPage
+
     }
 
     

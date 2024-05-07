@@ -8,7 +8,7 @@
         </div>
         <div class="kolom1">
         <button>
-            Request extension
+            <router-link class="link" to="/ExtensionPage">Request extension</router-link>
         </button>  
     </div>
         <button>Report issue</button>
@@ -57,7 +57,7 @@
             <p></p>
             <p>Categorie: Audio</p>
         </div>
-            <button class="available">
+            <button  class="available">
                 Request extension
             </button>  
         <button>Report issue</button>
