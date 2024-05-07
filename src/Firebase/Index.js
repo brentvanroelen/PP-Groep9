@@ -5,7 +5,8 @@ import {Firestore,collection,
   where,CollectionReference,
   query,startAt,endAt,
   setDoc,updateDoc,doc,
- addDoc, increment,getDoc,onSnapshot} from  'firebase/firestore'
+ addDoc, increment,getDoc,onSnapshot,
+deleteDoc} from  'firebase/firestore'
 
 
 const firebaseConfig = {
@@ -13,6 +14,7 @@ const firebaseConfig = {
   authDomain: "fir-newtech.firebaseapp.com",
   databaseURL: "https://fir-newtech-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "fir-newtech",
+  grpc: true,
   storageBucket: "fir-newtech.appspot.com",
   messagingSenderId: "646664658925",
   appId: "1:646664658925:web:3cc3a1377ab76d7100d1e4",
@@ -24,6 +26,7 @@ const app = initializeApp(firebaseConfig);
 const db =  getFirestore(app)
 export {
     db,collection,getDocs,Firestore,orderBy,where,CollectionReference,
-    query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot
+    query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot,
+    deleteDoc
 }
 

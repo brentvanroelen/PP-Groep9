@@ -24,6 +24,9 @@ let checkUserCart = false
 
 
 const handleReservation = async() => {
+    items = [];
+    promises = [];
+    itemMaps = [];
     if(!checkUserCart){
         if(dates.startDate != "" && dates.endDate != ""){
             for(let i = 0; i < quantity.quantity; i++){
@@ -103,7 +106,9 @@ const makeItemMap = (items) =>{
 const MakeReservation = async() => {
     const docRef = doc(db, "Reservations", "Tester" + " " + dates.startDate + " " + dates.endDate);
     await setDoc(docRef, {
-        ItemSerials: items.map(item => item.Serial.split("-")[0]),
+        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+        allItemSerials: items.map(item => item.Serial),
+        allItemNames: items.map(item => item.Name),
         StartDate: dates.startDate,
         EndDate: dates.endDate,
         StartMonth: dates.startMonth,

@@ -1,64 +1,53 @@
 <template>
-    <div>
-        <div v-for="reservation in reservationslist" :key="reservation.StartDate">
-            <div class="card">
-                <div class="card-body">
-                    <div v-if="!Returns" class="card-content">
-                        <div>
-                            <h5 class="card-title">{{ reservation.User }}</h5>
-                            <p class="card-text">{{ reservation.StartDate }}</p>
-                            <p class="card-text">{{ reservation.ReservationPrepared }}</p>
-                        </div>
-                        <div class="card-actions">
-                            <button @click="markAsPickedUp(reservation.StartDate)" class="btn">Picked Up</button>
-                            <button @click="discardReservation(reservation.StartDate)" class="btn">Discard</button>
-                        </div>
-                    </div>
-                    <div v-else class="card-content">
-                        <div>
-                            <h5 class="card-title">{{ reservation.User }}</h5>
-                            <p class="card-text">{{ reservation.EndDate }}</p>
-                            <p class="card-text">{{ reservation.ReservationPrepared }}</p>
-                        </div>
-                        <div class="card-actions">
-                            <button @click="markAsPickedUp(reservation.StartDate)" class="btn">Returned + check</button>
-                            <button @click="markAsPickedUp(reservation.StartDate)" class="btn">Returned</button>
-                        </div>
-                    </div>
+    <div class="card">
+        <div class="card-body">
+            <div v-if="scheduledLoan != undefined" class="card-content">
+                <div>
+                    <h5 class="card-title">{{ scheduledLoan.User }}</h5>
+                    <p class="card-text">Place for timeslot</p>
+                    <details>
+                        <summary>See Items</summary>
+                        <ul>
+                            <li v-for="(item, index) in scheduledLoan.allItemNames" :key="index">
+                            {{ item }}: {{ scheduledLoan.allItemSerials[index] }}
+                            </li>
+                        </ul>
+                    </details>
+                    <p v-if="scheduledLoan.ReservationPrepared" class="card-text">Status: Ready</p>
+                    <p v-else>Status: {{ scheduledLoan.amountLeftToPrepare }} item{{ scheduledLoan.amountLeftToPrepare !== 1 ? 's' : '' }} to prepare</p>
+                </div>
+                <div class="card-actions">
+                    <button @click="markAsPickedUp(scheduledLoan.StartDate)" class="btn">Picked Up</button>
+                    <button @click="discardReservation(scheduledLoan.StartDate)" class="btn">Discard</button>
+                </div>
+            </div>
+            <div v-if="scheduledReturn != undefined" class="card-content">
+                <div>
+                    <h5 class="card-title">{{ scheduledReturn.User }}</h5>
+                    <p class="card-text"> Place for timeslot</p>
+                    <details>
+                        <summary>See Items</summary>
+                        <ul>
+                            <li v-for="(item, index) in scheduledReturn.allItemNames" :key="index">
+                            {{ item }}: {{ scheduledReturn.allItemSerials[index] }}
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+                <div class="card-actions">
+                    <button @click="markAsPickedUp(scheduledReturn.StartDate)" class="btn">Returned + check</button>
+                    <button @click="markAsPickedUp(scheduledReturn.StartDate)" class="btn">Returned</button>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
-import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
-
-const currentDate = new Date().getDate();
-let unssub = false;
 const props = defineProps({
-    Returns: Boolean
-});
-
-const reservationslist = ref([]);
-
-watchEffect(() => {
-  const q = collection(db, "Reservations");
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    const reservations = [];
-    querySnapshot.forEach((doc) => {
-      reservations.push(doc.data());
-    });
-    reservationslist.value = reservations;
-    if (unssub) {
-      unsubscribe();
-    }
-  });
-});
-
-onUnmounted(() => {
-    unssub = true;
+    scheduledLoan: Object,
+    scheduledReturn: Object
 });
 
 const markAsPickedUp = async (reservationId) => {
@@ -98,7 +87,7 @@ const discardReservation = async (reservationId) => {
     flex-direction: row;
     align-items: center;
     gap: 10px;
-    width: 45%;
+    width: 40%;
 }
 .btn{
     background-color: #FF0000;
