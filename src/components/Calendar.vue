@@ -112,48 +112,48 @@
       
       
       const selectDay = (day) => {
-  const selectedDate = new Date(currentYear.value, currentMonth.value, day);
-  const maxReservationDays = 14; 
+          const selectedDate = new Date(currentYear.value, currentMonth.value, day);
+          const maxReservationDays = 14; 
 
-  const currentDateStartOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-  const selectedDateStartOfDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+          const currentDateStartOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+          const selectedDateStartOfDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
 
-  const diffInMilliseconds = selectedDateStartOfDay - currentDateStartOfDay;
-  
-  const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+          const diffInMilliseconds = selectedDateStartOfDay - currentDateStartOfDay;
+          
+          const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 
-  if (selectedDateStartOfDay >= currentDateStartOfDay && diffInDays <= maxReservationDays) {
-    const maxAllowedDuration = 7; 
+          if (selectedDateStartOfDay >= currentDateStartOfDay && diffInDays <= maxReservationDays) {
+            const maxAllowedDuration = 7; 
 
-    if (!selectedStartDate.value) {
-      selectedStartDate.value = selectedDateStartOfDay;
-    } else if (!selectedEndDate.value && selectedDateStartOfDay >= selectedStartDate.value) {
-      
-      const diffInDays = Math.ceil((selectedDateStartOfDay - selectedStartDate.value) / (1000 * 60 * 60 * 24));
-      
-      if (diffInDays <= maxAllowedDuration) {
-        selectedEndDate.value = selectedDateStartOfDay;
-        useDates().updateStartDate(selectedStartDate.value.getDate(), selectedStartDate.value.getMonth() + 1);
-        useDates().updateEndDate(selectedEndDate.value.getDate(), selectedEndDate.value.getMonth() + 1);
-        useTrigger().fireTrigger();
-        displayDate.value = [
-          selectedStartDate.value.getDate(),
-          selectedStartDate.value.getMonth() + 1,
-          selectedEndDate.value.getDate(),
-          selectedEndDate.value.getMonth() + 1
-        ];
-      } else {
-        // Voorlopige alert, moet nog aangepast worden ==>popup
-        alert("Maximum loan period exceeded.");
-      }
-    } else {
-      selectedStartDate.value = selectedDateStartOfDay;
-      selectedEndDate.value = null;
-      useDates().$reset();
-    }
-  } else {
-    alert("Reservation is only possible up to a maximum of 14 days in advance.");
-  }
+            if (!selectedStartDate.value) {
+              selectedStartDate.value = selectedDateStartOfDay;
+            } else if (!selectedEndDate.value && selectedDateStartOfDay >= selectedStartDate.value) {
+              
+              const diffInDays = Math.ceil((selectedDateStartOfDay - selectedStartDate.value) / (1000 * 60 * 60 * 24));
+              
+              if (diffInDays <= maxAllowedDuration) {
+                selectedEndDate.value = selectedDateStartOfDay;
+                useDates().updateStartDate(selectedStartDate.value.getDate(), selectedStartDate.value.getMonth() + 1);
+                useDates().updateEndDate(selectedEndDate.value.getDate(), selectedEndDate.value.getMonth() + 1);
+                useTrigger().fireTrigger();
+                displayDate.value = [
+                  selectedStartDate.value.getDate(),
+                  selectedStartDate.value.getMonth() + 1,
+                  selectedEndDate.value.getDate(),
+                  selectedEndDate.value.getMonth() + 1
+                ];
+              } else {
+                // Voorlopige alert, moet nog aangepast worden ==>popup
+                alert("Maximum loan period exceeded.");
+              }
+            } else {
+              selectedStartDate.value = selectedDateStartOfDay;
+              selectedEndDate.value = null;
+              useDates().$reset();
+            }
+          } else {
+            alert("Reservation is only possible up to a maximum of 14 days in advance.");
+          }
 };
 
 

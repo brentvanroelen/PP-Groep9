@@ -12,6 +12,10 @@
     import router from '@/router';
     import { useStore } from '@/Pinia/Store.js';
     import ItemScreen from '@/views/ItemScreen.vue';
+    
+    
+
+
 
     const querystring = ref('');
     const store = useStore();
@@ -19,9 +23,12 @@
     const search = async() => {
       let results = [];
       store.updateResults([]);
+
+
+
       const itemquery = query(collection(db, "Items"), 
-        where('SubStrings', 'array-contains', querystring.value.toLowerCase())
-      );
+          where('SubStrings', 'array-contains', querystring.value.toLowerCase())
+        );
 
       const querySnapshot = await getDocs(itemquery);
         querySnapshot.forEach((snap) =>{
