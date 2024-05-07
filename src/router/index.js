@@ -16,6 +16,7 @@ import addKitScreen from '../views/addKitScreen.vue'
 import Popup from '../components/Popup.vue'
 import options from '../views/options.vue'
 import Cart from '../views/Cart.vue'
+import MyProducts from '@/views/MyProducts.vue'
 
 const routes = [
   {
@@ -101,7 +102,16 @@ const routes = [
       path: '/options',
       name: 'options',
       component: options,
+    },
+
+    {
+      path: '/Myproducts',
+      name: 'Myproducts',
+      component: MyProducts
     }
+
+    
+
    
 
 ]

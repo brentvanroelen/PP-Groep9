@@ -4,7 +4,7 @@
       <li id='img'><router-link  to="/"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
     <div id="links">
       <li><router-link class="link" to="/">Home</router-link></li>
-      <li><router-link class="link" to="/">My products</router-link></li>
+      <li><router-link class="link" to="/Myproducts">My products</router-link></li>
       <li><router-link class="link" to="/contact">Contact</router-link></li>
       <li><router-link class="link" to="/cart">Cart</router-link></li>
       <li><router-link class="link" to="/Additem">Additem</router-link></li>
