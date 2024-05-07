@@ -17,6 +17,7 @@ import Popup from '../components/Popup.vue'
 import options from '../views/options.vue'
 import Cart from '../views/Cart.vue'
 import MyProducts from '@/views/MyProducts.vue'
+import ExtensionPage from '@/views/ExtensionPage.vue'
 
 const routes = [
   {
@@ -108,6 +109,12 @@ const routes = [
       path: '/Myproducts',
       name: 'Myproducts',
       component: MyProducts
+    },
+    
+    {
+      path: '/ExtensionPage',
+      name: 'ExtensionPage',
+      component: ExtensionPage
     }
 
     
