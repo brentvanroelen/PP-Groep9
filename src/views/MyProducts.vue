@@ -7,7 +7,7 @@
         </div>
         <div class="kolom1">
         <button>
-            Cancel Reservation
+            <router-link class="link" to="/ExtensionPage">Request extension</router-link>
         </button>  
         </div>
         <div class="kolom4">
@@ -21,9 +21,9 @@
             <p>Categorie: Audio</p>
         </div>
         <div class="kolom1">
-        <button>
-            Request extension
-        </button>  
+            <button>
+                Request extension
+            </button>  
         </div>
         <button>Report issue</button>
         <div class="kolom4">

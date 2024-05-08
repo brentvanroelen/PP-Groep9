@@ -1,24 +1,25 @@
 <template>
-    
-    <SearchBar id="searchBar"></SearchBar>
+    <h1>Manage Items</h1>
+        <SearchBarAdmin ></SearchBarAdmin>
+    <!--<SearchBar id="searchBar"></SearchBar>-->
 
         
-        <h1>Manage Items</h1>
+        
         
         
         <div class="items">
 
-            Data uit database
+            <!-- Data uit database -->
            
         </div>
 <div class="buttons">
         <button class="buttonsClass"><router-link class="link" to="/modifyItemScreen"> Add new kit</router-link></button>
-        <button  class="buttonsClass"  >Add item </button></div>
+        <button  class="buttonsClass"><router-link class="link" to="/PopupManageItemsScreen"> Add item </router-link></button></div>
         
 </template>
 
 <script setup>
-
+import SearchBarAdmin from '../components/SearchBarAdmin.vue'
 
 import SearchBar from '../components/Searchbar.vue'
 
@@ -45,13 +46,13 @@ import SearchBar from '../components/Searchbar.vue'
     margin-bottom: 20px;
     
 }
-#searchBar {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    justify-content: center;
-}
+
+   
+
 .items{
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+
 </style>
