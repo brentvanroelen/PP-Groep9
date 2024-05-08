@@ -57,19 +57,21 @@ let amountLeftToPrepare = ref(0);
 
 const scheduledLoans = computed(() => {
   console.log(reservationslist.value.filter(reservation => 
-    reservation.StartDate === currentDate.value.getDate() && 
-    (reservation.StartMonth - 1)  === currentDate.value.getMonth()
+    reservation.StartDate <= currentDate.value.getDate() && 
+    (reservation.StartMonth - 1)  <= currentDate.value.getMonth()&&
+    reservation.CurrentlyWithUser == false
   ))
   return reservationslist.value.filter(reservation => 
-    reservation.StartDate === currentDate.value.getDate() && 
-    (reservation.StartMonth - 1)  === currentDate.value.getMonth()
+    reservation.StartDate <= currentDate.value.getDate() && 
+    (reservation.StartMonth - 1)  <= currentDate.value.getMonth()&&
+    reservation.CurrentlyWithUser == false
   );
 });
 const scheduledReturns = computed(() => {
     
   return reservationslist.value.filter(reservation => 
-    reservation.EndDate === currentDate.value.getDate() && 
-    (reservation.EndMonth - 1)  === currentDate.value.getMonth()
+    reservation.EndDate <= currentDate.value.getDate() && 
+    (reservation.EndMonth - 1)  <= currentDate.value.getMonth()
   );
 });
 
