@@ -5,95 +5,30 @@
     </header>
     
     <main>
-        <section class="cart-items">
-            <!-- Item containers -->
-            
-            <!-- Item 1 -->
-            <article class="item-container">
-                <!-- Item details -->
-                <img src="" alt="Google glasses"> <!-- juiste img src nog toevoegen -->
-                <div class="item-info">
-                    <h2 class="item-title">Google glasses - <span style="font-size: 12px;">GO-12</span></h2>
-                    <p class="item-description">Blabla</p>
-                </div>
-                <div class="item-date">
-                    <span>Start date: 01/05/24</span> 
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-date">
-                    <span>End date: 10/05/24</span>
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-trash">
-                    <button class="trash-button"></button>
-                </div>
-            </article>
-
-            <!-- Item 2 -->
-            <article class="item-container">
-                <!-- Item details -->
-                <img src="" alt="Item 2"> <!-- juiste img src nog toevoegen -->
-                <div class="item-info">
-                    <h2 class="item-title">Item 2 - <span style="font-size: 12px;">seriecode</span></h2>
-                    <p class="item-description">Short description of item 2</p>
-                </div>
-                <div class="item-date">
-                    <span>Start date: 15/05/24</span> 
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-date">
-                    <span>End date: 20/05/24</span>
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-trash">
-                    <button class="trash-button"></button>
-                </div>
-            </article>
-
-            <!-- Item 3 -->
-            <article class="item-container">
-                <!-- Item details -->
-                <img src="" alt="Item 3"> <!-- juiste img src nog toevoegen -->
-                <div class="item-info">
-                    <h2 class="item-title">Item 3 - <span style="font-size: 12px;">seriecode</span></h2>
-                    <p class="item-description">Short description of item 3</p>
-                </div>
-                <div class="item-date">
-                    <span>Start date: 15/05/24</span> 
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-date">
-                    <span>End date: 20/05/24</span>
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-trash">
-                    <button class="trash-button"></button>
-                </div>
-            </article>
-
-            <!-- Item 4 -->
-            <article class="item-container">
-                <!-- Item details -->
-                <img src="" alt="Item 4"> <!-- juiste img src nog toevoegen -->
-                <div class="item-info">
-                    <h2 class="item-title">Item 4 - <span style="font-size: 12px;">seriecode</span></h2>
-                    <p class="item-description">Short description of item 4</p>
-                </div>
-                <div class="item-date">
-                    <span>Start date: 15/05/24</span> 
-                    <span class="calendar-icon">📅</span>
-                </div>
-                <div class="item-date">
-                    <span>End date: 20/05/24</span>
-                    <span class="calendar-icon">📅</span>
-                </div>
-               <div class="item-trash">
-                    <button class="trash-button"></button>
-                </div>
-            </article>
-        </section>
-
-        <hr>
+        <div v-for="(item, index) in items" :key="index">
+    <div class="item-box">
+        <img :src="item.Image" alt="" id="itemImg">
+        <div id="itemInfo-box">
+        <h2>{{ item.Name }}</h2>
+        <p><b>Description: </b> {{ item.Description }}</p>
+        <p><b>Serial Series: </b> {{  item.SerialSeries }}</p>
+    </div>
+        <p><b>Start date: </b> {{ startDate  }}</p>
+        <div class="calendar">
+            <img src="../assets/calendar.png" alt="">
+        </div>
+        <p><b>End date:</b> {{ endDate }}</p>
+        <span id="calendar">
+            <img src="../assets/calendar.png" alt="">
+        </span>
+        
+        <div class="item-trash">
+            <img src="../assets/trash.png" alt="">
+        </div>
+        <!-- Add more item properties as needed -->
+      </div>
+    </div>
+        
 
         <!-- Selected items en confirm order button container -->
         <section class="selected-items-container">
@@ -101,15 +36,28 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">0</span>
             </div>
-            <button class="confirm-button">Confirm order</button>
+            <button class="confirm-button" @click="test()">Confirm order</button>
         </section>
     </main>
 
 </template>
 
 <script setup>
-    import Navigation from "../components/Navigation.vue"
+import Navigation from "../components/Navigation.vue"
+    import { useCart } from '@/Pinia/Store';
 
+   
+
+    const cart = useCart();
+    const items = cart.items;
+    const startDate = cart.startDate;
+    const endDate = cart.endDate;
+
+    const test = () => {
+        console.log(items);
+        console.log(startDate);
+        console.log(endDate);
+    }
 
 </script>
 
@@ -132,7 +80,7 @@
             text-align: center;
         }
 
-        .cart-items {
+        /* .cart-items {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -190,12 +138,12 @@
         background: none;
         border: none;
         cursor: pointer;
-        }
+        } */
 
-        .trash-button::before {
-            content: '🗑️'; /* of je kan ook URL voor icon gebruiken */
-            font-size: 20px;
-        }
+        /* .trash-button::before {
+            content: '🗑️';  of je kan ook URL voor icon gebruiken 
+            font-size: 20px; 
+        }*/
         hr {
             margin: 20px 0;
             width: 80%;
@@ -229,5 +177,34 @@
 
         .confirm-button:hover {
             background-color: darkred;
+        }
+        .item-box {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            background-color: #D9D9D9;
+            border-radius: 2em;
+            margin: 1em 0 1em 0;
+            width: 1500px;
+            padding: 1em 0em 1em 0em;
+        }
+        #itemImg {
+            width: 200px;
+            border: 2px white solid;
+            border-radius: 1em;
+        }
+        .item-box img {
+            width: 40px;
+        }
+        .calendar{
+            background-color: aqua;
+        }
+        #itemInfo-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 300px;
+            height: 150px;
         }
 </style>
