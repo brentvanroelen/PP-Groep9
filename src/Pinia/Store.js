@@ -126,4 +126,15 @@ export const useOptions = defineStore({
       this.options = options
     }
   }
-})
+});
+export const useUserIdentification = defineStore({
+  id: 'UserIdentification',
+  state: () => ({
+    userId: ''
+  }),
+  actions: {
+    updateUserId(userId){
+      this.userId = userId
+    }
+  }
+});

@@ -1,34 +1,53 @@
 <template>
     <button @click="log"> test</button>
-  <div v-for="(cancellableReservation, Index) in cancellableReservationsArrayifier" :key= Index  class="product1">
+  	<div v-for="(cancellableReservation, Index) in displayReservations[0]" :key= Index  class="product1">
         <div class="kolom1">
-            <p>Name: {{ cancellableReservation.ItemName }}</p>
-            <img :src="cancellableReservation.ItemImage" alt="img">
+            <p>Serial: Reservation code</p>
+            <details>
+                <summary>See Items</summary>
+                <ul>
+                  <li v-for="(item, index) in getItems(cancellableReservation)" :key="index">
+                    Name: {{ item.ItemName}}
+                    Serialnumber: {{ item.Serial}}
+                    <img :src="item.ItemImage" alt="picture">
+                  </li>
+                </ul>
+            </details>
         </div>
         <div class="kolom1">
-        <button>
-            <router-link class="link" to="/ExtensionPage">Request extension</router-link>
+        <button @click="">
+            Cancel Reservation
         </button>  
         </div>
         <div class="kolom4">
-            <p>{{ startDate.getDate }}/{{ startDate.getMonth }}/{{ year }} </p>   
-            <p>{{ endDate.getDate }}/{{ endDate.getMonth }}/{{ year }}</p>
+            <p>{{ cancellableReservation.StartDate }}/{{ cancellableReservation.StartMonth }}/{{ year }} </p>   
+            <p>{{ cancellableReservation.EndDate }}/{{ cancellableReservation.EndMonth }}/{{ year }}</p>
         </div>    
     </div>
-    <div v-for="(reservation, Index) in arrayifier" class="product1">
+    <div v-for="(reservation, Index) in displayReservations[1]" :key="Index" class="product1">
         <div class="kolom1">
-            <p></p>
-            <p>Categorie: Audio</p>
+            <p>Serial: Reservation Code</p>
+            <details>
+                <summary>See Items</summary>
+                <ul>
+                  <li v-for="(item, index) in getItems(reservation)" :key="index">
+                    Name: {{ item.ItemName}}
+                    Serialnumber: {{ item.Serial}}
+                    <img :src="item.ItemImage" alt="picture">
+                    <button><router-link class="link" to="/ExtensionPage">Request singular extension</router-link></button>
+                  </li>
+                </ul>
+            </details>
         </div>
         <div class="kolom1">
             <button>
-                Request extension
+                <router-link class="link" to="/ExtensionPage">Request extension</router-link>
             </button>  
         </div>
         <button>Report issue</button>
         <div class="kolom4">
-            <p>Start date: 12/05/2024</p>   
-            <p>Deadline: 18/05/2024</p>
+            <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }} </p>   
+            <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
         </div>    
     </div>
 
@@ -45,33 +64,16 @@ const year = ref(new Date().getFullYear());
 let startDate = ref(new Date());
 let endDate = ref(new Date());
 
-const cancellableReservationsCalc = computed(() => {
-    if (reservations.value == undefined){
-        console.log("loading...")
-    } else {
-        console.log(reservations.value)
-        for (let reservation of reservations.value){
-            startDate.value.setDate(reservation.StartDate);
-            startDate.value.setMonth(reservation.StartMonth);
-            endDate.value.setDate(reservation.EndDate);
-            endDate.value.setMonth(reservation.EndMonth);
-            let adjustedStartDate = new Date(startDate.value);
-            adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
-            adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
-            console.log(adjustedStartDate)
-            console.log(!reservation.CurrentlyWithUser && new Date() < adjustedStartDate)
-            if (!reservation.CurrentlyWithUser && new Date() < adjustedStartDate){
-                reservations.value.splice(reservations.value.indexOf(reservation), 1);
-                console.log(reservations.value)
-                cancellableReservations.value.push(reservation);
-            }
-        }
-    }
-});
 
+const displayReservations = computed(() => {
+    let array = [cancellableReservationsCalc()[0], cancellableReservationsCalc()[1]];
+    console.log(array)
+    return array;
+});
 const arrayifier = computed(() => {
     let array = [];
     for (let reservation of reservations.value){
+        console.log(reservations.value)
         for (let i = 1; i <= 10; i++){
             if (reservation[`Item${i}`] != undefined){
                 array.push(reservation[`Item${i}`]);
@@ -82,26 +84,20 @@ const arrayifier = computed(() => {
     }
     return array;
 });
-const cancellableReservationsArrayifier = computed(() => {
+const getItems = (reservation) => {
     let array = [];
-    if(cancellableReservations.value != undefined){
-        console.log(cancellableReservations.value)
-        for (let reservation of cancellableReservations.value){
-            for (let i = 1; i <= 10; i++){
-                if (reservation[`Item${i}`] != undefined){
-                    array.push(reservation[`Item${i}`]);
-                }else{
-                    break;
-                }
+    if(reservation != undefined){
+        for (let i = 1; i <= 10; i++){
+            if (reservation[`Item${i}`] != undefined){
+                array.push(reservation[`Item${i}`]);
+            }else{
+                break;
             }
         }
         return array;
     }else {console.log("loading...")};
-});
+};
 
-const log = () => {
-    console.log(cancellableReservationsArrayifier)
-}
 const getUser = () => {
     /* get user id when logged in*/ 
     const user = "Tester";
@@ -118,6 +114,29 @@ const getReservations = async () => {
         
     });
 }
+
+const cancellableReservationsCalc = () => {
+    if (reservations.value == undefined){
+        console.log("loading...")
+    } else {
+        console.log(reservations.value)
+        for (let reservation of reservations.value){
+            startDate.value.setDate(reservation.StartDate);
+            startDate.value.setMonth(reservation.StartMonth);
+            let adjustedStartDate = new Date(startDate.value);
+            adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
+            adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
+            console.log(adjustedStartDate)
+            console.log(!reservation.CurrentlyWithUser && new Date() < adjustedStartDate)
+            if (!reservation.CurrentlyWithUser && new Date() < adjustedStartDate){
+                reservations.value.splice(reservations.value.indexOf(reservation), 1);
+                console.log(reservations.value)
+                cancellableReservations.value.push(reservation);
+            }
+        }
+        return [cancellableReservations.value, reservations.value];
+    }
+};
 
 
 onMounted( async() => {

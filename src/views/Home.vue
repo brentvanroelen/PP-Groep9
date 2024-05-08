@@ -27,6 +27,8 @@ import SearchBar from "../components/Searchbar.vue"
 import Admin from "../components/navigationAdmin.vue"
 
 
+
+
 </script>
 
 <style>
