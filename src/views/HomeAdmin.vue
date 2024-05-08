@@ -30,12 +30,12 @@
       <h2>Early Returns</h2>
       <label>User: </label> <input type="text" name="" id=""><br>
       <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-      <label for="borrowedItems">Borrowed items: </label> <!--borrowed Items--><br>
+      <label for="borrowedItems">Borrowed items: </label> borrowed Items<br>
       <button>Selection returned</button>
       <button>Selection returned + check</button>
       <button>Everything returned</button>
       <button>Everything returned + check</button>
-  </div>
+  </div> 
 
 </template>
 
@@ -121,7 +121,7 @@ onUnmounted(() => {
   grid-template-columns: 1fr; /* One column */
   grid-template-rows: auto 1fr; /* Two rows: auto height for date marker, 1fr for boxes */
   position: relative; /* Relative positioning for the semi-circle */
-  background-color: rgb(221, 207, 207);
+  background-color: #f0f0f0;
 }
 
 .date-marker {
@@ -131,14 +131,15 @@ onUnmounted(() => {
   grid-row: 1; /* Position in first row */
   z-index: 1; /* Ensure the date marker is above the semi-circle */
   position: relative; /* Relative positioning for the z-index */
+    color: #333;
 }
 
 .box-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Two columns for boxes */
-  gap: 2px; /* Gap between columns */
-  padding: 1px;
-  border: 4px solid #726767;
+  gap: 20px; /* Gap between columns */
+  padding: 20px;
+  border: 4px solid #666;
   border-radius: 10px;
   grid-column: 1; /* Position in first column */
   grid-row: 2; /* Position in second row */
@@ -153,10 +154,11 @@ onUnmounted(() => {
   left: 50%;
   width: 25%;
   height: 36.25px; /* Adjust this to control the height of the semi-circle */
-  background-color: #1667e0;
+  background-color: #ff6666;
   transform: translate(-50%, 0); /* Adjust this to control the vertical position of the semi-circle */
   z-index: 0; /* Ensure the semi-circle is below the date marker */
 }
+    
 .box-container::after {
   content: "";
   position: absolute;
@@ -164,7 +166,48 @@ onUnmounted(() => {
   left: 50%;
   width: 2px; /* Width of the divider */
   height: calc(100% - 38px); /* Height of the divider minus twice the padding */
-  background-color: #000; /* Color of the divider */
+  background-color: #333; /* Color of the divider */
 }
 
+.box {
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.scheduledLoans,
+.scheduledReturns {
+  background-color: #d0d0d0;
+}
+
+.spontaneousLoans,
+.earlyReturns {
+  background-color: #ffffff;
+}
+
+.box h2 {
+  color: #333;
+}
+
+label {
+  color: #666;
+}
+
+button {
+  background-color: #ff3333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+input[type="text"],    /* deze selector om specifiek stijlen te kunnen toepassen op de invoervelden */
+input[type="time"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+    
 </style>

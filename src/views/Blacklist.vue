@@ -1,7 +1,7 @@
 <template>
 
 
-        <h1 class="title">User blacklist</h1>
+<h1 class="title">User blacklist</h1>
         <div class="actions">
             <label for="cijfer">Show</label>
 <select id="cijfer" name="cijfer">
@@ -43,7 +43,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>2</td>
-                    <td class="orange">no</td>
+                    <td class="orange" ><div class="border" >no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -51,7 +51,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>1</td>
-                    <td class="green">no</td>
+                    <td  class="green"><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -59,7 +59,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>3</td>
-                    <td class="red">yes</td>
+                    <td class="red" ><div class="border" >yes</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -67,7 +67,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>1</td>
-                    <td>no</td>
+                    <td><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -75,7 +75,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>3</td>
-                    <td>yes</td>
+                    <td ><div class="border">yes</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -83,7 +83,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>1</td>
-                    <td>no</td>
+                    <td ><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -91,7 +91,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>1</td>
-                    <td>no</td>
+                    <td ><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -99,7 +99,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>2</td>
-                    <td>no</td>
+                    <td><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -107,7 +107,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>3</td>
-                    <td>yes</td>
+                    <td><div class="border">yes</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
@@ -115,7 +115,7 @@
                     <td>Naam</td>
                     <td>@student.ehb.be</td>
                     <td>2</td>
-                    <td>no</td>
+                    <td><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 
@@ -140,13 +140,14 @@
 <script>
 </script>
 
-<style>
-/* body {
+<style scoped>
+
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px; 
-} */
+}
 
 .title {
     text-align: center;
@@ -199,17 +200,28 @@ td {
 
 }
 
-.red {
-    background-color: #ffcccc; 
+
+.border {
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    padding: 5px;
+    width: 50px;
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+
+}
+.red div {
+    background-color: #ffcccc;  
     color: red;
 }
 
-.green {
+.green div {
     background-color: #ccffcc; 
     color: green;
 }
 
-.orange{
+.orange div{
     background-color: #ffd699;
     color: orange;
 }
