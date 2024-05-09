@@ -5,7 +5,7 @@
     <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
     <div class="searchbar-overlay"></div>
     <div class="searchbar">
-      <SearchBar/>
+      <SearchBar :page="home"/>
 
       
     </div>
@@ -26,7 +26,7 @@ import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
 import Admin from "../components/navigationAdmin.vue"
 
-
+const home = "UserHome"
 
 
 </script>

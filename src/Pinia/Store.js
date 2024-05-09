@@ -51,12 +51,17 @@ export const useCart = defineStore({
 export const useQuantity = defineStore({
   id: 'Quantity',
   state: () => ({
-    quantity: 1,
+    quantity: {
+
+    },
     available: 0
   }),
   actions: {
-    setQuantity(quantity){
-      this.quantity = quantity
+    setQuantity(item,quantity){
+      this.quantity[item] = quantity
+    },
+    getQuantity(item){
+      return this.quantity[item]
     },
     setavailable(available){
       this.available = available
@@ -67,27 +72,25 @@ export const useQuantity = defineStore({
 export const useChoiceOfItems = defineStore({
   id: 'ChoiceOfItems',
   state: () => ({
-    items1: [],
-    items2: [],
-    items3: [],
-    items4: [],
-    items5: [],
-    items6: [],
+    items: {
+
+    }
   }),
   actions: {
-    addInstance(array,item){
-      this[`items${array}`].push(item)
+    createCollection(collection){
+      this.items[collection] = []
     },
-    getInstance(array){
-      return this[`items${array}`]
+    addInstance(collection,item){
+      this.items[collection].push(item)
+    },
+    getInstance(collection,itemIndex){
+      return this.items[collection][itemIndex]
+    },
+    getCollection(collection){
+      return this.items[collection]
     },
     resetAllItems(){
-      this.items1 = []
-      this.items2 = []
-      this.items3 = []
-      this.items4 = []
-      this.items5 = []
-      this.items6 = []
+      this.items = {}
     }
   }
 
@@ -104,14 +107,14 @@ export const useTrigger = defineStore({
   }
 
 });
-export const useArraynumber = defineStore({
-  id: 'Arraynumber',
+export const useItemSelector = defineStore({
+  id: 'ItemSelector',
   state: () => ({
-    arraynumber: 1
+    itemName: '',
   }),
   actions: {
-    setArraynumber(arraynumber){
-      this.arraynumber = arraynumber
+    setCollectionName(name){
+      this.itemName = name
     }
   }
 

@@ -35,7 +35,6 @@ const props = defineProps({
   scheduledReturn: Object
 });
 let scheduledreturn = computed(() => {
-  console.log(props.scheduledReturn)
   return props.scheduledReturn;
 });
 
@@ -52,7 +51,6 @@ const itemReturned = async (reservation) => {
 }
 
 onMounted(() => {
-  console.log(scheduledreturn.value)
 })
 
 </script>

@@ -40,7 +40,6 @@ const props = defineProps({
 let discarded = ref(false);
 
 let scheduledloan = computed(() => {
-    console.log(props.scheduledLoan)
     return props.scheduledLoan;
 });
 
@@ -57,7 +56,6 @@ let isScheduledLoanDefined = computed(() => {
 });
 
 onMounted(() => {
-    console.log(scheduledloan.value)
 })
 
 const discardReservation = async (reservation) => {

@@ -1,17 +1,12 @@
 <template v-if="Item">
     <div id="box">
     <div  id="calendarBox">
-      <Calendar></Calendar>
+      <Calendar :page="page"></Calendar>
     </div>
     <div id="itemBox">
       <Items :item="Item"></Items>
       <div id="extraInfo">
-  <div id="quantity">
-    <p><b>Quantity:</b></p>
-    <select @change="setQuantity" v-model="selectedOption">
-      <option v-for="value in options" :key="value"> {{ options[value-1] }}</option>
-    </select>
-  </div>
+      <Quantity :item="Item"></Quantity>
 
   <div id="checkbox">
     <label for="checkbox1"><b>For project:</b></label>
@@ -38,37 +33,21 @@
   import { useRouter } from 'vue-router';
   import Items from "@/components/Items.vue";
   import Calendar from "@/components/Calendar.vue";
+  import Quantity from "@/components/Quantity.vue";
   import {ref, reactive} from 'vue';
   import { useStore,useCart,useQuantity,useChoiceOfItems } from '@/Pinia/Store';
 
   const props = defineProps({
-    Name: String
+    Name: String,
   });
-  const selectedOption = ref(1);
-  const test = ref([]);
   const cart = useCart();
-  const availableInstances = useChoiceOfItems();
   const checked = ref(false);
   const router = useRouter();
   const params = router.currentRoute.value.params;
   const store = useStore();
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
-  const quantity = useQuantity();
-  let options = computed(() => {
-    let amountAvailable = [];  
-    for (let i = 1; i <= availableInstances.getInstance(1).length ; i++) {
-      amountAvailable.push(i);
-    }
-    return amountAvailable;
-  });
-
-  for (let i = 1; i <= Item.AvailableAmount; i++) {
-    test.value.push(i);
-  }
-  const setQuantity = () => {
-    quantity.setQuantity(selectedOption.value);
-  }
+  const page = "UserHome";
 
   const addItemToCart = () => {
     console.log(Item);

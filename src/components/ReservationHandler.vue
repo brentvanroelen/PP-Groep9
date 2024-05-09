@@ -2,7 +2,7 @@
     <button @click="handleReservation()">Loan now</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useArraynumber } from '@/Pinia/Store';
+import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
@@ -15,7 +15,7 @@ const dates = useDates();
 const cart = useCart();
 const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
-const arraynumber = useArraynumber();
+const itemSelector = useItemSelector();
 
 let  items = []
 let itemMaps = [];
@@ -24,13 +24,14 @@ let checkUserCart = false
 
 
 const handleReservation = async() => {
+
     items = [];
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
+        itemSelector.setCollectionName(`${store.results[0].Name}`);
         if(dates.startDate != "" && dates.endDate != ""){
-            for(let i = 0; i < quantity.quantity; i++){
-                availableInstances.getInstance(arraynumber.arraynumber);
+            for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                 const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
                 .then(changeAmountAvailable(chosenitem.value.Name));
                 promises.push(promise);
@@ -60,10 +61,10 @@ const handleReservation = async() => {
     .then(() => MakeReservation())
 }
 const getItem = async() => {
-    chosenitem.value = availableInstances.getInstance(arraynumber.arraynumber)[0];
+    chosenitem.value = availableInstances.getInstance(itemSelector.itemName,[0]);
     console.log(chosenitem.value)
-    availableInstances.getInstance(arraynumber.arraynumber).shift();
-    availableInstances.getInstance(arraynumber.arraynumber);
+    availableInstances.getCollection(itemSelector.itemName).shift();
+    console.log(availableInstances.getInstance(itemSelector.itemName,[0]));
     items.push(chosenitem.value);
     console.log(items)
     console.log(chosenitem.value)

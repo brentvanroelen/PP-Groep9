@@ -4,6 +4,7 @@
     <div class="date-marker">
       <p>{{ new Date().toLocaleDateString() }}</p>
     </div>
+    <button>test</button>
     <div class="box-container">
       <div class="box scheduledLoans">
         <h2>Scheduled loans</h2>
@@ -14,18 +15,13 @@
         <h2>Scheduled returns</h2>
         <ScheduledReturn v-for="(scheduledreturn, index) in scheduledReturns" :key="index" :scheduled-return="scheduledreturn"></ScheduledReturn>
       </div>
-    </div>
-  </div>
-<div class="containe-">
+    
+  
   <div class="box spontaneousLoans">
       <h2>Spontaneous Loans</h2>
-      <label>User: </label> <input type="text" name="" id=""><br>
-      <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-      <label for="calender">Return date: </label> <!--calender--><br>
-      <label for="returnTime">Return time: </label><input type="time">
-      <button>Complete loan</button>
+      <SpontaneousLoans></SpontaneousLoans>
   </div>
-</div>
+
   <div class="box earlyReturns">
       <h2>Early Returns</h2>
       <label>User: </label> <input type="text" name="" id=""><br>
@@ -36,6 +32,9 @@
       <button>Everything returned</button>
       <button>Everything returned + check</button>
   </div> 
+
+</div>
+</div>
 
 </template>
 
@@ -48,19 +47,15 @@ import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
 import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
 import ScheduledReturn from "@/components/ScheduledReturn.vue";
 import ScheduledLoan from "@/components/ScheduledLoan.vue";
+import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 
 let currentDate = ref(new Date());
 let unssub = false;
-
+const showSpontaneous = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
 
 const scheduledLoans = computed(() => {
-  console.log(reservationslist.value.filter(reservation => 
-    reservation.StartDate <= currentDate.value.getDate() && 
-    (reservation.StartMonth - 1)  <= currentDate.value.getMonth()&&
-    reservation.CurrentlyWithUser == false
-  ))
   return reservationslist.value.filter(reservation => 
     reservation.StartDate <= currentDate.value.getDate() && 
     (reservation.StartMonth - 1)  <= currentDate.value.getMonth()&&
@@ -142,7 +137,7 @@ onUnmounted(() => {
   border: 4px solid #666;
   border-radius: 10px;
   grid-column: 1; /* Position in first column */
-  grid-row: 2; /* Position in second row */
+  grid-row: 2 / 4; /* Position in second row */
   margin: 0 20px; /* Margin on the left and right */
   
 }

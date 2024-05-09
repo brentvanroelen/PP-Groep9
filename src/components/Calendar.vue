@@ -28,7 +28,7 @@
       <p v-if="selectedStartDate && selectedEndDate">
         Selected Date Range: {{ displayDate[0] }}/{{ String(displayDate[1]).padStart(2, '0') }} to {{ displayDate[2] }}/{{ String(displayDate[3]).padStart(2, '0') }}
             </p>
-      <AvailabilityHandler></AvailabilityHandler>
+      <AvailabilityHandler :page="page"></AvailabilityHandler>
     </div>
   </template>
   
@@ -54,7 +54,9 @@
     const currentDate = new Date();
     const trigger = useTrigger();
 
-
+    const {page} = defineProps({
+      page: String
+    });
 
 
     const setCurrentMonth = () => {

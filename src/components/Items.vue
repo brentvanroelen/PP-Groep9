@@ -13,14 +13,18 @@
         </p>
         <p v-else><b>Beschikbaarheid:</b> Item niet beschikbaar</p>
       </div>
+      <div v-if="loan == true" id="quantity">
+        <Quantity :item="item" />  
      </div>
+    </div>
 </template>
 
 <script setup>
+import Quantity from './Quantity.vue';
 
-const {item} = defineProps({
-    item: Object
-    
+const {item,loan,arraynumber} = defineProps({
+    item: Object,
+    loan: Boolean,
 })
 
 </script>

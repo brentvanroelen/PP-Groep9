@@ -2,18 +2,23 @@
     <div @datesSelected="handleAvailability"></div>
 </template>
 <script setup>
-import { useStore,useDates,useQuantity, useChoiceOfItems, useTrigger } from '@/Pinia/Store';
+import { useStore,useDates,useQuantity, useChoiceOfItems, useTrigger, useCart } from '@/Pinia/Store';
 import { collection, getDocs, query, db, where} from '../Firebase/Index.js';
 import { watch,ref, computed } from 'vue';
 
 const store = useStore();
 const dates = useDates();
 const quantity = useQuantity();
+const cart = useCart();
 const availableInstances = useChoiceOfItems();
 const trigger = useTrigger(); 
 const triggergetter = computed(() => trigger.trigger);
-let arraynumber = 1;
 let Nonconflictingreserveditems = [];
+
+
+const {page} = defineProps({
+    page: String,
+})
 
 watch(triggergetter, async() => {
     if(trigger.trigger){
@@ -23,17 +28,33 @@ watch(triggergetter, async() => {
 });
 
 const handleAvailability = async() => {
-    arraynumber = 1;
     availableInstances.resetAllItems();
-    for (let item of store.results) {
-        if(dates.startDate != "" && dates.endDate != ""){
-            getAvailableItems(item.Name,item.SerialSeries);
-            /* CALL RESERVATION HANDLER*/
-        }else{
-            console.log("Please select a date range")
+    console.log(page)
+    if(page == "UserHome"){
+        for (let item of store.results) {
+            if(dates.startDate != "" && dates.endDate != ""){
+                console.log(item)
+                await getAvailableItems(item.Name,item.SerialSeries);
+                /* CALL RESERVATION HANDLER*/
+            }else{
+                console.log("Please select a date range")
+            }
         }
+    }else if(page == "HomeAdmin"){
+        for (let item of cart.items) {
+            if(dates.startDate != "" && dates.endDate != ""){
+                console.log(item)
+                await getAvailableItems(item.Name,item.SerialSeries);
+                /* CALL RESERVATION HANDLER*/
+                console.log(availableInstances)
+            }else{
+                console.log("Please select a date range")
+            }
+        }
+    }else{
+        console.log("Please select a page")
+    
     }
-
 }
 const dateifierUser = (startdateuser, startmonthuser, enddateuser, endmonthuser) => {
     let startuser = new Date();
@@ -54,19 +75,24 @@ const dateifierRes = (startdateres,startmonthres,enddateres,endmonthres) => {
     return [startres, endres];
 }
 const getAvailableItems = async(name,serial) => {
+    if(availableInstances.getCollection(name) == undefined){
+        availableInstances.createCollection(name);
+    }
+    console.log(availableInstances)
     const creference = collection(db, `Items/${name.charAt(0).toUpperCase() 
         + name.slice(1)}/${name.charAt(0).toUpperCase() 
         + name.slice(1)} items`);
     await getNonConflictingReservedItems(serial)
     const reservedSnapshot = await getDocs(creference);
+    console.log(reservedSnapshot.size)
     reservedSnapshot.forEach((doc) => {
+        console.log(doc.data().Reserved)
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
-            availableInstances.addInstance(arraynumber,doc.data());
+            availableInstances.addInstance(doc.data().Name,doc.data());
         }else{
-            availableInstances.getInstance(arraynumber);
+            availableInstances.getInstance(doc.data().Name);
         }
     });
-    arraynumber++
 }
 const getNonConflictingReservedItems = async(serialseries) => {
     Nonconflictingreserveditems = [];
