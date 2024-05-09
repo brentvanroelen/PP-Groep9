@@ -4,7 +4,6 @@
     <div class="date-marker">
       <p>{{ new Date().toLocaleDateString() }}</p>
     </div>
-    <button>test</button>
     <div class="box-container">
       <div class="box scheduledLoans">
         <h2>Scheduled loans</h2>
