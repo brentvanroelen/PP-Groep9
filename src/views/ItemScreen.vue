@@ -47,6 +47,7 @@
   const store = useStore();
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
+  const dates = useDates();
   const page = "UserHome";
 
   const addItemToCart = () => {
