@@ -35,7 +35,7 @@
   import Calendar from "@/components/Calendar.vue";
   import Quantity from "@/components/Quantity.vue";
   import {ref, reactive} from 'vue';
-  import { useStore,useCart,useQuantity,useChoiceOfItems } from '@/Pinia/Store';
+  import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
 
   const props = defineProps({
     Name: String,
@@ -53,6 +53,11 @@
     console.log(Item);
     cart.addItem(Item);
     console.log(cart.items);
+    cart.addEndDate(dates.endDate + "/" + dates.endMonth);
+    cart.addStartDate(dates.startDate + "/" + dates.startMonth);
+    cart.addStartDate
+    console.log(cart.startDate);
+    console.log(cart.endDate);
   }
 
   </script>

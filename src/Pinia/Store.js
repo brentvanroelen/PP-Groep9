@@ -37,6 +37,8 @@ export const useCart = defineStore({
   id: 'Cart',
   state: () => ({
     items: [],
+    startDate: '',
+    endDate: '', 
   }),
   actions: {
     addItem(item){
@@ -44,6 +46,12 @@ export const useCart = defineStore({
     },
     emptyCart(){
       this.items = []
+    },
+    addStartDate(startDate, startMonth){
+      this.startDate = startDate
+    },
+    addEndDate(endDate, endMonth){
+      this.endDate = endDate
     }
   }
 
