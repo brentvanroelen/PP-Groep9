@@ -75,6 +75,9 @@ export const useQuantity = defineStore({
     },
     setavailable(available){
       this.available = available
+    },
+    resetQuantity(){
+      this.quantity = {}
     }
   }
 
@@ -125,6 +128,9 @@ export const useItemSelector = defineStore({
   actions: {
     setCollectionName(name){
       this.itemName = name
+    },
+    resetCollectionName(){
+      this.itemName = ''
     }
   }
 

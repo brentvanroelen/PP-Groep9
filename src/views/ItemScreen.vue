@@ -19,7 +19,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler></ReservationHandler>
+      <ReservationHandler :check-user-cart="false"></ReservationHandler>
   </div>
 
         <Footer></Footer>

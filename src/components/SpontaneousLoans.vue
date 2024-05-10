@@ -10,9 +10,8 @@
             <br>
       </div>
       <label for="returnTime">Return time: </label><input type="time">
-      <button @click="log">Complete loan</button>
       <div>
-
+        <ReservationHandler :check-user-cart="true"></ReservationHandler>
       </div>
 </template>
 <script setup>
@@ -20,6 +19,7 @@ import Searchbar from "../components/Searchbar.vue"
 import {useStore,useCart} from "../Pinia/Store.js"
 import Calendar from "./Calendar.vue";
 import Items from "./Items.vue";
+import ReservationHandler from "./ReservationHandler.vue";
 
 const store = useStore()
 const cart = useCart()

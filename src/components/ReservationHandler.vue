@@ -20,7 +20,9 @@ const itemSelector = useItemSelector();
 let  items = []
 let itemMaps = [];
 let promises = [];
-let checkUserCart = false
+const {checkUserCart} = defineProps({
+    checkUserCart: Boolean
+})
 
 
 const handleReservation = async() => {
@@ -40,20 +42,22 @@ const handleReservation = async() => {
             console.log(promises)
         }
     }else if(checkUserCart){
-        if(dates.startDate != "" && dates.endDate != ""){
-            for(let item of cart.items){
-                console.log(item)
-                if(item.Available){
-                    const promise = getItem(item.Name).then(() =>markInstancesAsUnavailable(item.Name))
+        if(cart.items.length == 0){
+            console.log("No items in cart")
+        }else{
+            if(dates.startDate != "" && dates.endDate != ""){
+                for(let item of cart.items){
+                    console.log(item)
+                    itemSelector.setCollectionName(`${item.Name}`);
+                    for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
+                    const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
                     .then(() => changeAmountAvailable(item.Name));
                     promises.push(promise);
-                }else{
-                    console.log("Hoo boy i'm not looking forward to this")
+                    }
                 }
             }
         }
     }
-    console.log("We got here")
     Promise.all(promises)
     .then(() => {
         makeItemMap(items);
@@ -121,5 +125,9 @@ const MakeReservation = async() => {
         ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
+    availableInstances.resetAllItems()
+    cart.emptyCart();
+    quantity.resetQuantity();
+    itemSelector.resetCollectionName();
 }
 </script>
