@@ -19,6 +19,7 @@ import Cart from '../views/Cart.vue'
 import MyProducts from '@/views/MyProducts.vue'
 import PopupManageItemsScreen from '../components/PopupManageItemsScreen.vue'
 import ExtensionPage from '@/views/ExtensionPage.vue'
+import Login from '@/views/Login.vue'
 
 
 
@@ -85,58 +86,52 @@ const routes = [
     path: '/ManageItems',
     name: 'ManageItems',
     component: ManageItems
-    },
-    {
-      path: '/modifyItemScreen',
-      name: 'modifyItemScreen',
-      component: modifyItemScreen,
-    },
-    {
-      path: '/addKitScreen',
-      name: 'addKitScreen',
-      component: addKitScreen,
-    },
-
-    {
+  },
+  {
+    path: '/modifyItemScreen',
+    name: 'modifyItemScreen',
+    component: modifyItemScreen,
+  },
+  {
+    path: '/addKitScreen',
+    name: 'addKitScreen',
+    component: addKitScreen,
+  },
+  {
     path: '/Popup',
     name: 'Popup',
     component: Popup
-    },
-
-    {
-      path: '/options',
-      name: 'options',
-      component: options,
-    },
-
-    {
-      path: '/Myproducts',
-      name: 'Myproducts',
-      component: MyProducts
-    },
-
-    {
-      path: '/PopupManageItemsScreen',
-      name: 'PopupManageItemsScreen',
-      component: PopupManageItemsScreen,
-    },
-    {
-      path: '/ManageItems',
-      name: 'ManageItems',
-      component: ManageItems,},
-
-    
-    {
-      path: '/ExtensionPage',
-      name: 'ExtensionPage',
-      component: ExtensionPage
-
-    }
-
-    
-
-   
-
+  },
+  {
+    path: '/options',
+    name: 'options',
+    component: options,
+  },
+  {
+    path: '/Myproducts',
+    name: 'Myproducts',
+    component: MyProducts
+  },
+  {
+    path: '/PopupManageItemsScreen',
+    name: 'PopupManageItemsScreen',
+    component: PopupManageItemsScreen,
+  },
+  {
+    path: '/ManageItems',
+    name: 'ManageItems',
+    component: ManageItems
+  },
+  {
+    path: '/ExtensionPage',
+    name: 'ExtensionPage',
+    component: ExtensionPage
+  },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: Login
+  }
 ]
 
 const router = createRouter({

@@ -1,5 +1,7 @@
 // store.js
 import { defineStore } from 'pinia';
+import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from '@/Firebase/Index';
+import { signOut } from 'firebase/auth';
 
 
 export const useStore = defineStore({
@@ -144,6 +146,35 @@ export const useUserIdentification = defineStore({
     userId: ''
   }),
   actions: {
+    register(credentials){
+      createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
+      .then((userCredential) => {
+      const user = userCredential.user
+      console.log(user)
+      }).catch((error) => {
+      const errorCode = error.code
+      const errorMessage = error.message
+      console.log(errorCode, errorMessage)
+      });
+    },
+    logOut(){
+      signOut(auth).then(() => {
+        console.log('User signed out')
+      }).catch((error) => {
+        console.log(error.message)
+      });
+    },
+    login(credentials){
+      signInWithEmailAndPassword(auth, credentials.email, credentials.password)
+      .then((userCredential) => {
+      const user = userCredential.user
+      console.log(user)
+      }).catch((error) => { 
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode, errorMessage)
+      });
+    },
     updateUserId(userId){
       this.userId = userId
     }
