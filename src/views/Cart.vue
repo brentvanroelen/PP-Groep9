@@ -22,7 +22,7 @@
             <img src="../assets/calendar.png" alt="">
         </span>
         
-        <div class="item-trash">
+        <div class="item-trash" @click="removeItem()">
             <img src="../assets/trash.png" alt="">
         </div>
         <!-- Add more item properties as needed -->
@@ -34,7 +34,7 @@
         <section class="selected-items-container">
             <div class="selected-items">
                 <strong>Selected items:</strong>
-                <span id="item-count">0</span>
+                <span id="item-count">{{ itemCount }}</span>
             </div>
             <button class="confirm-button" @click="test()">Confirm order</button>
         </section>
@@ -43,8 +43,9 @@
 </template>
 
 <script setup>
-import Navigation from "../components/Navigation.vue"
+    import Navigation from "../components/Navigation.vue"
     import { useCart } from '@/Pinia/Store';
+    import { onMounted, ref } from 'vue';
 
    
 
@@ -52,11 +53,22 @@ import Navigation from "../components/Navigation.vue"
     const items = cart.items;
     const startDate = cart.startDate;
     const endDate = cart.endDate;
+    const itemCount = ref(0);
+
+    for (let i = 0; i < items.length; i++) {
+        itemCount.value += 1;
+    }
+    
+    const removeItem = (index) => {
+        cart.removeItem(index);
+        itemCount.value -= 1;
+    }
 
     const test = () => {
-        console.log(items);
-        console.log(startDate);
-        console.log(endDate);
+        console.log(cart.items)
+        // console.log(items);
+        // console.log(startDate);
+        // console.log(endDate);
     }
 
 </script>
@@ -80,70 +92,6 @@ import Navigation from "../components/Navigation.vue"
             text-align: center;
         }
 
-        /* .cart-items {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            width: 80%;
-        }
-
-        .item-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            padding: 10px;
-            width: 100%;
-        }
-
-        .item-container > * {
-            flex: 1; 
-            margin: 0 10px; 
-        }
-
-        .item img {
-            height: auto;
-            margin-right: 10px;
-            max-width: 100%;
-        }
-
-        .item-info {
-            width: 70%;
-        }
-
-        .item-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .item-description {
-            margin-bottom: 5px;
-        }
-
-        .item-date {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .calendar-icon {
-            margin-left: 5px; 
-            color: blue;
-            cursor: pointer;
-        }
-
-        .trash-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        } */
-
-        /* .trash-button::before {
-            content: '🗑️';  of je kan ook URL voor icon gebruiken 
-            font-size: 20px; 
-        }*/
         hr {
             margin: 20px 0;
             width: 80%;
@@ -195,9 +143,6 @@ import Navigation from "../components/Navigation.vue"
         }
         .item-box img {
             width: 40px;
-        }
-        .calendar{
-            background-color: aqua;
         }
         #itemInfo-box {
             display: flex;

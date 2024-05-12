@@ -73,7 +73,7 @@
     console.log(cart.items)
   }
   onMounted(async() => {
-    cart.emptyCart();
+    // cart.emptyCart();
   })
 </script>
   

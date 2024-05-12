@@ -194,6 +194,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  margin: 0.5em;
 }
 
 input[type="text"],    /* deze selector om specifiek stijlen te kunnen toepassen op de invoervelden */

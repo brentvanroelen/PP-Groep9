@@ -73,7 +73,7 @@ const onSubmit = () => {
 }
 </script>
 
-<style>
+<style scoped>
 
 .options {
     display: flex;
