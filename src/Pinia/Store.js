@@ -7,11 +7,12 @@ import { signOut } from 'firebase/auth';
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    results: []
+    results: JSON.parse(localStorage.getItem('results')) || [],
   }),
   actions: {
     updateResults(results) {
       this.results = results;
+      localStorage.setItem('results', JSON.stringify(results));
     }
   }
 });
