@@ -1,7 +1,7 @@
 <template v-if="Item">
     <div id="box">
     <div  id="calendarBox">
-      <Calendar :page="page"></Calendar>
+      <Calendar :item="Item.Name" :page="page"></Calendar>
     </div>
     <div id="itemBox">
       <Items :item="Item"></Items>
@@ -41,24 +41,24 @@
     Name: String,
   });
   const cart = useCart();
-  const checked = ref(false);
+  const quantity = useQuantity();
   const router = useRouter();
-  const params = router.currentRoute.value.params;
   const store = useStore();
+  const dates = useDates();
+  const checked = ref(false);
+  const params = router.currentRoute.value.params;
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
-  const dates = useDates();
   const page = "UserHome";
 
   const addItemToCart = () => {
-    console.log(Item);
-    cart.addItem(Item);
-    console.log(cart.items);
-    cart.addEndDate(dates.endDate + "/" + dates.endMonth);
-    cart.addStartDate(dates.startDate + "/" + dates.startMonth);
-    cart.addStartDate
-    console.log(cart.startDate);
-    console.log(cart.endDate);
+      if(dates.dates[Item.Name] === undefined || quantity.getQuantity(Item.Name) == 0){
+        console.log("Please select a date range and a quantity")
+      }else{
+        console.log(Item);
+        cart.addItem(Item);
+        console.log(cart.items);        
+      }
   }
 
   </script>

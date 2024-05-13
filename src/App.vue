@@ -14,10 +14,14 @@
 import Navigation from './components/Navigation.vue'
 import Footer from './components/Footer.vue'
 import NavigationAdmin from '../src/components/navigationAdmin.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useCart } from './Pinia/Store'
 
+const cart = useCart()
 const adminButton = ref(false)
-
+onMounted(() => {
+  cart.emptyCart()
+})
 
 
 

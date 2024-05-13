@@ -19,15 +19,16 @@ export const useStore = defineStore({
 export const useDates = defineStore({
   id: 'Dates',
   state: () => ({
-    startDate: '',
-    endDate: '',
-    startMonth: '',
-    endMonth: '',
+    dates: {
+      
+    }
   }),
   actions: {
-    updateStartDate(startDate, startMonth) {
-      this.startDate = startDate;
-      this.startMonth = startMonth;
+    updateDate(item, datearray) {
+      this.dates[item] = datearray;
+    },
+    resetDates(){
+      this.dates = {}
     },
     updateEndDate(endDate, endMonth) {
       this.endDate = endDate;
@@ -40,12 +41,14 @@ export const useCart = defineStore({
   id: 'Cart',
   state: () => ({
     items: JSON.parse(localStorage.getItem('cartItems')) || [],
+    itemNames: [],
     startDate: '',
     endDate: '', 
   }),
   actions: {
     addItem(item){
       this.items.push(item);
+      this.itemNames.push(item.Name)
       localStorage.setItem('cartItems', JSON.stringify(this.items));
     },
     emptyCart(){
@@ -78,6 +81,9 @@ export const useQuantity = defineStore({
       this.quantity[item] = quantity
     },
     getQuantity(item){
+      if(this.quantity[item] === undefined){
+        return 0
+      }
       return this.quantity[item]
     },
     setavailable(available){

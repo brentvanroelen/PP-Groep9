@@ -28,13 +28,13 @@ watch(triggergetter, async() => {
 });
 
 const handleAvailability = async() => {
-    availableInstances.resetAllItems();
     console.log(page)
     if(page == "UserHome"){
         for (let item of store.results) {
-            if(dates.startDate != "" && dates.endDate != ""){
+            if(Object.keys(dates.dates).length != 0){
                 console.log(item)
                 await getAvailableItems(item.Name,item.SerialSeries);
+                console.log(availableInstances)
                 /* CALL RESERVATION HANDLER*/
             }else{
                 console.log("Please select a date range")
@@ -42,7 +42,7 @@ const handleAvailability = async() => {
         }
     }else if(page == "HomeAdmin"){
         for (let item of cart.items) {
-            if(dates.startDate != "" && dates.endDate != ""){
+            if(Object.keys(dates.dates).length != 0){
                 console.log(item)
                 await getAvailableItems(item.Name,item.SerialSeries);
                 /* CALL RESERVATION HANDLER*/
@@ -78,15 +78,12 @@ const getAvailableItems = async(name,serial) => {
     if(availableInstances.getCollection(name) == undefined){
         availableInstances.createCollection(name);
     }
-    console.log(availableInstances)
     const creference = collection(db, `Items/${name.charAt(0).toUpperCase() 
         + name.slice(1)}/${name.charAt(0).toUpperCase() 
         + name.slice(1)} items`);
-    await getNonConflictingReservedItems(serial)
+    await getNonConflictingReservedItems(name,serial)
     const reservedSnapshot = await getDocs(creference);
-    console.log(reservedSnapshot.size)
     reservedSnapshot.forEach((doc) => {
-        console.log(doc.data().Reserved)
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
             availableInstances.addInstance(doc.data().Name,doc.data());
         }else{
@@ -94,10 +91,10 @@ const getAvailableItems = async(name,serial) => {
         }
     });
 }
-const getNonConflictingReservedItems = async(serialseries) => {
+const getNonConflictingReservedItems = async(name,serialseries) => {
     Nonconflictingreserveditems = [];
     let blacklist = []
-    const Userdates = dateifierUser(dates.startDate, dates.startMonth, dates.endDate, dates.endMonth);
+    const Userdates = dateifierUser(dates.dates[name][0], dates.dates[name][1], dates.dates[name][2], dates.dates[name][3]);
     const creference = collection(db, "Reservations");
     const reservedQuery = query(creference,where("ItemSerials", "array-contains" , serialseries));
     const reservedSnapshot = await getDocs(reservedQuery);

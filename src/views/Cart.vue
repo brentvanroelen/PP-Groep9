@@ -36,7 +36,7 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">{{ itemCount }}</span>
             </div>
-            <button class="confirm-button" @click="test()">Confirm order</button>
+            <ReservationHandler :check-user-cart="true"></ReservationHandler>
         </section>
     </main>
 
@@ -46,6 +46,7 @@
     import Navigation from "../components/Navigation.vue"
     import { useCart } from '@/Pinia/Store';
     import { onMounted, ref } from 'vue';
+    import ReservationHandler from "@/components/ReservationHandler.vue";
 
    
 
