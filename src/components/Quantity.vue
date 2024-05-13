@@ -8,7 +8,7 @@
 </template>
 <script setup>
 import { useQuantity, useChoiceOfItems } from '@/Pinia/Store';
-import { defineProps, computed,ref } from 'vue';
+import { computed,ref } from 'vue';
 
 const selectedOption = ref(1);
 const availableInstances = useChoiceOfItems();
