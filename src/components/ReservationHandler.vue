@@ -2,7 +2,7 @@
     <button @click="handleReservation()">Loan now</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector } from '@/Pinia/Store';
+import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
@@ -16,6 +16,7 @@ const cart = useCart();
 const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
 const itemSelector = useItemSelector();
+const user = useUserIdentification();
 
 let  items = []
 let itemMaps = [];
@@ -129,8 +130,11 @@ const makeItemMap = (items) =>{
 
 }
 const MakeReservation = async(date) => {
-    const docRef = doc(db, "Reservations", "Tester" + " " + date[0] + " " + date[2]);
-    await setDoc(docRef, {
+    const docRefGeneralReservation = doc(collection(db, "Reservations"));
+    const docRefUserReservation = doc(collection(db, `Users/${user.user.id}/Reservations`));
+    const docRefAdminReservation = doc(collection(db, `/Utility/Reservations/All Reservations`));
+    await setDoc(docRefGeneralReservation, {
+        id: docRefGeneralReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
         allItemNames: items.map(item => item.Name),
@@ -138,13 +142,52 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: "Tester",
+        User: user.user.id,
+        UserFirstName: user.user.firstName,
+        UserLastName: user.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
+    await setDoc(docRefUserReservation, {
+        id: docRefGeneralReservation.id, 
+        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+        allItemSerials: items.map(item => item.Serial),
+        allItemNames: items.map(item => item.Name),
+        StartDate: date[0],
+        EndDate: date[2],
+        StartMonth: date[1],
+        EndMonth: date[3],
+        User: user.user.id,
+        UserFirstName: user.user.firstName,
+        UserLastName: user.user.lastName,
+        ForProject: false,
+        Extended: false,
+        CurrentlyWithUser: false,
+        ReservationPrepared: false,
+        ...Object.assign({}, ...itemMaps)
+    });
+    await setDoc(docRefAdminReservation, {
+        id: docRefGeneralReservation.id, 
+        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+        allItemSerials: items.map(item => item.Serial),
+        allItemNames: items.map(item => item.Name),
+        StartDate: date[0],
+        EndDate: date[2],
+        StartMonth: date[1],
+        EndMonth: date[3],
+        User: user.user.id,
+        UserFirstName: user.user.firstName,
+        UserLastName: user.user.lastName,
+        ForProject: false,
+        Extended: false,
+        CurrentlyWithUser: false,
+        ReservationPrepared: false,
+        ...Object.assign({}, ...itemMaps)
+    });
+    
     itemSelector.resetCollectionName();
 }
 const groupByDates = (itemsObject) => {

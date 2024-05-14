@@ -31,6 +31,12 @@ const handleAvailability = async() => {
     console.log(page)
     if(page == "UserHome"){
         for (let item of store.results) {
+            console.log(item)
+            console.log(availableInstances.items)
+            console.log(availableInstances.items[item.Name])
+            if(availableInstances.items[item.Name] !== undefined){
+                availableInstances.items[item.Name] = [];
+            }
             if(Object.keys(dates.dates).length != 0){
                 console.log(item)
                 await getAvailableItems(item.Name,item.SerialSeries);
