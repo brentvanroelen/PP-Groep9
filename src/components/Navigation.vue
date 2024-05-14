@@ -8,20 +8,20 @@
       <li><router-link class="link" to="/contact">Contact</router-link></li>
       <li><router-link class="link" to="/cart">Cart</router-link></li>
       <li><router-link class="link" to="/Additem">Additem</router-link></li>
+      <li><button class="loginPageBtn" @click="logOut"> log out</button></li>
     </div>
     </ul>
   </nav>
 </template>
 
-<script>
-// @ is an alias to /src
+<script setup>
+import { useUserIdentification } from '@/Pinia/Store';
 
 
-export default {
-  name: 'Navigation',
-  components: {
+const userIdentification = useUserIdentification();
 
-  }
+const logOut = () => {
+    userIdentification.logOut();
 }
 </script>
 

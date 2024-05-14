@@ -40,19 +40,34 @@
 
 
 <script setup>
-import { useStore } from "@/Pinia/Store.js";
+import { useStore,useUserIdentification } from "@/Pinia/Store.js";
 import Reservation from "@/components/Reservation.vue";
 import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
 import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
 import ScheduledReturn from "@/components/ScheduledReturn.vue";
 import ScheduledLoan from "@/components/ScheduledLoan.vue";
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
+import{ useRouter } from 'vue-router';
 
 let currentDate = ref(new Date());
 let unssub = false;
 const showSpontaneous = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
+
+const user = useUserIdentification()
+const router = useRouter()
+const testing = true
+if(testing == false){
+  if (user.user.id == "" || user.user.id == undefined){
+    console.log("User not logged in")
+    user.logOut()
+  }else if(user.user.type !== "admin"){
+    router.push({name: "Home"})
+  }else{
+    console.log("Welcome")
+  }
+}
 
 const scheduledLoans = computed(() => {
   return reservationslist.value.filter(reservation => 

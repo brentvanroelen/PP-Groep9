@@ -25,10 +25,23 @@ import Footer from "../components/Footer.vue"
 import Categories from "../components/Categories.vue"
 import SearchBar from "../components/Searchbar.vue"
 import Admin from "../components/navigationAdmin.vue"
+import { useUserIdentification } from "@/Pinia/Store"
+import { useRouter } from "vue-router"
 
 const home = "UserHome"
-
-
+const user = useUserIdentification()
+const router = useRouter()
+const testing = true
+if(testing == false){
+  if (user.user.id == "" || user.user.id == undefined){
+    console.log("User not logged in")
+    user.logOut()
+  }else if(user.user.type == "admin"){
+    router.push({name: "HomeAdmin"})
+  }else{
+    console.log("Welcome")
+  }
+}
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 // store.js
 import { defineStore } from 'pinia';
-import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from '@/Firebase/Index';
-import { signOut } from 'firebase/auth';
+import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword, collection, setDoc, db,doc, getDoc } from '@/Firebase/Index';
+import { signOut,onAuthStateChanged } from 'firebase/auth';
 
 
 export const useStore = defineStore({
@@ -162,13 +162,63 @@ export const useOptions = defineStore({
 export const useUserIdentification = defineStore({
   id: 'UserIdentification',
   state: () => ({
-    userId: ''
+    user: {
+      id: '',
+      email: '',
+      type: '',
+      firstName: '',
+      lastName: '',
+    }
   }),
   actions: {
+    initialize(){
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('user:' , user)
+          this.user.id = user.uid
+          this.user.email = user.email
+          const docreference = doc(db, 'Users', user.uid)
+          getDoc(docreference).then((doc) => {
+            if(doc.exists()){
+              this.user.id = user.uid
+              this.user.email = user.email
+              this.user.type = doc.data().type
+              this.user.firstName = doc.data().firstName
+              this.user.lastName = doc.data().lastName
+              if(this.user.type === 'student'){
+                this.router.push('/')
+              }else if (this.user.type === 'admin'){
+                this.router.push('/HomeAdmin')
+              }else{
+                this.router.push('/')
+              }
+            }
+        })
+        } else {
+          console.log('user logged out')
+          this.user = {}
+          this.router.replace('/login')
+        }
+      })
+    },
     register(credentials){
       createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
       .then((userCredential) => {
       const user = userCredential.user
+
+      const docreference = doc(db,"Users", user.uid)
+      setDoc(docreference, {
+        type: 'student',
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        uid: user.uid,
+        email: credentials.email,
+      })
+      this.user.id = user.uid
+      this.user.email = credentials.email
+      this.user.type = 'student'
+      this.user.firstName = credentials.firstName
+      this.user.lastName = credentials.lastName
       console.log(user)
       }).catch((error) => {
       const errorCode = error.code
@@ -179,20 +229,13 @@ export const useUserIdentification = defineStore({
     logOut(){
       signOut(auth).then(() => {
         console.log('User signed out')
+        this.router.push('/login')
       }).catch((error) => {
         console.log(error.message)
       });
     },
     login(credentials){
       signInWithEmailAndPassword(auth, credentials.email, credentials.password)
-      .then((userCredential) => {
-      const user = userCredential.user
-      console.log(user)
-      }).catch((error) => { 
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorCode, errorMessage)
-      });
     },
     updateUserId(userId){
       this.userId = userId

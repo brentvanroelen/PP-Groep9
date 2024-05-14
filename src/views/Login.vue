@@ -12,9 +12,17 @@
                 <div class="Content">
                     <h1>{{formTitle}}</h1>
                     <form class='Content' @submit.prevent="onSubmit">
+                        <fieldset v-if="registerActive">
+                        <label for="email">First name</label>
+                        <input v-model="credentials.firstName" type="text" placeholder="First name" />
+                        </fieldset>
+                        <fieldset v-if="registerActive">
+                        <label for="email">Last name</label>
+                        <input v-model="credentials.lastName" type="text" placeholder="Last name" />
+                        </fieldset>
                         <fieldset>
                         <label for="email">Email</label>
-                        <input v-model="credentials.email" type="text" placeholder="Username" />
+                        <input v-model="credentials.email" type="text" placeholder="Email" />
                         </fieldset>
                         <fieldset>
                         <label for="password">Password</label>
@@ -29,7 +37,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref ,onMounted} from 'vue';
 import { useUserIdentification } from '@/Pinia/Store';
 
 const userIdentification = useUserIdentification();
@@ -37,8 +45,15 @@ let loginActive = ref(true);
 let registerActive = ref(false);
 const credentials = reactive({
     email: '',
-    password: ''
+    password: '',
+    firstName: '',
+    lastName: ''
 });
+
+
+onMounted(() => {
+  useUserIdentification().initialize()
+})
 
 
 const makeActive = (name) => {
