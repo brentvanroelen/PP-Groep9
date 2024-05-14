@@ -13,7 +13,7 @@
       <button class="adjustButton">Adjustments</button>
       <button class="deleteButton" @click="deleteStudent(student.id)">Delete</button>
       <br>
-      <button @click="toggleOrders(student)">▾</button>
+      <button @click="toggleOrders(student)">&#9776;</button>
       <!-- lijst met reservaties van de studenten-->
       <ul v-if="student.showOrders" class="ordersList">
         <!-- Loept door de reservaties -->
@@ -88,42 +88,91 @@
   font-family: Arial, sans-serif;
   max-width: 800px;
   margin: 0 auto;
+  background-color: #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
 }
 
+.ItemsToPrepare:hover {
+  background-color: #ddd;
+}
+  
 .studentContainer {
   position: relative;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
   margin-bottom: 20px;
-  padding: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
 }
 
-.studentInfo {
-  margin-bottom: 10px;
+.studentContainer:hover {
+    transform: translateY(-5px);
 }
 
+.readyButton {
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    background-color: #4caf50;
+    color: white;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
 
-.readyButton,
-.adjustButton,
+.readyButton:hover {
+    background-color: #45a049; 
+}
+
+.adjustButton {
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    background-color: #ff9800; 
+    color: white;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+.adjustButton:hover {
+    background-color: #f57c00; 
+}
+
 .deleteButton {
-  padding: 5px 10px;
-  margin-right: 5px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   cursor: pointer;
   border: none;
   border-radius: 20px; 
   background-color: #f44336; 
-  color: white; 
+  color: #fff; 
+  transition: background-color 0.3s;
+  margin-bottom: 10px
 }
 
-.readyButton:hover,
-.adjustButton:hover,
 .deleteButton:hover {
-  opacity: 0.8;
+  background-color: #d32f2f;
 }
 
 .items {
   border: 1px solid #eee;
-  padding: 10px;
-  margin-bottom: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.items:hover {
+    background-color: #f0f0f0;
 }
 
 .items p {
@@ -131,30 +180,34 @@
 }
 
 .items p:nth-child(even) {
-  color: #666;
+  color: #777;
 }
 
 .toggleButton {
   position: absolute;
-  bottom: 10px;
+  bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
   border: none;
-  background: none;
+  background: #ddd;
+  border-radius: 50%;
+  padding: 10px;
   font-size: 1.5em;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .toggleButton:focus {
   outline: none;
 }
 
-
+.toggleButton:hover {
+    background-color: #ccc; 
+}
+   
 @media (max-width: 600px) {
   .ItemsToPrepare {
-    padding: 0 10px;
+    padding: 10px;
   }
 }
-
-
 </style>
