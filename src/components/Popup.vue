@@ -3,6 +3,7 @@
       <div v-if="isVisible" class="popupContainer">
         <div class="popUp">
           <p class="popupText">Insert here</p>
+          <slot></slot>
           <button @click="closePopup" class="popupButton">Close</button>
         </div>
       </div>
