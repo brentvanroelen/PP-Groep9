@@ -25,6 +25,7 @@
       <h2>Early Returns</h2>
       <label>User: </label> <input type="text" name="" id=""><br>
       <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
+      <br>
       <label for="borrowedItems">Borrowed items: </label> borrowed Items<br>
       <button>Selection returned</button>
       <button>Selection returned + check</button>
@@ -112,32 +113,33 @@ onUnmounted(() => {
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: 1fr; /* One column */
-  grid-template-rows: auto 1fr; /* Two rows: auto height for date marker, 1fr for boxes */
-  position: relative; /* Relative positioning for the semi-circle */
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  position: relative;
   background-color: #f0f0f0;
+  margin: 0em 5em 5em 5em;
 }
 
 .date-marker {
   text-align: center;
   font-size: 1.5em;
-  grid-column: 1; /* Position in first column */
-  grid-row: 1; /* Position in first row */
-  z-index: 1; /* Ensure the date marker is above the semi-circle */
-  position: relative; /* Relative positioning for the z-index */
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 1;
+  position: relative;
     color: #333;
 }
 
 .box-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns for boxes */
-  gap: 20px; /* Gap between columns */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px; 
   padding: 20px;
   border: 4px solid #666;
   border-radius: 10px;
-  grid-column: 1; /* Position in first column */
-  grid-row: 2 / 4; /* Position in second row */
-  margin: 0 20px; /* Margin on the left and right */
+  grid-column: 1;
+  grid-row: 2 / 4;
+  margin: 0 20px;
   
 }
 
@@ -147,20 +149,20 @@ onUnmounted(() => {
   top: 0;
   left: 50%;
   width: 25%;
-  height: 36.25px; /* Adjust this to control the height of the semi-circle */
+  height: 36.25px;
   background-color: #ff6666;
-  transform: translate(-50%, 0); /* Adjust this to control the vertical position of the semi-circle */
-  z-index: 0; /* Ensure the semi-circle is below the date marker */
+  transform: translate(-50%, 0); 
+  z-index: 0; 
 }
     
 .box-container::after {
   content: "";
   position: absolute;
-  top: 38px; /* Start from the bottom of the padding */
+  top: 38px; 
   left: 50%;
-  width: 2px; /* Width of the divider */
-  height: calc(100% - 38px); /* Height of the divider minus twice the padding */
-  background-color: #333; /* Color of the divider */
+  width: 2px; 
+  height: calc(100% - 38px); 
+  background-color: #333; 
 }
 
 .box {
@@ -197,7 +199,7 @@ button {
   margin: 0.5em;
 }
 
-input[type="text"],    /* deze selector om specifiek stijlen te kunnen toepassen op de invoervelden */
+input[type="text"],    
 input[type="time"] {
   padding: 8px;
   border: 1px solid #ccc;

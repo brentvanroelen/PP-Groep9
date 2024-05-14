@@ -14,23 +14,27 @@
         <p><b>Serial Series: </b> {{  item.SerialSeries }}</p>
     </div>
         <p><b>Start date: </b> {{ startDate  }}</p>
-        <div class="calendar">
-            <img src="../assets/calendar.png" alt="">
-        </div>
-        <p><b>End date:</b> {{ endDate }}</p>
-        <span id="calendar">
+        <span class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
         </span>
-        
+        <p><b>End date:</b> {{ endDate }}</p>
+        <span id="calendar" @click="togglePopup(true)">
+            <img src="../assets/calendar.png" alt="" >
+        </span>
         <div class="item-trash" @click="removeItem()">
             <img src="../assets/trash.png" alt="">
         </div>
-        <!-- Add more item properties as needed -->
       </div>
-    </div>
+      <Popup v-if="showPopup" @close="togglePopup(false)">
+            <h3>{{ item.Name }}</h3>
+            <Calendar></Calendar>
+            <br>
+            <button>Edit date</button>
+    </Popup>
         
+    </div>
+    
 
-        <!-- Selected items en confirm order button container -->
         <section class="selected-items-container">
             <div class="selected-items">
                 <strong>Selected items:</strong>
@@ -40,6 +44,7 @@
         </section>
     </main>
 
+
 </template>
 
 <script setup>
@@ -47,9 +52,10 @@
     import { useCart } from '@/Pinia/Store';
     import { onMounted, ref } from 'vue';
     import ReservationHandler from "@/components/ReservationHandler.vue";
+    import Popup from "@/components/Popup.vue";
+    import Calendar from "@/components/Calendar.vue";
 
-   
-
+    let showPopup = ref(false);
     const cart = useCart();
     const items = cart.items;
     const startDate = cart.startDate;
@@ -59,7 +65,11 @@
     for (let i = 0; i < items.length; i++) {
         itemCount.value += 1;
     }
-    
+
+    const togglePopup = (value) => {
+        showPopup.value = !showPopup.value;
+    }
+
     const removeItem = (index) => {
         cart.removeItem(index);
         itemCount.value -= 1;
@@ -152,5 +162,15 @@
             align-items: center;
             width: 300px;
             height: 150px;
+        }
+        button{
+            padding: 10px 20px;
+            background-color: #d50000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            outline: none;
+            margin: 1em;
         }
 </style>
