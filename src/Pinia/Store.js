@@ -253,3 +253,15 @@ export const useCategories = defineStore({
     }
   }
 });
+export const useKitItems = defineStore({
+  id: 'kitItems',
+  state: () => ({
+    selectedItems: []
+  }),
+  actions: {
+    addItem(itemArray){
+      
+      this.selectedItems.push(...itemArray);
+    }
+  }
+});

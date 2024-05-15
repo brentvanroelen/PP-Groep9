@@ -98,7 +98,13 @@ const Makenewdoc = async () => {
 };
 
 const addNewItem = async () => {
+
+
+
   const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
+
+
+
   await setDoc(doc(db, 'Items', itemName), {
     Name: itemName,
     Category: docdata.value.Category,
@@ -107,7 +113,7 @@ const addNewItem = async () => {
     DamagedItems: docdata.value.DamagedItems,
     IsInKit: docdata.value.IsInKit,
     Quantity: docdata.value.Quantity,
-    SubStrings: generateSubstrings(itemName),
+    SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
     SerialSeries: docdata.value.SerialSeries,
@@ -127,7 +133,7 @@ const addNewInstance = async () => {
       Serial: serial,
       HasIssues: instancedata.value.HasIssues,
       Issues: instancedata.value.Issues,
-      SubStrings: generateSubstrings(serial),
+      SubStrings: generateSubstrings,
       Reserved: instancedata.value.Reserved,
       Image: await getImage(instanceName)
     });
