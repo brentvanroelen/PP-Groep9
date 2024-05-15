@@ -1,43 +1,57 @@
 <template>
-  <h1>Modify item</h1>
-  <adminSearchBarAddItem/>
-  <div class="modifyItems">
-      <div v-for="(item, index) in items" :key="index" class="item">
-          <h2>{{ item.Name }}</h2>
-          <img :src="item.Image" alt="Item Image">
-          <p>{{ item.Description }}</p>
-      </div>
-  </div>
+    <h1>Modify item</h1>
+    <adminSearchBarAddItem/>
+    <div class="modifyItems">
+        <div v-for="(item, index) in items" :key="index" class="item">
+            <h2>{{ item.Name }}</h2>
+            <img :src="item.Image" alt="Item Image">
+            <p>{{ item.Description }}</p>
+            <input type="checkbox" v-model="selectedItems" :value="item" class="item-checkbox">
 
-  <div class="buttons">
-      <button class="buttonsClass">
-          <router-link class="link" to="/addKitScreen"> Add to selected kit</router-link>
-      </button>
-  </div>
-</template>
+        </div>
+    </div>
+  
+    <div class="buttons">
+        <button class="buttonsClass" @click="addToSelectedKit">
+            Add to selected kit
+        </button>
+    </div>
+  </template>
+  
+  <script setup>
+    import { ref, onMounted } from 'vue';
+    import { useRouter } from 'vue-router';
+    import adminSearchBarAddItem from '../components/adminSearchBarAddItem.vue';
+    import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
+  
+    const router = useRouter();
+    const db = getFirestore();
+    const items = ref([]);
+    const selectedItems = ref([]);
+  
+    onMounted(async () => {
+        await fetchItems();
+    });
+  
+    const fetchItems = async () => {
+        const itemCollection = collection(db, 'Items');
+        const itemSnapshot = await getDocs(itemCollection);
+        const itemsData = [];
+        itemSnapshot.forEach((doc) => {
+            itemsData.push(doc.data());
+        });
+        items.value = itemsData;
+    };
+  
+    const addToSelectedKit = () => {
+        //Do something with selectedItems, like navigating to the next page
+        router.push({ path: '/addKitScreen', query: { items: selectedItems.value } });
+    };
 
-<script setup>
-  import { ref, onMounted } from 'vue';
-  import adminSearchBarAddItem from '../components/adminSearchBarAddItem.vue';
-  import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
-
-  const db = getFirestore();
-  const items = ref([]);
-
-  onMounted(async () => {
-      await fetchItems();
-  });
-
-  const fetchItems = async () => {
-      const itemCollection = collection(db, 'Items');
-      const itemSnapshot = await getDocs(itemCollection);
-      const itemsData = [];
-      itemSnapshot.forEach((doc) => {
-          itemsData.push(doc.data());
-      });
-      items.value = itemsData;
-  };
-</script>
+    const isSelected = (item) => {
+  return selectedItems.value.includes(item);
+};
+  </script>
 
 <style>
   #SearchBar {
@@ -45,6 +59,12 @@
       margin-bottom: 40px;
       justify-content: center;
   }
+  .item {
+    width: calc(33.33% - 10px);
+    margin-bottom: 20px;
+    background-color: white; /* Voeg deze regel toe */
+    /* Overige stijlen */
+}
 
   .modifyItems {
       display: flex;
