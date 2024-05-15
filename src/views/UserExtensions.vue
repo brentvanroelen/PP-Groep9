@@ -27,10 +27,7 @@
 import { ref } from 'vue';
 
 const names = ref(['Alice Johnson', 'Michael Smith', 'Charlie Brown']);
-names.forEach(name => {
-    const infoDiv = generateInfoDiv(name);
-    infoContainer.appendChild(infoDiv);
-});
+
 
 </script>
 
