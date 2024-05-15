@@ -1,33 +1,41 @@
 <template>
   <!-- <Navigation></Navigation> -->
   <!-- <Admin></Admin> -->
-  <div class="searchcontainer">
-    <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
-    <div class="searchbar-overlay"></div>
-    <div class="searchbar">
-      <SearchBar :page="home"/>
 
+    <div v-if="aantalWaarschuwingen < maxWaarschuwingen">
+      <div class="searchcontainer">
+        <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
+        <div class="searchbar-overlay"></div>
+        <div class="searchbar">
+          <SearchBar :page="home"/>
+        </div>
+      </div>
+      <Kits />
+      <Categories></Categories>
+          <Footer></Footer>
+      <br>
+      <br>
       
     </div>
-  </div>
-  <Kits />
-  <br>
-  <br>
-<!--   <button><router-link class="link" to="/HomeAdmin" id="buttonAdmin"></router-link>Admin</button>
- -->  <!-- Categories -->
-  <Categories></Categories>
-  </template>
+
+    <div class="waarschuwing" v-else>
+      <h1>Waarschuwing</h1>
+      <p>Je hebt te veel waarschuwingen ontvangen om toegang te krijgen tot deze website.</p>
+    </div>
+
+
+</template>
 
 <script setup>
-import Navigation from "../components/Navigation.vue"
-import Footer from "../components/Footer.vue"
-import Categories from "../components/Categories.vue"
-import SearchBar from "../components/Searchbar.vue"
-import Admin from "../components/navigationAdmin.vue"
+import { ref } from 'vue';
+import Navigation from "../components/Navigation.vue";
+import Footer from "../components/Footer.vue";
+import Categories from "../components/Categories.vue";
+import SearchBar from "../components/Searchbar.vue";
+import Admin from "../components/navigationAdmin.vue";
 import { useUserIdentification } from "@/Pinia/Store"
 import { useRouter } from "vue-router"
 
-const home = "UserHome"
 const user = useUserIdentification()
 const router = useRouter()
 const testing = true
@@ -41,15 +49,24 @@ if(testing == false){
     console.log("Welcome")
   }
 }
+import { ref } from 'vue';
+import Navigation from "../components/Navigation.vue";
+import Footer from "../components/Footer.vue";
+import Categories from "../components/Categories.vue";
+import SearchBar from "../components/Searchbar.vue";
+import Admin from "../components/navigationAdmin.vue";
+
+const home = "UserHome";
+
+const aantalWaarschuwingen = ref(1); 
+const maxWaarschuwingen = ref(3); 
 </script>
 
-<style>
+<style scoped>
 .searchcontainer {
   position: relative;
   background: url("../assets/Campus-Kaai.jpg") no-repeat center center/cover;
 }
-
-
 
 
 </style>
