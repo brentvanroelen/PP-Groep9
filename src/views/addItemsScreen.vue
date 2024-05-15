@@ -1,161 +1,177 @@
 <template>
-    <div>
-      <h1 v-if="!instance">Add item</h1>
-      <h1 v-else>Add instance</h1>
-      <form @submit.prevent="Makenewdoc">
-        <div v-if="!instance">
-          <div class="form-group">
-            <label for="name">Name: </label>
-            <input type="text" id="name" name="name" v-model="docdata.Name" required>
-          </div>
-          <div class="form-group">
-            <label for="category">Category: </label>
-            <input type="text" id="category" name="category" v-model="docdata.Category" required>
-          </div>
-          <div class="form-group">
-            <label for="brand">Brand:</label>
-            <input type="text" id="brand" name="brand" v-model="docdata.Brand">
-          </div>
-          <div class="form-group">
-            <label for="description">Description: </label>
-            <input type="text" id="description" name="description" v-model="docdata.Description">
-          </div>
-          <div class="form-group">
-            <label for="image">Image: </label>
-            <input type="text" id="image" name="image" v-model="docdata.Image">
-          </div>
-          <div class="form-group">
-            <label for="serial">Serial Series: </label>
-            <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries">
-          </div>
+  <div>
+    <h1 v-if="!instance">Add item</h1>
+    <h1 v-else>Add instance</h1>
+    <form @submit.prevent="Makenewdoc">
+      <div v-if="!instance">
+        <div class="form-group">
+          <label for="name">Name: </label>
+          <input type="text" id="name" name="name" v-model="docdata.Name" required>
         </div>
-        <div v-else>
-          <div class="form-group">
-            <label for="name">Name: </label>
-            <input type="text" id="name" name="name" v-model="instancedata.Name" required>
-          </div>
-          <div class="form-group">
-            <label for="serial">Serial: </label>
-            <input type="text" id="serial" name="serial" v-model="instancedata.Serial" required>
-          </div>
+        <div class="form-group">
+          <label for="category">Category: </label>
+          <input type="text" id="category" name="category" v-model="docdata.Category" required>
         </div>
-        <div class="button-group">
-          <button type="button" class="btn" @click="setInstance(false)">Add New Item</button>
-          <button type="button" class="btn" @click="setInstance(true)">Add Instance</button>
+        <div class="form-group">
+          <label for="brand">Brand:</label>
+          <input type="text" id="brand" name="brand" v-model="docdata.Brand">
         </div>
-        <button type="submit" class="btn">Add item</button>
-        <button type="submit" class="btn"><router-link class="link" to="/ManageItems">Close</router-link></button>
-      </form>
-    </div>
-  </template>
-  
-  
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { db, setDoc, updateDoc, doc, increment, getDoc } from '../Firebase/Index.js';
+        <div class="form-group">
+          <label for="description">Description: </label>
+          <input type="text" id="description" name="description" v-model="docdata.Description">
+        </div>
+        <div class="form-group">
+          <label for="image">Image: </label>
+          <input type="text" id="image" name="image" v-model="docdata.Image">
+        </div>
+        <div class="form-group">
+          <label for="serial">Serial Series: </label>
+          <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries">
+        </div>
+      </div>
+      <div v-else>
+        <div class="form-group">
+          <label for="name">Name: </label>
+          <input type="text" id="name" name="name" v-model="instancedata.Name" required>
+        </div>
+        <div class="form-group">
+          <label for="serial">Serial: </label>
+          <input type="text" id="serial" name="serial" v-model="instancedata.Serial" required>
+        </div>
+      </div>
+      <div class="button-group">
+        <button type="button" class="btn" @click="setInstance(false)">Add New Item</button>
+        <button type="button" class="btn" @click="setInstance(true)">Add Instance</button>
+      </div>
+      <button type="submit" class="btn">Add item</button>
+      <button type="button" class="btn">
+        <router-link class="link" to="/ManageItems">Close</router-link>
+      </button>
+    </form>
+  </div>
+</template>
 
-  
-  let instance = ref(false);
-  
-  const docdata = ref({
-    Name: '',
-    Category: '',
-    Brand: '',
-    Description: '',
+<script setup>
+import { ref } from 'vue';
+import { db, setDoc, updateDoc, doc, increment, getDoc } from '../Firebase/Index.js';
+
+let instance = ref(false);
+
+const docdata = ref({
+  Name: '',
+  Category: '',
+  Brand: '',
+  Description: '',
+  Image: '',
+  DamagedItems: [],
+  IsInKit: false,
+  Quantity: 1,
+  SubStrings: [],
+  Available: true,
+  AvailableAmount: 0,
+  SerialSeries: ''
+});
+
+const instancedata = ref({
+  Name: '',
+  Serial: '',
+  HasIssues: false,
+  Issues: {
+    User: '',
+    IssueType: '',
     Image: '',
-    DamagedItems: [],
-    IsInKit: false,
-    Quantity: 1,
-    SubStrings: [],
-    Available: true,
-    AvailableAmount: 0,
-    SerialSeries: ''
+    Description: ''
+  },
+  Reserved: false
+});
+
+const setInstance = (isInstance) => {
+  instance.value = isInstance;
+};
+
+const Makenewdoc = async () => {
+  if (!instance.value) {
+    await addNewItem();
+  } else {
+    await addNewInstance();
+  }
+};
+
+const addNewItem = async () => {
+
+
+
+  const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
+
+
+
+  await setDoc(doc(db, 'Items', itemName), {
+    Name: itemName,
+    Category: docdata.value.Category,
+    Brand: docdata.value.Brand,
+    Description: docdata.value.Description,
+    DamagedItems: docdata.value.DamagedItems,
+    IsInKit: docdata.value.IsInKit,
+    Quantity: docdata.value.Quantity,
+    SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
+    Available: docdata.value.Available,
+    AvailableAmount: docdata.value.AvailableAmount,
+    SerialSeries: docdata.value.SerialSeries,
+    Image: docdata.value.Image
   });
-  
-  const instancedata = ref({
-    Name: '',
-    Serial: '',
-    HasIssues: false,
-    Issues: {
-      User: '',
-      IssueType: '',
-      Image: '',
-      Description: ''
-    },
-    Reserved: false
-  });
-  
-  const setInstance = (isInstance) => {
-    instance.value = isInstance;
-  };
-  
-  const Makenewdoc = async () => {
-    const itemName = docdata.value.Name.trim().toLowerCase();
-    const instanceName = instancedata.value.Name.charAt(0).toUpperCase() + instancedata.value.Name.slice(1)
-    const serial = instancedata.value.Serial.toUpperCase();
-  
-    if (!instance.value) {
-      // Voeg nieuw item toe
-      await setDoc(doc(db, 'Items', itemName), {
-        Name: itemName,
-        Category: docdata.value.Category,
-        Brand: docdata.value.Brand,
-        Description: docdata.value.Description,
-        DamagedItems: docdata.value.DamagedItems,
-        IsInKit: docdata.value.IsInKit,
-        Quantity: docdata.value.Quantity,
-        SubStrings: generateSubstrings(itemName),
-        Available: docdata.value.Available,
-        AvailableAmount: docdata.value.AvailableAmount,
-        SerialSeries: docdata.value.SerialSeries
-      });
-    } else {
-      // Voeg nieuwe instantie toe
-      const itemRef = doc(db, 'Items', instanceName);
-      const itemDoc = await getDoc(itemRef);
-        await setDoc(doc(db, `Items/${instanceName}/${instanceName} items`, serial), {
-          Name: instanceName,
-          Serial: serial,
-          HasIssues: instancedata.value.HasIssues,
-          Issues: instancedata.value.Issues,
-          SubStrings: generateSubstrings(serial),
-          Reserved: instancedata.value.Reserved,
-          Image: await getImage(instanceName)
-          
-        });
-        await changeAmountAvailable(instanceName);
-      }
-  };
-  
-  const generateSubstrings = (str) => {
-    const substrings = [];
-    for (let i = 0; i < str.length; i++) {
-      for (let j = i + 1; j <= str.length; j++) {
-        substrings.push(str.substring(i, j));
-      }
-    }
-    return substrings;
-  };
-  
-  const changeAmountAvailable = async (queryname) => {
-    const docRef = doc(db, `Items/${queryname}`);
-    await updateDoc(docRef, {
-      AvailableAmount: increment(1)
+};
+
+const addNewInstance = async () => {
+  const instanceName = instancedata.value.Name.charAt(0).toUpperCase() + instancedata.value.Name.slice(1);
+  const serial = instancedata.value.Serial.toUpperCase();
+  const itemRef = doc(db, 'Items', instanceName);
+  const itemDoc = await getDoc(itemRef);
+
+  if (itemDoc.exists()) {
+    await setDoc(doc(db, `Items/${instanceName}/${instanceName} items`, serial), {
+      Name: instanceName,
+      Serial: serial,
+      HasIssues: instancedata.value.HasIssues,
+      Issues: instancedata.value.Issues,
+      SubStrings: generateSubstrings,
+      Reserved: instancedata.value.Reserved,
+      Image: await getImage(instanceName)
     });
-  };
-  
-  const getImage = async (queryname) => {
-    const docRef = doc(db, `Items/${queryname}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data().Image;
-    } else {
-      console.log('No such document!');
-      return '';
+    await changeAmountAvailable(instanceName);
+  } else {
+    console.log(`Item with name ${instanceName} does not exist.`);
+  }
+};
+
+const generateSubstrings = (str) => {
+  const substrings = [];
+  for (let i = 0; i < str.length; i++) {
+    for (let j = i + 1; j <= str.length; j++) {
+      substrings.push(str.substring(i, j));
     }
-  };
-  </script>
+  }
+  return substrings;
+};
+
+const changeAmountAvailable = async (queryname) => {
+  const docRef = doc(db, `Items/${queryname}`);
+  await updateDoc(docRef, {
+    AvailableAmount: increment(1)
+  });
+};
+
+const getImage = async (queryname) => {
+  const docRef = doc(db, `Items/${queryname}`);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data().Image;
+  } else {
+    console.log('No such document!');
+    return '';
+  }
+};
+</script>
+
   
   
   <style>

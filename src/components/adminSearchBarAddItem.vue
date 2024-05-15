@@ -1,58 +1,63 @@
 <template>
-    <div class="search-container">
-      <div class="search-bar">
-        <input type="text" v-model="querystring" @keyup.enter="search"placeholder="Search">
-        <button @click="search">Search</button>
-      </div>
-      <div class="searchResults">
-      <ul>
-        <li v-for="(item, index) in results" :key="index">
-          {{ item.Name }} - {{ item.Description }}
-          <img :src="item.Image" alt="" id="img">
-        </li>
-      </ul>
+  <div class="search-container">
+    <div class="search-bar">
+      <input type="text" v-model="querystring" @keyup.enter="search" placeholder="Search">
+      <button @click="search">Search</button>
     </div>
-    
+    <div class="searchResults">
+      <div v-for="(item, index) in results" :key="index" class="item">
+        <h2>{{ item.Name }}</h2>
+        <img :src="item.Image" alt="Item Image">
+        <p>{{ item.Description }}</p>
+        <input type="checkbox" v-model="selectedItems" :value="item"  @change="addToSelectedKit" class="item-checkbox" >
       </div>
-  
-  </template>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { collection, where, db, query, getDocs } from '../Firebase/Index.js';
+import { useStore } from '@/Pinia/Store.js';
+import { useKitItems } from '@/Pinia/Store.js';
+
+const querystring = ref('');
+const results = ref([]);
+const selectedItems = ref([]);
+const kitItems = useKitItems();
+
+const store = useStore();
+const addToSelectedKit = (item) => {
+  console.log(selectedItems.value);
+    kitItems.addItem(selectedItems.value);
+  console.log(kitItems);
+
+
+};
+
+
+const search = async () => {
+  results.value = [];
+  const itemquery = query(
+    collection(db, "Items"), 
+    where('SubStrings', 'array-contains', querystring.value.toLowerCase())
+  );
+
     
-  <script setup>
-    import {onMounted, ref, watch} from '../main.js'
-    import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
-    import router from '@/router';
-    import { useStore,useCart } from '@/Pinia/Store.js';
-   
       
-      
-    
-    const showResults = ref(false);
-    const props = defineProps({
-      page: String,
-      class: String
-    });
-    const querystring = ref('');
-    const store = useStore();
-    const cart = useCart();
-  
-    const search = async() => {
-      let results = [];
-      store.updateResults([]);
-      const itemquery = query(collection(db, "Items"), 
-      where('SubStrings', 'array-contains', querystring.value.toLowerCase())
-      );
-      
-      const querySnapshot = await getDocs(itemquery);
-        querySnapshot.forEach((snap) =>{
-          console.log(snap.data())
-          results.push(snap.data())
-      })
-      console.log(results)
-      store.updateResults(results)
-    };
-    
-  
-  </script>
+  const querySnapshot = await getDocs(itemquery);
+  const itemsData = [];
+  querySnapshot.forEach((snap) => {
+    itemsData.push(snap.data());
+  });
+  results.value = itemsData;
+};
+
+
+
+
+</script>
+
     
   
     <style scoped>

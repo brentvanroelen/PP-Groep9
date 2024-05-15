@@ -1,32 +1,61 @@
 <template>
     <div class="addKitScreen">
-        <div class="inputKits">
-            <label for="kitName" class="labels">Kit name: </label><input type="text" name="" id="kitNameInput">
-            <label for="number" class="labels">Number (optional): </label> <input type="number" name="" id="numberInput">
-            <label for="kitDescription" class="labels">Kit description: </label><input type="text" name="" id="descriptionInput">
+      <div class="inputKits">
+        <label for="kitName" class="labels">Kit name: </label><input type="text" name="" id="kitNameInput">
+        <label for="number" class="labels">Number (optional): </label> <input type="number" name="" id="numberInput">
+        <label for="kitDescription" class="labels">Kit description: </label><input type="text" name="" id="descriptionInput">
+      </div>
+      
+      <div class="buttons">   
+        <button class="buttonsClass">Add more items</button>
+        <div class="fileInputWrapper">
+          <input type="file" name="file" id="file">
+          <button class="buttonsClass">Upload IMG</button>
         </div>
-        
-        <div class="buttons">   
-            <button class="buttonsClass">Add more items</button>
-            <div class="fileInputWrapper">
-                <input type="file" name="file" id="file">
-                <button class="buttonsClass">Upload IMG</button>
-            </div>
+      </div>
+      
+      <div class="items highlighted">
+        <div v-for="(item, index) in selectedItems" :key="index" class="item">
+          <div class="itemPanel"><h2>{{ item.Name }}</h2>
+          <img :src="item.Image" alt="Selected Item Image">
+          <p>{{ item.Description }}</p>
+          <button @click="removeItem(index)">Remove</button></div>
         </div>
-        
-        <div class="items highlighted">
-            Data uit database
-        </div>
-        
-        <button class="buttonsClass largerButton">Add Kit</button>
+      </div>
+      
+      <button class="buttonsClass largerButton">Add Kit</button>
     </div>
-</template>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
+  import { useKitItems } from '@/Pinia/Store';
 
+  
+  const kitItems = useKitItems();
+  
 
+  
+  const router = useRouter();
+  const selectedItems = ref(kitItems.selectedItems);
+  
+  
+  const removeItem = (index) => {
+    selectedItems.value.splice(index, 1);
+  };
+  
+ 
+  const route = router.currentRoute.value;
+  if (route.query.items) {
+    selectedItems.value = route.query.items;
+  }
+  </script>
+  
 
-<script setup>
+  
 
-</script>
 
 <style scoped>
 
@@ -77,13 +106,26 @@
 }
 
 .items {
-    background-color: red; /* Tijdelijke opvallende kleur */
+    
     width: auto; 
     height: 200px; 
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
+}
+
+.item{
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    background-color: grey;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .fileInputWrapper {
