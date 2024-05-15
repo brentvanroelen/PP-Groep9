@@ -40,84 +40,125 @@
             <tbody>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>2</td>
-                    <td class="orange" ><div class="border" >no</div></td>
+                    <td>John Doe</td>
+                    <td>john.doe@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td class="orange"><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>1</td>
-                    <td  class="green"><div class="border">no</div></td>
+                    <td>Jane Smith</td>
+                    <td>jane.smith@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td class="green"><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>3</td>
-                    <td class="red" ><div class="border" >yes</div></td>
+                    <td>Michael Johnson</td>
+                    <td>michael.johnson@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td class="red"><div class="border">yes</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>1</td>
+                    <td>Emily Brown</td>
+                    <td>emily.brown@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
                     <td><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>3</td>
-                    <td ><div class="border">yes</div></td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>1</td>
-                    <td ><div class="border">no</div></td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>1</td>
-                    <td ><div class="border">no</div></td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>2</td>
-                    <td><div class="border">no</div></td>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>3</td>
+                    <td>David Lee</td>
+                    <td>david.lee@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
                     <td><div class="border">yes</div></td>
                     <td>...</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>Naam</td>
-                    <td>@student.ehb.be</td>
-                    <td>2</td>
+                    <td>Sarah Taylor</td>
+                    <td>sarah.taylor@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
                     <td><div class="border">no</div></td>
                     <td>...</td>
                 </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>James Wilson</td>
+                    <td>james.wilson@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td><div class="border">no</div></td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>Olivia Martinez</td>
+                    <td>olivia.martinez@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td><div class="border">no</div></td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>William Garcia</td>
+                    <td>william.garcia@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td><div class="border">no</div></td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>Emma Rodriguez</td>
+                    <td>emma.rodriguez@example.com</td>
+                    <td>
+                        <button class="increase-warning-btn">+</button>
+                        <span class="warning-count">3</span>
+                        <button class="decrease-warning-btn">-</button>
+                    </td>
+                    <td><div class="border">yes</div></td>
+                    <td>...</td>
+                </tr>
+                
                 
             </tbody>
         </table>
@@ -137,7 +178,100 @@
 
 
 </template>
-<script>
+
+<script setup>
+document.addEventListener("DOMContentLoaded", function() {
+    function updateBlacklistedStatus(row) {
+        let warnings = parseInt(row.querySelector(".warning-count").textContent);
+        let blacklistedCell = row.querySelector("td:nth-child(5)");
+
+        if (warnings === 1) {
+            blacklistedCell.innerHTML = '<div class="border">no</div>';
+            blacklistedCell.classList.remove("orange", "red");
+            blacklistedCell.classList.add("green");
+        } else if (warnings === 2) {
+            blacklistedCell.innerHTML = '<div class="border">no</div>';
+            blacklistedCell.classList.remove("green", "red");
+            blacklistedCell.classList.add("orange");
+        } else if (warnings >= 3) {
+            blacklistedCell.innerHTML = '<div class="border">yes</div>';
+            blacklistedCell.classList.remove("green", "orange");
+            blacklistedCell.classList.add("red");
+        } else {
+            blacklistedCell.innerHTML = '<div class="border">no</div>';
+            blacklistedCell.classList.remove("orange", "red");
+            blacklistedCell.classList.add("green");
+        }
+    }
+
+    function applyColorsToAllRows() {
+        let rows = document.querySelectorAll(".content tbody tr");
+        rows.forEach(function(row) {
+            updateBlacklistedStatus(row);
+        });
+    }
+
+    applyColorsToAllRows();
+
+    let select = document.getElementById("cijfer");
+    select.addEventListener("change", function() {
+        let aantal = parseInt(select.value);
+        let rows = document.querySelectorAll(".content tbody tr");
+
+        rows.forEach(function(row, index) {
+            if (index < aantal) {
+                row.style.display = "table-row";
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        applyColorsToAllRows();
+    });
+
+    let increaseButtons = document.querySelectorAll(".increase-warning-btn");
+    increaseButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            let warningCountElement = button.parentElement.querySelector(".warning-count");
+            let currentCount = parseInt(warningCountElement.textContent);
+            if (currentCount < 3) {
+                warningCountElement.textContent = currentCount + 1;
+                updateBlacklistedStatus(button.parentElement.parentElement);
+            }
+        });
+    });
+
+    let decreaseButtons = document.querySelectorAll(".decrease-warning-btn");
+    decreaseButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            let warningCountElement = button.parentElement.querySelector(".warning-count");
+            let currentCount = parseInt(warningCountElement.textContent);
+            if (currentCount > 0) {
+                warningCountElement.textContent = currentCount - 1;
+                updateBlacklistedStatus(button.parentElement.parentElement);
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    var searchInput = document.getElementById("search");
+
+    searchInput.addEventListener("input", function() {
+        var searchText = searchInput.value.toLowerCase(); 
+        var rows = document.querySelectorAll(".content tbody tr");
+
+        rows.forEach(function(row) {
+            var nameCell = row.querySelector("td:nth-child(2)"); 
+
+            if (nameCell.textContent.toLowerCase().includes(searchText)) {
+                row.style.display = ""; 
+            } else {
+                row.style.display = "none"; 
+            }
+        });
+    });
+});
 </script>
 
 <style scoped>
@@ -238,5 +372,6 @@ td {
     vertical-align: top; 
     text-align: center;
 }
+
 
 </style>
