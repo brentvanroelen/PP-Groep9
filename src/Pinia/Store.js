@@ -199,3 +199,14 @@ export const useUserIdentification = defineStore({
     }
   }
 });
+export const useCategories = defineStore({
+  id: 'Categories',
+  state: () => ({
+    categories: ['Audio', 'Belichting', 'Tools', 'Varia', 'Video', 'XR']
+  }),
+  actions: {
+    addCategory(category){
+      this.categories.push(category)
+    }
+  }
+});
