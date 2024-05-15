@@ -2,7 +2,7 @@
   <!-- <Navigation></Navigation> -->
   <!-- <Admin></Admin> -->
 
-    <div v-if="aantalWaarschuwingen < maxWaarschuwingen">
+    <div v-if="aantalWaarschuwingen">
       <div class="searchcontainer">
         <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
         <div class="searchbar-overlay"></div>
@@ -12,7 +12,6 @@
       </div>
       <Kits />
       <Categories></Categories>
-          <Footer></Footer>
       <br>
       <br>
       
@@ -49,12 +48,7 @@ if(testing == false){
     console.log("Welcome")
   }
 }
-import { ref } from 'vue';
-import Navigation from "../components/Navigation.vue";
-import Footer from "../components/Footer.vue";
-import Categories from "../components/Categories.vue";
-import SearchBar from "../components/Searchbar.vue";
-import Admin from "../components/navigationAdmin.vue";
+
 
 const home = "UserHome";
 

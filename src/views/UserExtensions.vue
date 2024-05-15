@@ -1,40 +1,32 @@
 <template>
 
 <h1>Extension request</h1>
- <div id="infoContainer"></div>
-
-</template>
-
-<script>
-
-const names = ['Alice Johnson', 'Michael Smith', 'Charlie Brown'];
-
-function generateInfoDiv(name) {
-    const infoDiv = document.createElement('div');
-    infoDiv.classList.add('info');
-
-    infoDiv.innerHTML = `
-        <div>Image</div>
+<div id="infoContainer">
+    <div class="info" v-for="(name, index) in names" :key="index">
         <div>
-            <p>Student: ${name}</p>
+            Image
+        </div>
+        <div>
+            <p>Student: {{name}}</p>
             <p>Extension duration: </p>
         </div>
-        
         <div class="tekst">
             <input type="text" class="input-text" placeholder="Enter reason here">
         </div>
-
         <div class="actions">
             <button class="action-btn1">V</button>
             <button class="action-btn2">X</button>
         </div>
-    `;
+    </div>
+</div>
 
-    return infoDiv;
-}
 
-const infoContainer = document.getElementById('infoContainer');
+</template>
 
+<script setup>
+import { ref } from 'vue';
+
+const names = ref(['Alice Johnson', 'Michael Smith', 'Charlie Brown']);
 names.forEach(name => {
     const infoDiv = generateInfoDiv(name);
     infoContainer.appendChild(infoDiv);
