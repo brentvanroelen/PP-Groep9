@@ -3,7 +3,7 @@
   <div class="search-container">
     <div class="search-bar">
       <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
-      <DropDown :dropdownOptions="dropdownOptions" :dropdownName="dropdownName" v-for="option in dropdownOptions" :value="option" :key="option">{{ option }}</DropDown>
+      <DropDown :dropdownOptions="dropdownOptions" :dropdownName="dropdownName"></DropDown>
       <span class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
         </span>

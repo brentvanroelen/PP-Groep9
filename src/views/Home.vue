@@ -16,7 +16,6 @@
 <!--   <button><router-link class="link" to="/HomeAdmin" id="buttonAdmin"></router-link>Admin</button>
  -->  <!-- Categories -->
   <Categories></Categories>
-  <Footer></Footer>
   </template>
 
 <script setup>
