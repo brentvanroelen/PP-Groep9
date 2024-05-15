@@ -3,7 +3,7 @@
     <template v-for="(cancellableReservation, Index) in displayReservations[0]" :key= Index>
         <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
             <div class="kolom1">
-                <p>Serial: Reservation code</p>
+                <p>Serial: {{ cancellableReservation.id }}</p>
                 <details>
                     <summary>See Items</summary>
                     <ul>
@@ -28,7 +28,7 @@
     </template>
     <div v-for="(reservation, Index) in displayReservations[1]" :key="Index" class="product1">
         <div class="kolom1">
-            <p>Serial: Reservation Code</p>
+            <p>Serial: {{ reservation.id }}</p>
             <details>
                 <summary>See Items</summary>
                 <ul>
@@ -59,13 +59,14 @@ import { computed, onMounted, ref } from "vue";
 import { db,collection,query,where,getDocs,doc } from "../Firebase/Index.js";
 import SearchBar from "../components/Searchbar.vue"
 import {reservationReturnedOrCanceled} from "../js/functions.js"
+import { useUserIdentification } from "@/Pinia/Store.js";
 
 let cancelledReservations = ref([]);
 let reservations = ref([]);
 let cancellableReservations = ref([]);
 const year = ref(new Date().getFullYear());
 let startDate = ref(new Date());
-
+const user = useUserIdentification();
 
 const displayReservations = computed(() => {
     let array = [cancellableReservationsCalc()[0], cancellableReservationsCalc()[1]];
@@ -103,21 +104,20 @@ const cancelRes = (reservation) => {
     
 };
 
-
-
-const getUser = () => {
-    /* get user id when logged in*/ 
-    const user = "Tester";
-    return user
-}
 const getReservations = async () => {
-    const collectionRef = collection(db, "Reservations");
-    const q = query(collectionRef, where("User", "==", `${getUser()}`));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-        reservations.value.push(doc.data());
+    if(user.user.id){
+        const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);
+        const querySnapshot = await getDocs(collectionRef);
+        if (querySnapshot.empty) {
+            console.log('No Reservations found!');
+            return;
+        }else{
+            querySnapshot.forEach((doc) => {
+            reservations.value.push(doc.data());
+            });
+        }
         
-    });
+    }
 }
 
 const cancellableReservationsCalc = () => {
