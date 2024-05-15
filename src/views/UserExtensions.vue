@@ -1,4 +1,5 @@
 <template>
+<<<<<<< Updated upstream
 
 <h1>Extension request</h1>
 <div id="infoContainer">
@@ -14,9 +15,26 @@
             <input type="text" class="input-text" placeholder="Enter reason here">
         </div>
         <div class="actions">
+=======
+    <div>
+      <h1>Extension request</h1>
+      <div class="info-container">
+        <div v-for="(name, index) in names" :key="index" class="info">
+          <div>Image</div>
+          <div>
+            <p>Student: {{ name }}</p>
+            <p>Extension duration: </p>
+          </div>
+          <div class="text">
+            <input type="text" class="input-text" placeholder="Enter reason here">
+          </div>
+          <div class="actions">
+>>>>>>> Stashed changes
             <button class="action-btn1">V</button>
             <button class="action-btn2">X</button>
+          </div>
         </div>
+<<<<<<< Updated upstream
     </div>
 </div>
 
@@ -37,61 +55,77 @@ names.forEach(name => {
 <style>
 
 h1{
+=======
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        names: ['Alice Johnson', 'Michael Smith', 'Charlie Brown']
+      };
+    }
+  };
+  </script>
+  
+  <style scoped>
+  h1 {
+>>>>>>> Stashed changes
     text-align: center;
-}
-
-.info {
+  }
+  
+  .info-container {
     display: flex;
-    align-items: center; 
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .info {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
     padding: 10px;
     background-color: #c1c1c1;
     font-size: large;
-}
-
-.actions {
+    width: 80%;
+  }
+  
+  .actions {
     display: flex;
-    align-items: center; 
-    margin-right: 45px;
-}
-
-.action-btn1 {
+    align-items: center;
+  }
+  
+  .action-btn1,
+  .action-btn2 {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .action-btn1 {
     background-color: #4CAF50;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-.action-btn2 {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+  }
+  
+  .action-btn2 {
     background-color: red;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-.input-text {
+  }
+  
+  .input-text {
     width: 400px;
     height: 100px;
-    text-align: left; 
+    text-align: left;
     resize: none;
-}
-
-.tekst{
+  }
+  
+  .text {
     margin-right: 0px;
-}
-
-
-
-
-
-
-</style>
+  }
+  </style>
+  
