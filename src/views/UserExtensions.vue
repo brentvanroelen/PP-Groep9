@@ -1,42 +1,34 @@
 <template>
-<<<<<<< Updated upstream
-
-<h1>Extension request</h1>
-<div id="infoContainer">
-    <div class="info" v-for="(name, index) in names" :key="index">
-        <div>
-            Image
-        </div>
-        <div>
-            <p>Student: {{name}}</p>
+    <div>
+      <h1>Extension request</h1>
+      <div class="info-container">
+        <div class="info" v-for="(name, index) in names" :key="index">
+          <div>Image</div>
+          <div>
+            <p>Student: {{ name }}</p>
             <p>Extension duration: </p>
-        </div>
-        <div class="tekst">
+          </div>
+          <div class="tekst">
             <input type="text" class="input-text" placeholder="Enter reason here">
-        </div>
-        <div class="actions">
+          </div>
+          <div class="actions">
             <button class="action-btn1">V</button>
             <button class="action-btn2">X</button>
           </div>
         </div>
+      </div>
     </div>
-
-</template>
-
-<script setup>
-import { ref } from 'vue';
-
-const names = ref(['Alice Johnson', 'Michael Smith', 'Charlie Brown']);
-names.forEach(name => {
-    const infoDiv = generateInfoDiv(name);
-    infoContainer.appendChild(infoDiv);
-});
-
-</script>
-
-<style>
-
-h1{
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue';
+  
+  // Define names as a reactive ref
+  const names = ref(['Alice Johnson', 'Michael Smith', 'Charlie Brown']);
+  </script>
+  
+  <style scoped>
+  h1 {
     text-align: center;
   }
   
