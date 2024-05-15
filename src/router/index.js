@@ -20,6 +20,7 @@ import MyProducts from '@/views/MyProducts.vue'
 import PopupManageItemsScreen from '../components/PopupManageItemsScreen.vue'
 import ExtensionPage from '@/views/ExtensionPage.vue'
 import Login from '@/views/Login.vue'
+import addItemsScreen from '../views/addItemsScreen.vue'
 
 
 
@@ -113,9 +114,9 @@ const routes = [
     component: MyProducts
   },
   {
-    path: '/PopupManageItemsScreen',
-    name: 'PopupManageItemsScreen',
-    component: PopupManageItemsScreen,
+    path: '/addItemsScreen',
+    name: 'addItemsScreen',
+    component: addItemsScreen,
   },
   {
     path: '/ManageItems',

@@ -50,32 +50,8 @@
       console.log(results)
       store.updateResults(results)
     };
-    const confirmedSearch = async() => {
-      await search();
-      if(props.page == "UserHome"){
-          router.push({name: "productscreen"})
-        }else if(props.page == "AdminHome"){
-          console.log("AdminHome")
-        }
-    }
-    if(props.page == "HomeAdmin"){
-      watch(querystring, async(newVal, oldVal) => {
-      // If the new value has 3 or more characters, trigger the search
-      if (newVal.length >= 3) {
-        await search();
-        showResults.value = store.results.length > 0;
-      }else{
-        showResults.value = false;
-      }
-    })
-  };
-    const addToCart = (item) => {
-      cart.addItem(item);
-      console.log(cart.items)
-    }
-    onMounted(async() => {
-      cart.emptyCart();
-    })
+    
+  
   </script>
     
   

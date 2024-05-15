@@ -4,11 +4,11 @@
         <input type="checkbox" name="instance" id="instance" v-model="instance">
         <h1 v-if="!instance">Voeg items toe</h1>
         <form v-if="!instance">
-            <label for="name">Name</label>
+            <label for="name">Name: </label>
             <input type="text" id="name" name="name"  v-model="docdata.Name">
-            <label for="category">Category</label>
+            <label for="category">Category: </label>
             <input type="text" id="category" name="category" v-model="docdata.Category">
-            <label for="brand">Brand</label>
+            <label for="brand">Brand:</label>
             <input type="text" id="brand" name="brand" v-model="docdata.Brand">
             <label for="description">Description</label>
             <input type="text" id="description" name="description" v-model="docdata.Description">

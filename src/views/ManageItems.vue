@@ -14,7 +14,7 @@
         </div>
 <div class="buttons">
         <button class="buttonsClass"><router-link class="link" to="/modifyItemScreen"> Add new kit</router-link></button>
-        <button  class="buttonsClass"><router-link class="link" to="/PopupManageItemsScreen"> Add item </router-link></button></div>
+        <button  class="buttonsClass"><router-link class="link" to="/addItemsScreen"> Add item </router-link></button></div>
         
 </template>
 

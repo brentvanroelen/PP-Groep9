@@ -3,12 +3,17 @@
     <div v-if="isVisible" class="popupContainer">
       <div class="popUp">
         <div class="contentWrapper">
+          <label for="instance">check for instances</label>
+        <input type="checkbox" name="instance" id="instance" v-model="instance">
+        <h1 v-if="!instance">Voeg items toe</h1>
+          
           <div class="itemInfo">
-            <label for="name">Name: </label><input type="text" name="name" id="name">
+
+            <label for="name">Name:</label><input type="text" id="name" name="name"  v-model="docdata.Name">
             <label for="serie">Serie: </label><input type="text" name="serie" id="serie">          
-            <label for="quantity">Quantity: </label> <input type="number" name="Quantity" id="quantity">          
-            <label for="category">Category: </label><input type="text" name="category" id="category">      
-            <label for="description">Description: </label><input type="text" name="description" id="description">        
+            <label for="quantity">Quantity: </label><input type="text" id="category" name="category" v-model="docdata.Category">         
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" v-model="docdata.Brand"><label for="description">Description: </label><input type="text" name="description" id="description">        
             <label for="location">Location</label><input type="text" name="location" id="location">
           </div>
           <div class="imgInput">
@@ -40,6 +45,10 @@ export default {
 
 <style scoped>
 .centerx {
+  text-align: center;
+}
+
+.h2{
   text-align: center;
 }
 
@@ -92,14 +101,14 @@ export default {
 }
 
 .itemInfo {
-  width: 45%; /* Adjust width as needed */
+  width: 45%; 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
 .imgInput {
-  width: 45%; /* Adjust width as needed */
+  width: 45%;  
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -107,6 +116,6 @@ export default {
 
 .itemInfo label,
 .imgInput label {
-  margin-bottom: 5px; /* Extra ruimte tussen labels toevoegen */
-}
+  margin-bottom: 5px;  
+} 
 </style>
