@@ -1,9 +1,25 @@
 <template>
+  <div id="test">
   <div class="search-container">
     <div class="search-bar">
       <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
+      <DropDown :dropdownOptions="dropdownOptions" :dropdownName="dropdownName" v-for="option in dropdownOptions" :value="option" :key="option">{{ option }}</DropDown>
+      <span class="calendar" @click="togglePopup(true)">
+            <img src="../assets/calendar.png" alt="">
+        </span>
       <button @click="confirmedSearch">Search</button>
     </div>
+  </div>
+    <Teleport to="body">
+  <Popup v-if="showPopup" @close="togglePopup(false)">
+            <h3>Pick a date</h3>
+            <Calendar></Calendar>
+            <br>
+            <button>Pick date</button>
+            <br>
+    </Popup>
+  </Teleport>
+    
     <div class="search-results" v-if="showResults">
       <div v-for="result in store.results" :key="result.id">
         <div class="iteminfo">
@@ -14,17 +30,30 @@
       </div>
     </div>
   </div>
+  
   </template>
   
 <script setup>
   import {onMounted, ref, watch} from '../main.js'
   import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
   import router from '@/router';
-  import { useStore,useCart } from '@/Pinia/Store.js';
+  import { useStore,useCart,useCategories } from '@/Pinia/Store.js';
   import ItemScreen from '@/views/ItemScreen.vue';
-    
-    
+  import DropDown from './DropDown.vue';
+  import Popup from './Popup.vue';
+  import Calendar from './Calendar.vue';
+
   
+  
+  const dropdownName = ref('Categories');
+  const dropdownOptions = useCategories().categories;
+  const selectedCategory = ref(null);
+  let showPopup = ref();
+  
+  const togglePopup = () => {
+        showPopup.value = !showPopup.value;
+    }
+
   const showResults = ref(false);
   const props = defineProps({
     page: String,
@@ -72,16 +101,16 @@
     cart.addItem(item);
     console.log(cart.items)
   }
-  onMounted(async() => {
-    // cart.emptyCart();
-  })
+  
 </script>
   
 
   <style scoped>
   .search-container {
-  width: 100%; /* Adjust this value to suit your needs */
+  width: 800px; /* Adjust this value to suit your needs */
   position: relative; /* This makes the .search-results position relative to this container */
+  background-color: #c1c1c1;
+  padding: 0.5em;
   }
   .search-bar {
     display: flex;
@@ -89,7 +118,10 @@
     margin-top: 0%;
     justify-content: center;
   }
-  
+  img{
+    width: 110px;
+    height: 40px;
+  }
   .search-bar input {
     padding: 8px;
     border: 1px solid #ccc;
@@ -99,7 +131,7 @@
   
   .search-bar button {
      padding: 8px 12px; 
-    background-color: #007bff;
+    background-color: #d50000;
     color: white;
     border: none;
     border-radius: 4px;
