@@ -170,15 +170,6 @@ onUnmounted(() => {
   z-index: 0; 
 }
     
-.box-container::after {
-  content: "";
-  position: absolute;
-  top: 38px; 
-  left: 50%;
-  width: 2px; 
-  height: calc(100% - 38px); 
-  background-color: #333; 
-}
 
 .box {
   padding: 20px;
