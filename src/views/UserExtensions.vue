@@ -15,29 +15,11 @@
             <input type="text" class="input-text" placeholder="Enter reason here">
         </div>
         <div class="actions">
-=======
-    <div>
-      <h1>Extension request</h1>
-      <div class="info-container">
-        <div v-for="(name, index) in names" :key="index" class="info">
-          <div>Image</div>
-          <div>
-            <p>Student: {{ name }}</p>
-            <p>Extension duration: </p>
-          </div>
-          <div class="text">
-            <input type="text" class="input-text" placeholder="Enter reason here">
-          </div>
-          <div class="actions">
->>>>>>> Stashed changes
             <button class="action-btn1">V</button>
             <button class="action-btn2">X</button>
           </div>
         </div>
-<<<<<<< Updated upstream
     </div>
-</div>
-
 
 </template>
 
@@ -55,24 +37,6 @@ names.forEach(name => {
 <style>
 
 h1{
-=======
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        names: ['Alice Johnson', 'Michael Smith', 'Charlie Brown']
-      };
-    }
-  };
-  </script>
-  
-  <style scoped>
-  h1 {
->>>>>>> Stashed changes
     text-align: center;
   }
   

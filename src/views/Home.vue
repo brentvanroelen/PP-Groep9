@@ -1,12 +1,8 @@
 <template>
   <!-- <Navigation></Navigation> -->
   <!-- <Admin></Admin> -->
-<<<<<<< Updated upstream
 
     <div v-if="aantalWaarschuwingen">
-=======
-    <div v-if="aantalWaarschuwingen < maxWaarschuwingen">
->>>>>>> Stashed changes
       <div class="searchcontainer">
         <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
         <div class="searchbar-overlay"></div>
@@ -52,10 +48,6 @@ if(testing == false){
     console.log("Welcome")
   }
 }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 const home = "UserHome";
 
