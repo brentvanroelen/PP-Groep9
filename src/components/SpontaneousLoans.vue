@@ -1,6 +1,6 @@
 <template>
     <label>User: </label> <input type="text" name="" id=""><br>
-      <label for="ItemorKITname">Item or KIT name: </label><Searchbar class="homeAdminSearch" :page="page"></Searchbar>
+      <label for="ItemorKITname">Item or KIT name: </label>
       <p >Return date: </p> <Calendar :page="page"></Calendar><br>
       <div v-if="cart.items != undefined">
             <p>Items in loan: </p> 
@@ -15,7 +15,6 @@
       </div>
 </template>
 <script setup>
-import Searchbar from "../components/Searchbar.vue"
 import {useStore,useCart} from "../Pinia/Store.js"
 import Calendar from "./Calendar.vue";
 import Items from "./Items.vue";
