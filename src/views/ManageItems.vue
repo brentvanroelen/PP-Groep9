@@ -57,7 +57,7 @@ const fetchItems = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .icon {
   background: none !important;
   box-shadow: none !important;
