@@ -46,7 +46,9 @@
                 <router-link class="link" to="/ExtensionPage">Request extension</router-link>
             </button>  
         </div>
-        <button>Report issue</button>
+         <button>
+            <router-link class="link" to="/ReportIssue"> Report Issue </router-link>
+        </button>
         <div class="kolom4">
             <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }} </p>   
             <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
