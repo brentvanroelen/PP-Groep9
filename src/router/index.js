@@ -145,6 +145,7 @@ const routes = [
     path: '/ReportIssue',
     name: 'ReportIssue',
     component: ReportIssue
+  }
 ]
 
 const router = createRouter({
