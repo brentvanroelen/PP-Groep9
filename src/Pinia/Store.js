@@ -270,3 +270,14 @@ export const useKitItems = defineStore({
     }
   }
 });
+
+
+export const useSearchedItems = defineStore({
+    id: 'searchedItems',
+    state: () => ({
+      item: []
+    }),actions: {
+      addSearchedItem(item){
+        this.item.push(item)
+      } }
+    });

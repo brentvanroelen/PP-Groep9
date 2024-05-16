@@ -21,6 +21,8 @@ import PopupManageItemsScreen from '../components/PopupManageItemsScreen.vue'
 import ExtensionPage from '@/views/ExtensionPage.vue'
 import Login from '@/views/Login.vue'
 import addItemsScreen from '../views/addItemsScreen.vue'
+import checkPage from '@/views/checkPage.vue'
+import ReportIssue from '../views/ReportIssue.vue'
 
 
 
@@ -132,6 +134,17 @@ const routes = [
     path: '/Login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/checkPage',
+    name: 'checkPage',
+    component: checkPage
+  },
+  
+  {
+    path: '/ReportIssue',
+    name: 'ReportIssue',
+    component: ReportIssue
   }
 ]
 
