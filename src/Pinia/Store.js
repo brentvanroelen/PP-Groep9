@@ -107,6 +107,7 @@ export const useChoiceOfItems = defineStore({
       this.items[collection] = []
     },
     addInstance(collection,item){
+      console.log(collection, item)
       this.items[collection].push(item)
     },
     getInstance(collection,itemIndex){
@@ -168,6 +169,7 @@ export const useUserIdentification = defineStore({
       type: '',
       firstName: '',
       lastName: '',
+      warningCount: 0
     }
   }),
   actions: {
@@ -185,6 +187,7 @@ export const useUserIdentification = defineStore({
               this.user.type = doc.data().type
               this.user.firstName = doc.data().firstName
               this.user.lastName = doc.data().lastName
+              this.user.warningCount = doc.data().warningCount
               if(this.user.type === 'student'){
                 this.router.push('/')
               }else if (this.user.type === 'admin'){
@@ -213,12 +216,14 @@ export const useUserIdentification = defineStore({
         lastName: credentials.lastName,
         uid: user.uid,
         email: credentials.email,
+        warningCount: 0
       })
       this.user.id = user.uid
       this.user.email = credentials.email
       this.user.type = 'student'
       this.user.firstName = credentials.firstName
       this.user.lastName = credentials.lastName
+      this.user.warningCount = 0
       console.log(user)
       }).catch((error) => {
       const errorCode = error.code
