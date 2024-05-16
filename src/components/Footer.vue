@@ -1,20 +1,22 @@
 <template>
-    <div class="footercontainer">
-        <ul class="Footer">
-            <li id="Logo"><img src="../assets/EhB-logo-transparant.png" alt=""></li>
-        <div id="Info">
-            <div id="Contacts">
-            <li>Contacts:</li>
-            <li>Phone: 02 523 37 37</li>
-            <li>Email:info@ehb.be</li>
+    <Teleport to="body">
+        <div class="footercontainer">
+            <ul class="Footer">
+                <li id="Logo"><img src="../assets/EhB-logo-transparant.png" alt=""></li>
+            <div id="Info">
+                <div id="Contacts">
+                <li>Contacts:</li>
+                <li>Phone: 02 523 37 37</li>
+                <li>Email:info@ehb.be</li>
+                </div>
+                <div id="Adres">
+                <li>Adres:</li>
+                <li>Nijverheidkaai 170, 1070 Anderlecht</li>
+                </div>
             </div>
-            <div id="Adres">
-            <li>Adres:</li>
-            <li>Nijverheidkaai 170, 1070 Anderlecht</li>
-            </div>
+            </ul>
         </div>
-        </ul>
-    </div>
+    </Teleport>
 </template>
 
 <script>
@@ -38,6 +40,9 @@ export default {
         display: flex;
         justify-content: center;
         margin-left: 0.5em;
+    }
+    ul.Footer{
+        bottom: 0;
     }
     .Footer{
         display: flex;
