@@ -25,8 +25,7 @@
         <li v-for="item in student.orders" :key="item.id" class="items">
           <p>Name: {{ item.ItemName }}</p>
           <p>Serial: {{ item.Serial }}</p>
-          <p v-if="item.itemPrepared">Status: Item prepared</p>
-          <p v-else>Status: Item not prepared</p>
+          <p> Status: {{ item.itemStatus }}</p>
           <button @click="markItemAsPrepared(student, item)" class= readyButton> item prepared</button>
         </li>
       </ul>
@@ -37,8 +36,8 @@
   
   
 <script setup>
-  import { onUnmounted, ref, watchEffect } from 'vue';
-  import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc } from '../Firebase/Index.js';
+  import { computed, onUnmounted, ref, watchEffect } from 'vue';
+  import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc, setDoc } from '../Firebase/Index.js';
   
   
   let todayDate = new Date();
@@ -59,7 +58,12 @@
         items.push(doc.data()[`Item${i}`]);
         if(doc.data()[`Item${i}`].ItemPrepared == false){
             itemsToPrepare++;
-          }
+        }
+        if(isItemWithSomeoneElse(items[i-1])){
+          items[i-1].itemStatus = "Item is with someone else";
+        }else{
+          items[i-1].itemStatus = "Item is in the medialab";}
+
       }
       let date = new Date();
       date.setDate(doc.data().EndDate);
@@ -134,16 +138,18 @@
     student.itemsToPrepare--;
     item.itemPrepared = true;
     const docRef = doc(db, `Utility/Reservations/All Reservations/${student.id}`);
+    const itemid = `Item${item.id}`
     if(student.itemsToPrepare == 0){
         student.reservationPrepared = true;
         await updateDoc(docRef, {
-          [`Item${item.id}`]: {ItemPrepared: true},
+          [`${itemid}.ItemPrepared`]: true,
           ReservationPrepared : true
         });
     }else{
         await updateDoc(docRef, {
-          [`Item${item.id}`]: {ItemPrepared: true}
-        });
+          [`${itemid}.ItemPrepared`]: true,
+        }
+        );
     }
   }
   const markAllItemsAsPrepared = async(student) => {
@@ -154,11 +160,31 @@
     student.reservationPrepared = true;
     const docRef = doc(db, `Utility/Reservations/All Reservations/${student.id}`);
     for(let i = 1; i <= student.orders.length; i++)
-      await updateDoc(docRef, {
+      await setDoc(docRef, {
         [`Item${item.id}`]: {ItemPrepared: true},
-        ReservationPrepared : true
-      });
+        ReservationPrepared : true},
+        { merge: true}
+      );
   }
+  const isItemWithSomeoneElse = async(item) => {
+    console.log(item.Serial)
+    const q = query(collection(db, 'Utility/Reservations/All Reservations'), where("allItemSerials", "array-contains-any", [item.Serial]));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      return false;
+    }else{
+      querySnapshot.forEach((doc) => {
+        todayDate.setHours(0,0,0,0);
+        let startDate = new Date(todayDate.getFullYear(), doc.data().StartMonth - 1, doc.data().StartDate);
+        let endDate = new Date(todayDate.getFullYear(), doc.data().EndMonth - 1, doc.data().EndDate);
+        if (startDate <= todayDate && todayDate <= endDate) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+  };
 </script>
   
  <style scoped>
