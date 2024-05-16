@@ -16,10 +16,10 @@
       
       <div class="items highlighted">
         <div v-for="(item, index) in selectedItems" :key="index" class="item">
-          <h2>{{ item.Name }}</h2>
+          <div class="itemPanel"><h2>{{ item.Name }}</h2>
           <img :src="item.Image" alt="Selected Item Image">
           <p>{{ item.Description }}</p>
-          <button @click="removeItem(index)">Remove</button>
+          <button @click="removeItem(index)">Remove</button></div>
         </div>
       </div>
       
@@ -31,28 +31,15 @@
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
+  import { useKitItems } from '@/Pinia/Store';
 
   
+  const kitItems = useKitItems();
   
-  const db = getFirestore();
-  onMounted(async () => {
-        await fetchItems();
-    });
-  
-  
-  
-  const fetchItems = async () => {
-        const itemCollection = collection(db, 'Items');
-        const itemSnapshot = await getDocs(itemCollection);
-        const itemsData = [];
-        itemSnapshot.forEach((doc) => {
-            itemsData.push(doc.data());
-        });
-        items.value = itemsData;
-    };
+
   
   const router = useRouter();
-  const selectedItems = ref([]);
+  const selectedItems = ref(kitItems.selectedItems);
   
   
   const removeItem = (index) => {
@@ -126,6 +113,19 @@
     justify-content: center;
     align-items: center;
     font-size: 24px;
+}
+
+.item{
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    background-color: grey;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .fileInputWrapper {

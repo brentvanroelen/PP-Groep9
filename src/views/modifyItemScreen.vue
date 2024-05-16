@@ -23,11 +23,15 @@
     import { useRouter } from 'vue-router';
     import adminSearchBarAddItem from '../components/adminSearchBarAddItem.vue';
     import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
+    import { useKitItems } from '@/Pinia/Store';
+    import { useStore } from '@/Pinia/Store';
   
     const router = useRouter();
     const db = getFirestore();
     const items = ref([]);
     const selectedItems = ref([]);
+    const kitItems = useKitItems();
+    const store = useStore();
   
     onMounted(async () => {
         await fetchItems();
@@ -44,8 +48,10 @@
     };
   
     const addToSelectedKit = () => {
-        //Do something with selectedItems, like navigating to the next page
-        router.push({ path: '/addKitScreen', query: { items: selectedItems.value } });
+
+        kitItems.addItem(selectedItems.value);
+
+        router.push({ path: '/addKitScreen'});
     };
 
     const isSelected = (item) => {

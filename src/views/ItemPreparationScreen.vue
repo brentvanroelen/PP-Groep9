@@ -1,6 +1,9 @@
 <template>
   <div class="ItemsToPrepare">
-    <h2>Items to prepare:</h2>
+    <div class="head">
+      <button @click="decrementDate" class="readyButton">&larr;</button><h2>Items to prepare:</h2><button @click="incrementDate" class="readyButton">&rarr;</button>
+    </div>
+    <p>Today: {{ displayDate }}</p>
     
     <!-- Loept door de students -->
     <div v-for="student in students" :key="student.id" class="studentContainer">
@@ -8,6 +11,8 @@
         <p>Student: {{ student.name }}</p>
         <p>Pick-up date: {{ student.pickUpDate }}</p>
         <p>Pick-up time: {{ student.pickUpTime }}</p>
+        <p v-if="student.reservationPrepared">The reservation is prepared</p>
+        <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
       </div>
       <button class="readyButton">Everything is ready</button>
       <button class="adjustButton">Adjustments</button>
@@ -18,11 +23,11 @@
       <ul v-if="student.showOrders" class="ordersList">
         <!-- Loept door de reservaties -->
         <li v-for="order in student.orders" :key="order.id" class="items">
-          <p>Name: {{ order.name }}</p>
-          <p>Serial: {{ order.serial }}</p>
-          <p>Brand: {{ order.brand }}</p>
-          <p>Location: {{ order.location }}</p>
-          <p>Status: {{ order.status }}</p>
+          <p>Name: {{ order.ItemName }}</p>
+          <p>Serial: {{ order.Serial }}</p>
+          <p v-if="order.itemPrepared">Status: All items prepared</p>
+          <p v-else>Status: Item not prepared</p>
+          <button class= readyButton> item prepared</button>
         </li>
       </ul>
     </div>
@@ -31,57 +36,99 @@
 
   
   
-  <script>
-  export default {
-    data() {
-      return {
-        students: [
-          {
-            id: 1,
-            name: 'Fredrick Thompson',
-            pickUpDate: '27-03-2024',
-            pickUpTime: '10:30', 
-            showOrders: false,
-            orders: [
-              { id: 1, name: 'Camera', serial: 'CA-24', brand: 'Sony', location: 'Closet 6 Shelf 4', status: 'Uitgeleend tot 27/03/2024 10:30' }, 
-              { id: 2, name: 'Statief', serial: 'ST-33', brand: 'Sony', location: 'Closet 15 helf 7', status: 'Beschikbaar' }, 
-              { id: 3, name: 'Greenscreen', serial: 'GS-02', brand: 'Greenindustries', location: 'Closet 3 shelf 1', status: 'Beschikbaar'}, 
-              { id: 4, name: 'Statief', serial: 'ST-27', brand: 'Sony', location: 'Closet 6 shelf 3', status: 'Beschikbaar'}
-            ]
-          },
-          {
-            id: 2,
-            name: 'Samuel Lemmings', 
-            pickUpDate: '27/03/2024', 
-            pickUpTime: '11:30', 
-            showOrders: false,
-            orders: [
-              { id: 1, name: 'VR Oculus Rift', serial: 'OR', brand:'Meta' ,location: 'Closet 3 Shelf 5', status: 'Beschadigd' },
-              { id: 2, name: 'Statief', serial: 'ST-39', brand:'Sony' ,location: 'Closet 6 Shelf 5', status: 'Beschikbaar' },
-              { id: 3, name: 'Microfoon', serial: 'MC-14', brand:'DPA Microphones' ,location: 'Closet 12 Shelf 6', status: 'Versleten kabel' },
-              { id: 4, name: 'Speaker', serial: 'SP-42', brand:'Adam Audio' ,location: 'Closet 9 Shelf 15', status: 'Beschikbaar' }
-            ]
-          },
-          {
-            id: 3,
-            name: 'Bob Wouters',
-            pickUpDate: '29/03/2024',
-            pickUpTime: '09:45', 
-            showOrders: false,
-            orders: [
-              { id: 4, name: 'Tablet', serial: 'DEF456', location: 'Shelf C', status: 'Ready' }
-            ]
+<script setup>
+  import { onUnmounted, ref, watchEffect } from 'vue';
+  import { getDocs, collection, onSnapshot,db,where,query } from '../Firebase/Index.js';
+  
+  
+  let todayDate = new Date();
+  let displayDate = ref(("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() +1)).slice(-2) + "/" + todayDate.getFullYear())
+  let unsub = false;
+  const students = ref([]) 
+  const toggleOrders = (student) => {
+    student.showOrders = !student.showOrders;
+  }
+  const getItems = async() =>{
+    const reservations = collection(db, 'Utility/Reservations/All Reservations');
+    const q = query(reservations, where("EndDate", "==", todayDate.getDate()), where("EndMonth", "==", todayDate.getMonth() + 1));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      let itemsToPrepare = 0;
+      let items = [];
+      for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
+        items.push(doc.data()[`Item${i}`]);
+        if(doc.data()[`Item${i}`].ItemPrepared == false){
+            itemsToPrepare++;
           }
-        ]
-      };
-    },
-    methods: {
-      toggleOrders(student) {
-        student.showOrders = !student.showOrders;
       }
-    }
-  };
-  </script>
+      let date = new Date();
+      date.setDate(doc.data().EndDate);
+      date.setMonth(doc.data().EndMonth);
+      let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth())).slice(-2) + "/" + date.getFullYear();
+      students.value.push({
+        id: doc.data().id,
+        name: doc.data().User,
+        pickUpDate: formattedDate,
+        pickUpTime: 12,
+        showOrders: false,
+        orders: items,
+        reservationPrepared: doc.data().ReservationPrepared,
+        itemsToPrepare: itemsToPrepare
+      });
+    });
+  }
+  watchEffect(() => {
+    console.log("watchEffect")
+    const reservations = collection(db, 'Utility/Reservations/All Reservations');
+    const q = query(reservations, where("EndDate", "==", todayDate.getDate()), where("EndMonth", "==", todayDate.getMonth()));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let itemsToPrepare = 0;
+      querySnapshot.forEach((doc) => {
+        let items = [];
+        for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
+          console.log(doc.data())
+          items.push(doc.data()[`Item${i}`]);
+          if(doc.data()[`Item${i}`].ItemPrepared == false){
+            itemsToPrepare++;
+          }
+        }
+        let date = new Date();
+        date.setDate(doc.data().EndDate);
+        date.setMonth(doc.data().EndMonth);
+        let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth())).slice(-2) + "/" + date.getFullYear();
+        students.value.push({
+          id: doc.data().id,
+          name: doc.data().User,
+          pickUpDate: formattedDate,
+          pickUpTime: 12,
+          showOrders: false,
+          orders: items,
+          reservationPrepared: doc.data().ReservationPrepared,
+          itemsToPrepare: itemsToPrepare
+        });
+        console.log(students.value)
+      });
+      if(unsub){
+        unsubscribe();
+      }
+    })
+  })
+  onUnmounted(() => {
+    unsub = true;
+  })
+  const decrementDate = () => {
+    students.value = [];
+    todayDate.setDate(todayDate.getDate() - 1);
+    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    getItems();
+  }
+  const incrementDate = () => {
+    students.value = [];
+    todayDate.setDate(todayDate.getDate() + 1);
+    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    getItems();
+  }
+</script>
   
  <style scoped>
 .ItemsToPrepare {
@@ -203,6 +250,13 @@
 
 .toggleButton:hover {
     background-color: #ccc; 
+}
+.head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
 }
    
 @media (max-width: 600px) {

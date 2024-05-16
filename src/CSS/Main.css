@@ -68,11 +68,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #fafafa;
+    height: 100%;
+    min-height: 91.5vh;
   }
   body{
     margin: 0;
     padding: 0;
     background: white ;
+    min-height: 100vh;
   }
   *{
     margin: 0;
