@@ -23,7 +23,6 @@
   <script setup>
   import { ref } from 'vue';
   
-  // Define names as a reactive ref
   const names = ref(['Alice Johnson', 'Michael Smith', 'Charlie Brown']);
   </script>
   
@@ -78,7 +77,7 @@
     height: 100px;
     text-align: left;
     resize: none;
-  }
+}
   
   .text {
     margin-right: 0px;
