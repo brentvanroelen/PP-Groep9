@@ -14,7 +14,7 @@
         <p v-if="student.reservationPrepared">The reservation is prepared</p>
         <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
       </div>
-      <button class="readyButton">Everything is ready</button>
+      <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
       <button class="adjustButton">Adjustments</button>
       <button class="deleteButton" @click="deleteStudent(student.id)">Delete</button>
       <br>
@@ -22,12 +22,12 @@
       <!-- lijst met reservaties van de studenten-->
       <ul v-if="student.showOrders" class="ordersList">
         <!-- Loept door de reservaties -->
-        <li v-for="order in student.orders" :key="order.id" class="items">
-          <p>Name: {{ order.ItemName }}</p>
-          <p>Serial: {{ order.Serial }}</p>
-          <p v-if="order.itemPrepared">Status: All items prepared</p>
+        <li v-for="item in student.orders" :key="item.id" class="items">
+          <p>Name: {{ item.ItemName }}</p>
+          <p>Serial: {{ item.Serial }}</p>
+          <p v-if="item.itemPrepared">Status: Item prepared</p>
           <p v-else>Status: Item not prepared</p>
-          <button class= readyButton> item prepared</button>
+          <button @click="markItemAsPrepared(student, item)" class= readyButton> item prepared</button>
         </li>
       </ul>
     </div>
@@ -38,7 +38,7 @@
   
 <script setup>
   import { onUnmounted, ref, watchEffect } from 'vue';
-  import { getDocs, collection, onSnapshot,db,where,query } from '../Firebase/Index.js';
+  import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc } from '../Firebase/Index.js';
   
   
   let todayDate = new Date();
@@ -127,6 +127,37 @@
     todayDate.setDate(todayDate.getDate() + 1);
     displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
     getItems();
+  }
+  const markItemAsPrepared = async(student, item) => {
+    console.log(student)
+    console.log(item)
+    student.itemsToPrepare--;
+    item.itemPrepared = true;
+    const docRef = doc(db, `Utility/Reservations/All Reservations/${student.id}`);
+    if(student.itemsToPrepare == 0){
+        student.reservationPrepared = true;
+        await updateDoc(docRef, {
+          [`Item${item.id}`]: {ItemPrepared: true},
+          ReservationPrepared : true
+        });
+    }else{
+        await updateDoc(docRef, {
+          [`Item${item.id}`]: {ItemPrepared: true}
+        });
+    }
+  }
+  const markAllItemsAsPrepared = async(student) => {
+    student.orders.forEach(item => {
+      item.itemPrepared = true;
+    });
+    student.itemsToPrepare = 0;
+    student.reservationPrepared = true;
+    const docRef = doc(db, `Utility/Reservations/All Reservations/${student.id}`);
+    for(let i = 1; i <= student.orders.length; i++)
+      await updateDoc(docRef, {
+        [`Item${item.id}`]: {ItemPrepared: true},
+        ReservationPrepared : true
+      });
   }
 </script>
   

@@ -113,6 +113,7 @@ const makeItemMap = (items) =>{
     console.log(items)
     itemMaps = items.map((item, index) => ({
         [`Item${index + 1}`]: {
+            id: index + 1,
             ItemName: item.Name,
             ItemImage: item.Image,
             Serial: item.Serial,
@@ -130,11 +131,11 @@ const makeItemMap = (items) =>{
 
 }
 const MakeReservation = async(date) => {
-    const docRefGeneralReservation = doc(collection(db, "Reservations"));
     const docRefUserReservation = doc(collection(db, `Users/${user.user.id}/Reservations`));
-    const docRefAdminReservation = doc(collection(db, `/Utility/Reservations/All Reservations`));
-    await setDoc(docRefGeneralReservation, {
-        id: docRefGeneralReservation.id, 
+    const docRefGeneralReservation = doc(db, `Reservations/${docRefUserReservation.id}`);
+    const docRefAdminReservation = doc(db, `/Utility/Reservations/All Reservations/${docRefUserReservation.id}`);
+    await setDoc(docRefUserReservation,{
+        id: docRefUserReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
         allItemNames: items.map(item => item.Name),
@@ -151,8 +152,8 @@ const MakeReservation = async(date) => {
         ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
-    await setDoc(docRefUserReservation, {
-        id: docRefGeneralReservation.id, 
+    await setDoc(docRefGeneralReservation,{
+        id: docRefUserReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
         allItemNames: items.map(item => item.Name),
@@ -169,8 +170,9 @@ const MakeReservation = async(date) => {
         ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
-    await setDoc(docRefAdminReservation, {
-        id: docRefGeneralReservation.id, 
+    
+    await setDoc(docRefAdminReservation,{
+        id: docRefUserReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
         allItemNames: items.map(item => item.Name),

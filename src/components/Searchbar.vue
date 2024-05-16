@@ -3,10 +3,15 @@
   <div class="search-container">
     <div class="search-bar">
       <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
-      <DropDown :dropdownOptions="dropdownOptions" :dropdownName="dropdownName"></DropDown>
+      <div>
+        <select v-model="selectedCategory">
+          <option value="" disabled>Categories</option>
+          <option v-for="(option, index) in dropdownOptions" :key="index" :value="option" >{{ option }}</option>
+        </select>
+      </div>
       <span class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
-        </span>
+      </span>
       <button @click="confirmedSearch">Search</button>
     </div>
   </div>
@@ -14,9 +19,7 @@
   <Popup v-if="showPopup" @close="togglePopup(false)">
             <h3>Pick a date</h3>
             <Calendar></Calendar>
-            <br>
             <button>Pick date</button>
-            <br>
     </Popup>
   </Teleport>
     
@@ -30,25 +33,24 @@
       </div>
     </div>
   </div>
-  
   </template>
   
 <script setup>
   import {onMounted, ref, watch} from '../main.js'
   import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
   import router from '@/router';
-  import { useStore,useCart,useCategories } from '@/Pinia/Store.js';
+  import { useStore,useCart,useCategories} from '@/Pinia/Store.js';
   import ItemScreen from '@/views/ItemScreen.vue';
-  import DropDown from './DropDown.vue';
   import Popup from './Popup.vue';
   import Calendar from './Calendar.vue';
+  
 
   
-  
-  const dropdownName = ref('Categories');
+  const selectedCategory = ref('');
   const dropdownOptions = useCategories().categories;
-  const selectedCategory = ref(null);
   let showPopup = ref();
+
+
   
   const togglePopup = () => {
         showPopup.value = !showPopup.value;
