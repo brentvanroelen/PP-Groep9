@@ -292,3 +292,14 @@ export const useSelectedUser = defineStore({
     }
   }
 });
+export const useEarlyReturnsReservations = defineStore({
+  id: 'EarlyReturnsReservations',
+  state: () => ({
+    Reservations: []
+  }),
+  actions: {
+    addReservation(reservation){
+      this.Reservations.push(reservation)
+    }
+  }
+});
