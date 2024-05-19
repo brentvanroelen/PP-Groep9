@@ -22,7 +22,6 @@
       <ReservationHandler :check-user-cart="false"></ReservationHandler>
   </div>
 
-        <Footer></Footer>
   </template>
   
   

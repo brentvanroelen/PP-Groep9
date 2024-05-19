@@ -1,13 +1,17 @@
 <template>
 
 <div class="container">
-    <div class="date-marker">
-      <p>{{ new Date().toLocaleDateString() }}</p>
+
+    <div class="head">
+      <button @click="decrementDate" class="readyButton">&larr;</button><h1>Date: {{ displayDate }}</h1><button @click="incrementDate" class="readyButton">&rarr;</button>
     </div>
+
     <div class="box-container">
       <div class="box scheduledLoans">
         <h2>Scheduled loans</h2>
-        <ScheduledLoan v-for="(scheduledloan, index) in scheduledLoans" :key="index" :scheduled-loan="scheduledloan"></ScheduledLoan>
+        <div v-if="todayDate != undefined">
+          <HomePlannedLoans v-if="dateChanged" :today-date="todayDate"></HomePlannedLoans>
+        </div>
       </div>
 
       <div class="box scheduledReturns">
@@ -49,16 +53,21 @@ import ScheduledReturn from "@/components/ScheduledReturn.vue";
 import ScheduledLoan from "@/components/ScheduledLoan.vue";
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 import{ useRouter } from 'vue-router';
+import HomePlannedLoans from "@/components/HomePlannedLoans.vue";
 
 let currentDate = ref(new Date());
 let unssub = false;
 const showSpontaneous = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
+let todayDate = new Date();
+let displayDate = ref(("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() +1)).slice(-2) + "/" + todayDate.getFullYear())
+let dateChanged = ref(true);
 
 const user = useUserIdentification()
 const router = useRouter()
 const testing = true
+const emits = defineEmits(["incrementDate", "decrementDate"]);
 if(testing == false){
   if (user.user.id == "" || user.user.id == undefined){
     console.log("User not logged in")
@@ -68,6 +77,22 @@ if(testing == false){
   }else{
     console.log("Welcome")
   }
+}
+const decrementDate = () => {
+  dateChanged.value = false
+  setTimeout(() => {
+    todayDate.setDate(todayDate.getDate() - 1);
+    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    dateChanged.value = true  
+  }, 1);
+}
+const incrementDate = () => {
+  dateChanged.value = false
+  setTimeout(() => {
+    todayDate.setDate(todayDate.getDate() + 1);
+    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    dateChanged.value = true
+  }, 1);
 }
 
 const scheduledLoans = computed(() => {
@@ -158,17 +183,7 @@ onUnmounted(() => {
   
 }
 
-.container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 25%;
-  height: 36.25px;
-  background-color: #ff6666;
-  transform: translate(-50%, 0); 
-  z-index: 0; 
-}
+
     
 
 .box {
@@ -204,6 +219,13 @@ button {
   margin-top: 10px;
   margin: 0.5em;
 }
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  
+  }
 
 input[type="text"],    
 input[type="time"] {
