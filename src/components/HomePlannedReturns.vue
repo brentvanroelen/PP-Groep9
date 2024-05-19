@@ -1,46 +1,53 @@
 <template>
-  <div class="ItemsToPrepare" v-if="!showLateReservations">
-      <!-- Loept door de students -->
-    <div v-for="student in students" :key="student.id" class="studentContainer">
-      <div class="studentInfo">
-        <p>Student: {{ student.name }}</p>
-        <p>Return date: {{ student.pickUpDate }}</p>
-        <p>Return time: {{ student.pickUpTime }}</p>
-      </div>
-      <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
-      <button class="deleteButton">Discard</button>
-      <br>        
-      <button @click="toggleOrders(student)">&#9776;</button>
-      <!-- lijst met reservaties van de studenten-->
-      <ul v-if="student.showOrders" class="ordersList">
-        <!-- Loept door de reservaties -->
-        <li v-for="item in student.orders" :key="item.id" class="items">
-          <p>Name: {{ item.ItemName }}</p>
-          <p>Serial: {{ item.Serial }}</p>
-        </li>
-      </ul>
-    </div>
+  <div v-if="loading">
+    <p>Loading...</p>
   </div>
-  <div class="ItemsToPrepare" v-else>
-      <!-- Loept door de students -->
-    <div v-for="student in lateReservationArray" :key="student.id" class="studentContainer">
-      <div class="studentInfo">
-        <p>Student: {{ student.name }}</p>
-        <p>Return date: {{ student.pickUpDate }}</p>
-        <p>Return time: {{ student.pickUpTime }}</p>
+  <div v-if="!loading">
+    <div class="ItemsToPrepare" v-if="!showLateReservations">
+      <div v-if="students.length == 0">
+        <p>No returns for {{ displayDate }}</p>
       </div>
-      <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
-      <button class="deleteButton">Discard</button>
-      <br>        
-      <button @click="toggleOrders(student)">&#9776;</button>
-      <!-- lijst met reservaties van de studenten-->
-      <ul v-if="student.showOrders" class="ordersList">
-        <!-- Loept door de reservaties -->
-        <li v-for="item in student.orders" :key="item.id" class="items">
-          <p>Name: {{ item.ItemName }}</p>
-          <p>Serial: {{ item.Serial }}</p>
-        </li>
-      </ul>
+        <!-- Loept door de students -->
+      <div v-if="students.length != 0" v-for="student in students" :key="student.id" class="studentContainer">
+        <div class="studentInfo">
+          <p>Student: {{ student.name }}</p>
+          <p>Return date: {{ student.pickUpDate }}</p>
+          <p>Return time: {{ student.pickUpTime }}</p>
+        </div>
+        <button @click="returned(student,false)" class="readyButton">Items returned</button>
+        <br>        
+        <button @click="toggleOrders(student)">&#9776;</button>
+        <!-- lijst met reservaties van de studenten-->
+        <ul v-if="student.showOrders" class="ordersList">
+          <!-- Loept door de reservaties -->
+          <li v-for="item in student.orders" :key="item.id" class="items">
+            <p>Name: {{ item.ItemName }}</p>
+            <p>Serial: {{ item.Serial }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ItemsToPrepare" v-else>
+        <!-- Loept door de students -->
+      <div v-for="student in lateReservationArray" :key="student.id" class="studentContainer">
+        <div class="studentInfo">
+          <p>Student: {{ student.name }}</p>
+          <p>Return date: {{ student.pickUpDate }}</p>
+          <p>Return time: {{ student.pickUpTime }}</p>
+        </div>
+        <button @click="returned(student,false)" class="readyButton">Returned</button>
+        <button @click="returnedWarning(student,true)" class="deleteButton">Returned + Warning</button>
+        <br>        
+        <button @click="toggleOrders(student)">&#9776;</button>
+        <!-- lijst met reservaties van de studenten-->
+        <ul v-if="student.showOrders" class="ordersList">
+          <!-- Loept door de reservaties -->
+          <li v-for="item in student.orders" :key="item.id" class="items">
+            <p>Name: {{ item.ItemName }}</p>
+            <p>Serial: {{ item.Serial }}</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +63,8 @@ let unsub = false;
 const students = ref([]) 
 const allReservations = ref([]);
 const lateReservationArray = ref([]);
+let loading = ref(true);
+
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
@@ -65,11 +74,15 @@ const props = defineProps({
   todayDate: Date,
   showLateReservations: Boolean
 })  
+let displayDate = ref(("0" + props.todayDate.getDate()).slice(-2) + "/" + ("0" + (props.todayDate.getMonth() +1)).slice(-2) + "/" + props.todayDate.getFullYear())
 
 const getItems = async() =>{
   const reservations = collection(db, 'Utility/Reservations/All Reservations');
   const q = query(reservations, where("EndDate", "==", props.todayDate.getDate()), where("EndMonth", "==", props.todayDate.getMonth() + 1),where ("CurrentlyWithUser", "==", false));
   const querySnapshot = await getDocs(q);
+  if(querySnapshot.empty){
+    loading.value = false;
+  }
   querySnapshot.forEach(async(doc) => {
     let items = [];
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
@@ -91,6 +104,9 @@ const getItems = async() =>{
       showOrders: false,
       orders: items,
     });
+    if(loading){
+      loading.value = false;
+    }
   });
 }
 
@@ -109,18 +125,14 @@ watchEffect(() => {
   })
 })
 
-const markAsPickedUp = async (reservation) => {
-  await updateDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`), {
-    CurrentlyWithUser: true
-  })
-  await updateDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`), {
-    CurrentlyWithUser: true
-  })
+const returned = async (reservation, warning) => {
+  await reservationReturnedOrCanceled(reservation, warning);
   const index = students.value.findIndex(s => s.id === reservation.id);
   if (index !== -1) {
     students.value.splice(index, 1);
   };
 };
+
 
 const filterAllReservationsOnLateness = () =>{
   const generalReservations = allReservations.value.filter(reservation => {

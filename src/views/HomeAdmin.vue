@@ -15,9 +15,11 @@
       </div>
 
       <div class="box scheduledReturns">
-        <h2>Scheduled returns</h2>
-        <button @click="showLateReservations = !showLateReservations">LateReservations</button>
+        <h2 v-if="!showLateReservations">Scheduled returns</h2>
+        <h2 v-else>Late reservations</h2>
         <HomePlannedReturns v-if="dateChanged" :today-date="todayDate" :show-late-reservations="showLateReservations"></HomePlannedReturns>
+        <button v-if="!showLateReservations" @click="showLateReservations = !showLateReservations">See late reservations</button>
+        <button v-else @click="showLateReservations = !showLateReservations">See Today's Reservation</button>
       </div>
     
   
@@ -27,15 +29,7 @@
   </div>
 
   <div class="box earlyReturns">
-      <h2>Early Returns</h2>
-      <label>User: </label> <input type="text" name="" id=""><br>
-      <label for="ItemorKITname">Item or KIT name: </label><input type="text" name="" id="">
-      <br>
-      <label for="borrowedItems">Borrowed items: </label> borrowed Items<br>
-      <button>Selection returned</button>
-      <button>Selection returned + check</button>
-      <button>Everything returned</button>
-      <button>Everything returned + check</button>
+      <EarlyReturns></EarlyReturns>
   </div> 
 
 </div>
@@ -50,17 +44,14 @@ import { useStore,useUserIdentification } from "@/Pinia/Store.js";
 import Reservation from "@/components/Reservation.vue";
 import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
 import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
-import ScheduledReturn from "@/components/ScheduledReturn.vue";
-import ScheduledLoan from "@/components/ScheduledLoan.vue";
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 import{ useRouter } from 'vue-router';
 import HomePlannedLoans from "@/components/HomePlannedLoans.vue";
 import HomePlannedReturns from "@/components/HomePlannedReturns.vue";
+import EarlyReturns from "@/components/EarlyReturns.vue";
 
-let currentDate = ref(new Date());
 let unssub = false;
 const showLateReservations = ref(false);
-const showSpontaneous = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
 let todayDate = new Date();
@@ -98,20 +89,7 @@ const incrementDate = () => {
   }, 1);
 }
 
-const scheduledLoans = computed(() => {
-  return reservationslist.value.filter(reservation => 
-    reservation.StartDate <= currentDate.value.getDate() && 
-    (reservation.StartMonth - 1)  <= currentDate.value.getMonth()&&
-    reservation.CurrentlyWithUser == false
-  );
-});
-const scheduledReturns = computed(() => {
-    
-  return reservationslist.value.filter(reservation => 
-    reservation.EndDate <= currentDate.value.getDate() && 
-    (reservation.EndMonth - 1)  <= currentDate.value.getMonth()
-  );
-});
+
 
 
 watchEffect(() => {
@@ -154,6 +132,13 @@ onUnmounted(() => {
 
 
 <style scoped>
+.scheduledReturnsHeader{
+  display: flex;
+  align-items: center;
+}
+.scheduledReturnsHeader button{
+  margin-left: 20px;
+}
 .container {
   display: grid;
   grid-template-columns: 1fr;
@@ -202,6 +187,7 @@ onUnmounted(() => {
 .spontaneousLoans,
 .earlyReturns {
   background-color: #ffffff;
+  max-width: 400px;
 }
 
 .box h2 {

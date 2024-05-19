@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { getDocs, query, where, collection } from 'firebase/firestore';
+import { getDocs, query, where, collection, orderBy } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useStore } from '@/Pinia/Store.js';
 import { db } from '../Firebase/Index.js'; // Make sure to update this path if it's different
@@ -40,31 +40,48 @@ const useSearchedItems = useSearchedItemsFunction();
 const querystring = ref('');
 const store = useStore();
 const results = ref([]);
+const reservations = ref([]);
 let generalItem;
 
+const props = defineProps({
+  page: String,
+  class: String
+});
 
 
 
 const search = async () => {
-  console.log(querystring.value);
-  store.updateResults([]);
-  await querySnapshot1().then(() => {
-    querySnapshot2();
-  });
+  if(props.page === 'HomeAdmin') {
+    searchAdmin();
+  } else {
+    console.log(querystring.value);
+    store.updateResults([]);
+    await querySnapshot1().then(() => {
+      querySnapshot2();
+    });
 
-  store.updateResults(results.value);
-  console.log(results.value);
-  addSearchedItem();
-};
+    store.updateResults(results.value);
+    console.log(results.value);
+    addSearchedItem();
 
-const addSearchedItem = () => {
-  useSearchedItems.addSearchedItem(results.value);
 
-  const searchedItem = results.value;
-  console.log(searchedItem);
+    const addSearchedItem = () => {
+      useSearchedItems.addSearchedItem(results.value);
+      const searchedItem = results.value;
+      console.log(searchedItem);
+    }
+	}
 
 } 
-
+const searchAdmin = async () => {
+  const cref = collection(db, 'Utility/Reservations/All Reservations');
+  const qref = query(cref, where('allItemSerials', 'array-contains-any', [querystring.value]));
+  const docs = await getDocs(qref);
+  docs.forEach((doc) => {
+    reservations.value.push(doc.data());
+  });
+  console.log(reservations.value);
+};
 
 
 

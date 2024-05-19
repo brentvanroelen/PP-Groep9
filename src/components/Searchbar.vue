@@ -1,15 +1,15 @@
 <template>
   <div id="test">
-  <div class="search-container">
+  <div class="search-container" :class="props.page">
     <div class="search-bar">
       <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
-      <div>
+      <div v-if="props.page != 'HomeAdmin'">
         <select v-model="selectedCategory">
           <option value="" disabled>Categories</option>
           <option v-for="(option, index) in dropdownOptions" :key="index" :value="option" >{{ option }}</option>
         </select>
       </div>
-      <span class="calendar" @click="togglePopup(true)">
+      <span v-if="props.page != 'HomeAdmin'" class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
       </span>
       <button @click="confirmedSearch">Search</button>
@@ -108,6 +108,10 @@
   
 
   <style scoped>
+  .search-container.HomeAdmin{
+    width: fit-content;
+    max-height: fit-content;
+  }
   .search-container {
   width: 800px; /* Adjust this value to suit your needs */
   position: relative; /* This makes the .search-results position relative to this container */
@@ -121,8 +125,8 @@
     justify-content: center;
   }
   img{
-    width: 110px;
-    height: 40px;
+    width: 120px;
+    height: 120px;
   }
   .search-bar input {
     padding: 8px;
@@ -143,7 +147,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -159,9 +163,11 @@
   overflow: visible;
 }
 img{
-  max-width: 35%;
+  max-width: 100%;
   margin-top: 2px;
   align-self: start;
+  overflow: visible;
+  overflow-clip-margin: 2px;
 }
 button {
   background-color: #ff3333;

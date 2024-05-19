@@ -270,14 +270,25 @@ export const useKitItems = defineStore({
     }
   }
 });
-
-
 export const useSearchedItems = defineStore({
-    id: 'searchedItems',
-    state: () => ({
-      item: []
-    }),actions: {
-      addSearchedItem(item){
-        this.item.push(item)
-      } }
-    });
+  id: 'searchedItems',
+  state: () => ({
+    item: []
+  }),
+  actions: {
+    addSearchedItem(item){
+      this.item.push(item)
+    } 
+  }
+});
+export const useSelectedUser = defineStore({
+  id: 'selectedUser',
+  state: () => ({
+    user: {}
+  }),
+  actions: {
+    selectUser(user){
+      this.user = user
+    }
+  }
+});
