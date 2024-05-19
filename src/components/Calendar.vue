@@ -21,7 +21,7 @@
           v-for="day in days.values()"
           :key="day"
           @click="selectDay(day)"
-          :class="{ 'selected': isSelected(day), 'grayedOut': grayedOut(day)  }">
+          :class="{ 'selected': isSelected(day), 'grayedOut': grayedOut(day), 'between': isBetween(day)  }">
           {{ day }}
         </div>
       </div>
@@ -47,6 +47,8 @@
   const friday = ref();
   const student = ref();
   const teacher = ref();
+  const studentReservation = ref();
+  const teacherReservation = ref();
 
 
   const fetchData = async () => {
@@ -62,10 +64,12 @@
     wednesday.value = data.wednesday;
     thursday.value = data.thursday;
     friday.value = data.friday;
+    studentReservation.value = data.studentReservation;
+    teacherReservation.value = data.teacherReservation;
   }
   
   }
-
+  
   let currentMonth = ref(0);
   const currentYear = ref(0);
   const dates = useDates();
@@ -112,14 +116,14 @@
     let length = 0;
 
     if(userType.user.type === "student" ){
-      length = student.value * 7 ;
+      length = studentReservation.value * 7 ;
     }else if(user.user.type === "docent"){
-      length = teacher.value * 7 ;
+      length = teacherReservation.value * 7 ;
     }
     const futureDate = new Date();
     futureDate.setDate(currentDate.getDate() + length);
 
-    if( Weekend || day < currentDate.getDate() && currentMonth.value <= currentDate.getMonth() && currentYear.value === currentDate.getFullYear() ||  currentMonth.value < currentDate.getMonth() || monday.value === false && date.getDay() === 1 || tuesday.value === false && date.getDay() === 2 || wednesday.value === false && date.getDay() === 3 || thursday.value === false && date.getDay() === 4 || friday.value === false && date.getDay() === 5 ){
+    if( Weekend || day < currentDate.getDate() && currentMonth.value <= currentDate.getMonth() && currentYear.value === currentDate.getFullYear() ||  currentMonth.value < currentDate.getMonth() || monday.value === false && date.getDay() === 1 || tuesday.value === false && date.getDay() === 2 || wednesday.value === false && date.getDay() === 3 || thursday.value === false && date.getDay() === 4 || friday.value === false && date.getDay() === 5 || date > futureDate){
       return true;
     }else{
       return false;
@@ -130,6 +134,12 @@
   const blanks = () => {
     const firstDayOfMonth = new Date(currentYear.value, currentMonth.value, 0);
     return new Array(firstDayOfMonth.getDay()).fill('');
+  };
+
+  const isBetween = (day) => {
+    const date = new Date(currentYear.value, currentMonth.value, day);
+  return (selectedStartDate.value && selectedEndDate.value && date.getTime() > selectedStartDate.value.getTime() && date.getTime() < selectedEndDate.value.getTime()
+  );
   };
 
   const nextMonth = () => {
@@ -205,8 +215,6 @@
           selectedEndDate.value = null;
           dates.resetDates();
       }
-    } else {
-      alert("Reservation is only possible up to a maximum of 14 days in advance.");
     }
   }; 
 
@@ -241,7 +249,9 @@
     width: 500px;
     margin: auto;
 }
-
+.between {
+  background-color: #52810c;
+}
 .header {
     display: flex;
     justify-content: space-evenly;

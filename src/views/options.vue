@@ -37,17 +37,34 @@
         </div>
 
         <div class="loanDuration">
-            <h3>Edit loan duration</h3>
+            <h3>Edit loans</h3>
             <h4>Loan duration: </h4>
-            <label for="student">Student: </label> <select name="weken" id="wekenSelect" v-model="student">
+            <label for="student" class="student">Student: </label> 
+            <select name="weken" id="wekenSelect" v-model="student">
                 <option value=1>1 week</option>
                 <option value=2>2 weeks</option>
                 <option value=3>3 weeks</option>
                 <option value=4>4 weeks</option>
-
             </select>
             <br>
-            <label for="Teacher">Teacher: </label> <select name="weken" id="wekenSelect" v-model="teacher">
+            <label for="Teacher" class="teacher">Teacher: </label> 
+            <select name="weken" id="wekenSelect" v-model="teacher">
+                <option value=1>1 week</option>
+                <option value=2>2 weeks</option>
+                <option value=3>3 weeks</option>
+                <option value=4>4 weeks</option>
+            </select>
+            <h4>Reservation duration</h4>
+            <label for="studentReservation" class="student">Student: </label> 
+            <select name="weken" id="wekenSelect" v-model="studentReservation">
+                <option value=1>1 week</option>
+                <option value=2>2 weeks</option>
+                <option value=3>3 weeks</option>
+                <option value=4>4 weeks</option>
+            </select>
+            <br>
+            <label for="TeacherReservation" class="teacher">Teacher: </label> 
+            <select name="weken" id="wekenSelect" v-model="teacherReservation">
                 <option value=1>1 week</option>
                 <option value=2>2 weeks</option>
                 <option value=3>3 weeks</option>
@@ -176,12 +193,16 @@ const fetchData = async () => {
         returnEndTime.value = data.returnEndTime;
         userLoanLimit.value = data.userLoanLimit;
         userKitLimit.value = data.userKitLimit;
+        studentReservation.value = data.studentReservation;
+        teacherReservation.value = data.teacherReservation;
     }else{
         console.log("There is no data");
     }
 }
 onMounted(fetchData);
 
+const studentReservation = ref();
+const teacherReservation = ref();
 const startPickupTime = ref();
 const endPickupTime = ref();
 const monday = ref();
@@ -212,6 +233,8 @@ const update = () => {
         friday: friday.value,
         student: parseInt(student.value),
         teacher: parseInt(teacher.value),
+        studentReservation: parseInt(studentReservation.value),
+        teacherReservation: parseInt(teacherReservation.value),
         overdueTimeTillWarning: parseInt(overdueTimeTillWarning.value),
         requiredWarningsToBlacklist: parseInt(requiredWarningsToBlacklist.value),
         allowRequests: allowRequests.value,
@@ -249,6 +272,7 @@ h1{
         margin: auto;
         width: 1500px;
 }
+
 button{
     background-color: #FF0000;
     padding: 10px;
@@ -303,7 +327,6 @@ button{
   width: 0;
   height: 0;
 }
-
 
 .slider {
   position: absolute;
