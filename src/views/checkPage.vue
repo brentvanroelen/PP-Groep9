@@ -24,6 +24,8 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const serialNumber = ref(route.query.serialNumber);
 console.log(serialNumber.value);
+console.log(serialNumber.value.Name);
+console.log(serialNumber.value.Serial);
 
 const searchedItem = useSearchedItems.searchedItem;
 
@@ -53,7 +55,7 @@ const onFileChange = (event) => {
 
 const reportIssueToDatabase = async (issueData) => {
     try {
-        const itemRef = doc(db, `Items/${serialNumber.value.charAt(0)}/${serialNumber.value} items/${serialNumber.value}`);
+        const itemRef = doc(db, `Items/${serialNumber.value.Name}/${serialNumber.value.Name} items/${serialNumber.value.Serial}`);
         
         
         const itemSnapshot = await getDoc(itemRef);

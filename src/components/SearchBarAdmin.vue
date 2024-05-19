@@ -7,7 +7,7 @@
   <div v-if="results.length > 0" class="items-grid">
     <div v-for="(item, index) in results" :key="index" class="item" >
       <div class="icons">
-        <router-link :to="{ path: '/checkPage', query: { serialNumber: item.Serial } }" class="link">
+        <router-link :to="{ path: '/checkPage', query: { serialNumber: item} }" class="link">
     <img src="/src/assets/552871.png" alt="">
     </router-link>
     <ul>
