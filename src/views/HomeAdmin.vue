@@ -16,7 +16,8 @@
 
       <div class="box scheduledReturns">
         <h2>Scheduled returns</h2>
-        <ScheduledReturn v-for="(scheduledreturn, index) in scheduledReturns" :key="index" :scheduled-return="scheduledreturn"></ScheduledReturn>
+        <button @click="showLateReservations = !showLateReservations">LateReservations</button>
+        <HomePlannedReturns v-if="dateChanged" :today-date="todayDate" :show-late-reservations="showLateReservations"></HomePlannedReturns>
       </div>
     
   
@@ -54,9 +55,11 @@ import ScheduledLoan from "@/components/ScheduledLoan.vue";
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 import{ useRouter } from 'vue-router';
 import HomePlannedLoans from "@/components/HomePlannedLoans.vue";
+import HomePlannedReturns from "@/components/HomePlannedReturns.vue";
 
 let currentDate = ref(new Date());
 let unssub = false;
+const showLateReservations = ref(false);
 const showSpontaneous = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
