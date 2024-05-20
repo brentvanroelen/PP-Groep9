@@ -117,8 +117,10 @@
 
     if(userType.user.type === "student" ){
       length = studentReservation.value * 7 ;
-    }else if(user.user.type === "docent"){
+    }else if(userType.user.type === "docent"){
       length = teacherReservation.value * 7 ;
+    }else if(userType.user.type === "admin"){
+      length = 365;
     }
     const futureDate = new Date();
     futureDate.setDate(currentDate.getDate() + length);
@@ -185,8 +187,10 @@
     }
     if(userType.user.type === "student" ){
       duration = student.value * 7 ;
-    }else if(user.user.type === "docent"){
+    }else if(userType.user.type === "docent"){
       duration = teacher.value * 7 ;
+    }else if(userType.user.type === "admin"){
+      duration = 365;
     }
     if (selectedDateStartOfDay >= currentDateStartOfDay && diffInDays <= maxReservationDays) {
       const maxAllowedDuration = duration; 
