@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div v-else>
+  <div v-if="props.page != 'HomeAdmin'">
     No results found.
   </div>
 </template>
@@ -85,6 +85,8 @@ const searchAdmin = async () => {
       UserFirstName: doc.data().UserFirstName,
       UserLastName: doc.data().UserLastName,
       allItemSerials: doc.data().allItemSerials,
+      ItemSerials: doc.data().ItemSerials,
+      allItemNames: doc.data().allItemNames,
       EndDate: doc.data().EndDate,
       EndMonth: doc.data().EndMonth,
       ReservationPrepared: doc.data().ReservationPrepared,

@@ -9,7 +9,7 @@ import {Firestore,collection,
   query,startAt,endAt,
   setDoc,updateDoc,doc,
  addDoc, increment,getDoc,onSnapshot,
-deleteDoc} from  'firebase/firestore'
+deleteDoc,deleteField} from  'firebase/firestore'
 
 
 const firebaseConfig = {
@@ -31,6 +31,7 @@ const auth = getAuth(app);
 export {
     db,auth,collection,getDocs,Firestore,orderBy,where,CollectionReference,
     query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot,
-    deleteDoc,createUserWithEmailAndPassword,signInWithEmailAndPassword
+    deleteDoc,createUserWithEmailAndPassword,signInWithEmailAndPassword,
+    deleteField
 }
 
