@@ -1,6 +1,4 @@
 <template>
-  <!-- <Navigation></Navigation> -->
-  <!-- <Admin></Admin> -->
 
     <div v-if="aantalWaarschuwingen">
       <div class="searchcontainer">
@@ -67,11 +65,26 @@ const maxWaarschuwingen = ref(3);
   position: relative;
   background: url("../assets/Campus-Kaai.jpg") no-repeat center center/cover;
   overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.searchcontainer:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
   #img {
     width: 100%;
     height: auto;
+    display: block;
+    border-radius: 15px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+
+  #img:hover {
+  opacity: 1;
   }
 
   .searchbar-overlay {
@@ -81,6 +94,14 @@ const maxWaarschuwingen = ref(3);
     width: 100%;
     height: 100%;
     z-index: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    opacity: 0; /* eerst niet zichtbaar */
+    transition: opacity 0.3s ease;
+  }
+
+  .searchcontainer:hover .searchbar-overlay {
+  opacity: 1; /* overlay op hover */
   }
 
   .searchbar {
@@ -92,6 +113,39 @@ const maxWaarschuwingen = ref(3);
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(255, 255, 255, 0.9); 
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0; /* eerst niet zichtbaar */
+    transition: opacity 0.3s ease; 
+  }
+
+  .searchcontainer:hover .searchbar {
+  opacity: 1; /* searchbar op hover tonen */
+  } 
+  
+  .waarschuwing {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffdddd; 
+  border-radius: 10px;
+  margin: 20px; 
+  transform: scale(1); /* eerst normale groote */
+  transition: transform 0.3s ease;
+  }
+
+  .waarschuwing:hover {
+  transform: scale(1.05); /*wordt iets groter op hover*/
+  }
+  .waarschuwing h1 {
+  font-size: 24px;
+  color: #ff0000;
+  }
+
+  .waarschuwing p {
+  font-size: 16px;
+  color: #333;
   }
 
 </style>
