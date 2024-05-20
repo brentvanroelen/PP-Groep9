@@ -1,7 +1,7 @@
 <template>
     <div class="items">
     <h1>Product Screen</h1>
-    <section class="itemslisting">
+    <section class="itemslisting" v-if="results != 'nothing'">
         <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
            <Items :item="item" ></Items>
     </router-link>

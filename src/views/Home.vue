@@ -52,8 +52,8 @@ if(testing == false){
   }
 }
 const goProductScreen = () => {
-  store.updateResults([])
-  router.push({name: "productscreen", params: {search: "nothing"}})
+  store.updateResults(['nothing'])
+  router.push({name: "productscreen"})
 }
 
 const home = "UserHome";

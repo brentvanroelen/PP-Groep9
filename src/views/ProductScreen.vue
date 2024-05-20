@@ -13,9 +13,7 @@ import {useRoute} from "../main.js";
 import {ref,watch} from "../main.js";
 import { collection, db, getDocs, query, where } from '../Firebase/Index.js';
 
-const props = defineProps({
-    search: String
-})
+
 const store = useStore();
 const loadCatalog = async() => {
     let items = [];
@@ -26,7 +24,7 @@ const loadCatalog = async() => {
     })
     store.updateResults(items);
 }
-if(props.search != "nothing"){
+if(store.results[0] == "nothing"){
     loadCatalog();
 }
 
