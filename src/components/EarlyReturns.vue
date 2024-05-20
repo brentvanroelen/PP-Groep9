@@ -103,46 +103,50 @@ const selectionReturnedHandler = async() => {
       })
     }
     for(let i = 1; i <= chosenReservation.value.allItemSerials.length; i++){
-      if(chosenReservation.value.allItemSerials[i-1] == item.Serial){
-        const serialPrefix = item.Serial.split('-')[0];
-        const matchingItems = chosenReservation.value.allItemSerials.filter(serial => serial.split('-')[0] === serialPrefix);
-        if(matchingItems.length === 1){
-          await updateDoc(docRefSelectedResAdmin, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-            ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
-          })
-          await updateDoc(docRefSelectedResUser, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-            ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
-          })
-          await updateDoc(docRefSelectedResGeneral, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-            ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
-          })
-        }else{
-          let index = chosenReservation.value.allItemNames.findIndex(name => name === item.ItemName);
-          await updateDoc(docRefSelectedResAdmin, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-          })
-          await updateDoc(docRefSelectedResUser, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-          })
-          await updateDoc(docRefSelectedResGeneral, {
-            [`Item${i}`]: deleteField(),
-            allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
-            allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
-          })
-        }  
+      if(chosenReservation.value.allItemSerials.length == 1){
+        reservationReturnedOrCanceled(chosenReservation.value, false)
+      }else{
+        if(chosenReservation.value.allItemSerials[i-1] == item.Serial){
+          const serialPrefix = item.Serial.split('-')[0];
+          const matchingItems = chosenReservation.value.allItemSerials.filter(serial => serial.split('-')[0] === serialPrefix);
+          if(matchingItems.length === 1){
+            await updateDoc(docRefSelectedResAdmin, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+              ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
+            })
+            await updateDoc(docRefSelectedResUser, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+              ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
+            })
+            await updateDoc(docRefSelectedResGeneral, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.filter((name) => name != item.ItemName),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+              ItemSerials: chosenReservation.value.ItemSerials.filter((serialseries) => serialseries != serialPrefix)
+            })
+          }else{
+            let index = chosenReservation.value.allItemNames.findIndex(name => name === item.ItemName);
+            await updateDoc(docRefSelectedResAdmin, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+            })
+            await updateDoc(docRefSelectedResUser, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+            })
+            await updateDoc(docRefSelectedResGeneral, {
+              [`Item${i}`]: deleteField(),
+              allItemNames: chosenReservation.value.allItemNames.splice(index, 1),
+              allItemSerials: chosenReservation.value.allItemSerials.filter((serial) => serial != item.Serial),
+            })
+          }  
+        }
       }
     }
   }
