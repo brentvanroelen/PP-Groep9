@@ -201,7 +201,7 @@
         if (diffInDays <= maxAllowedDuration) {
           selectedEndDate.value = selectedDateStartOfDay;
           let dateInfo = [selectedStartDate.value.getDate(), selectedStartDate.value.getMonth() + 1, selectedEndDate.value.getDate(), selectedEndDate.value.getMonth() + 1]
-          dates.updateDate(item,dateInfo)
+          dates.updateGeneralDates(dateInfo)
           console.log(dates.dates)
           useTrigger().fireTrigger();
           displayDate.value = [

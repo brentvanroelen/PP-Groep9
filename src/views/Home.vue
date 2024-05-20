@@ -10,6 +10,7 @@
           <SearchBar :page="home"/>
         </div>
       </div>
+      <button @click="goProductScreen">See catalog</button>
       <Kits />
       <Categories></Categories>
       <br>
@@ -34,8 +35,10 @@ import SearchBar from "../components/Searchbar.vue";
 import Admin from "../components/navigationAdmin.vue";
 import { useUserIdentification } from "@/Pinia/Store"
 import { useRouter } from "vue-router"
+import { useStore } from "@/Pinia/Store"
 
 const user = useUserIdentification()
+const store = useStore()
 const router = useRouter()
 const testing = true
 if(testing == false){
@@ -47,6 +50,10 @@ if(testing == false){
   }else{
     console.log("Welcome")
   }
+}
+const goProductScreen = () => {
+  store.updateResults([])
+  router.push({name: "productscreen", params: {search: "nothing"}})
 }
 
 const home = "UserHome";

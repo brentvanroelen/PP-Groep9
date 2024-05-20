@@ -21,7 +21,9 @@ export const useDates = defineStore({
   state: () => ({
     dates: {
       
-    }
+    },
+    general: [] 
+
   }),
   actions: {
     updateDate(item, datearray) {
@@ -30,10 +32,9 @@ export const useDates = defineStore({
     resetDates(){
       this.dates = {}
     },
-    updateEndDate(endDate, endMonth) {
-      this.endDate = endDate;
-      this.endMonth = endMonth;
-    }
+    updateGeneralDates(datearray){
+      this.general = datearray
+    },
   }
 
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="earlyReturnBox">
     <h2>Early Returns</h2>
-    <label for="ItemorKITname">Item or KIT name: </label>
+    <label for="ItemorKITname">Item Serial Number: </label>
     <SearchBarAdmin :page="'HomeAdmin'"></SearchBarAdmin>
     <br>
     <div v-if="EarlyReservations.Reservations.length != 0" v-for="reservation in EarlyReservations.Reservations" :key="reservation.id" class="studentContainer">
@@ -169,13 +169,13 @@ const refactorReservation =  async() => {
     if(reservation[`Item${itemnumber}`] != undefined){
       items[`Item${itemnumber}`] = reservation[`Item${itemnumber}`]
       await updateDoc(docRefSelectedResAdmin, {
-        [`Item${i}`]: deleteField()
+        [`Item${itemnumber}`]: deleteField()
       })
       await updateDoc(docRefSelectedResUser, {
-        [`Item${i}`]: deleteField()
+        [`Item${itemnumber}`]: deleteField()
       })
       await updateDoc(docRefSelectedResGeneral, {
-        [`Item${i}`]: deleteField()
+        [`Item${itemnumber}`]: deleteField()
       })
       itemsFound++
     }

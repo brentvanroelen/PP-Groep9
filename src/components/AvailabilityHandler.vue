@@ -37,7 +37,7 @@ const handleAvailability = async() => {
             if(availableInstances.items[item.Name] !== undefined){
                 availableInstances.items[item.Name] = [];
             }
-            if(Object.keys(dates.dates).length != 0){
+            if(Object.keys(dates.general).length != 0){
                 console.log(item)
                 await getAvailableItems(item.Name,item.SerialSeries);
                 console.log(availableInstances)
@@ -100,7 +100,7 @@ const getAvailableItems = async(name,serial) => {
 const getNonConflictingReservedItems = async(name,serialseries) => {
     Nonconflictingreserveditems = [];
     let blacklist = []
-    const Userdates = dateifierUser(dates.dates[name][0], dates.dates[name][1], dates.dates[name][2], dates.dates[name][3]);
+    const Userdates = dateifierUser(dates.general[0], dates.general[1], dates.general[2], dates.general[3]);
     const creference = collection(db, "Reservations");
     const reservedQuery = query(creference,where("ItemSerials", "array-contains" , serialseries));
     const reservedSnapshot = await getDocs(reservedQuery);
