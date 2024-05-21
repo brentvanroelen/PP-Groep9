@@ -21,7 +21,9 @@ export const useDates = defineStore({
   state: () => ({
     dates: {
       
-    }
+    },
+    general: [] 
+
   }),
   actions: {
     updateDate(item, datearray) {
@@ -30,10 +32,9 @@ export const useDates = defineStore({
     resetDates(){
       this.dates = {}
     },
-    updateEndDate(endDate, endMonth) {
-      this.endDate = endDate;
-      this.endMonth = endMonth;
-    }
+    updateGeneralDates(datearray){
+      this.general = datearray
+    },
   }
 
 });
@@ -270,14 +271,36 @@ export const useKitItems = defineStore({
     }
   }
 });
-
-
 export const useSearchedItems = defineStore({
-    id: 'searchedItems',
-    state: () => ({
-      item: []
-    }),actions: {
-      addSearchedItem(item){
-        this.item.push(item)
-      } }
-    });
+  id: 'searchedItems',
+  state: () => ({
+    item: []
+  }),
+  actions: {
+    addSearchedItem(item){
+      this.item.push(item)
+    } 
+  }
+});
+export const useSelectedUser = defineStore({
+  id: 'selectedUser',
+  state: () => ({
+    user: {}
+  }),
+  actions: {
+    selectUser(user){
+      this.user = user
+    }
+  }
+});
+export const useEarlyReturnsReservations = defineStore({
+  id: 'EarlyReturnsReservations',
+  state: () => ({
+    Reservations: []
+  }),
+  actions: {
+    addReservation(reservation){
+      this.Reservations.push(reservation)
+    }
+  }
+});

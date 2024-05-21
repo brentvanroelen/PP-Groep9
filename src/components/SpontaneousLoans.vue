@@ -1,5 +1,5 @@
 <template>
-    <label>User: </label> <input type="text" name="" id=""><br>
+      <label for="User">User: </label><UserSearchbar></UserSearchbar>
       <label for="ItemorKITname">Item or KIT name: </label>
       <p >Return date: </p> <Calendar :page="page"></Calendar><br>
       <div v-if="cart.items != undefined">
@@ -19,6 +19,7 @@ import {useStore,useCart} from "../Pinia/Store.js"
 import Calendar from "./Calendar.vue";
 import Items from "./Items.vue";
 import ReservationHandler from "./ReservationHandler.vue";
+import UserSearchbar from "./UserSearchbar.vue";
 
 const store = useStore()
 const cart = useCart()

@@ -26,25 +26,61 @@ export default {
 </script>
 
 <style scoped>
-    #Categories{
-        display: flex;
-        justify-content: space-around;
-        list-style-type: none;
-        align-items: center;
-        padding: 0.5em;
+    h2 {
+        margin-top: 20px;
     }
     
-    img{
-        width: 8em;
-        background-color: white;
-        border: 1px solid black;
-    }
-    #Names{
+    #Categories{
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-around;
         list-style-type: none;
         align-items: center;
-        padding: 0.5em;
+        padding: 20px 0;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    #Categories li {
+        margin: 10px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+    }
+
+    #Categories li img {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    #Categories li:hover {
+        transform: translateY(-5px);
+    }
+
+    #Names {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        list-style-type: none;
+        padding: 10px 0;
+        margin-top: 10px;
+    }
+
+    #Names li {
+        margin: 0 10px;
+        font-weight: bold;
+        color: #444;
+        cursor: pointer;
+        text-align: center;
+        transition: color 0.3s ease;
+    }
+
+    #Names li:hover {
+        color: #ff0000; 
     }
     
 </style>

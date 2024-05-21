@@ -1,5 +1,8 @@
 <template>
-  <div class="ItemsToPrepare">
+  <div class="ItemsToPrepare" v-if="!loading">
+    <div v-if="students.length == 0">
+      <p>No Scheduled Loans for {{ displayDate }}</p>
+    </div>
       <!-- Loept door de students -->
     <div v-for="student in students" :key="student.id" class="studentContainer">
       <div class="studentInfo">
@@ -27,6 +30,9 @@
       </ul>
     </div>
   </div>
+  <div v-else>
+    <p>Loading...</p>
+  </div>
 </template>
   
     
@@ -38,6 +44,7 @@ import { reservationReturnedOrCanceled } from '@/js/functions.js';
 
 let unsub = false;
 const students = ref([]) 
+let loading = ref(true);
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
@@ -46,11 +53,17 @@ const toggleOrders = (student) => {
 const props = defineProps({
   todayDate: Date
 })
+let displayDate = ref(("0" + props.todayDate.getDate()).slice(-2) + "/" + ("0" + (props.todayDate.getMonth() +1)).slice(-2) + "/" + props.todayDate.getFullYear())
+
+
 
 const getItems = async() =>{
   const reservations = collection(db, 'Utility/Reservations/All Reservations');
   const q = query(reservations, where("StartDate", "==", props.todayDate.getDate()), where("StartMonth", "==", props.todayDate.getMonth() + 1),where ("CurrentlyWithUser", "==", false));
   const querySnapshot = await getDocs(q);
+  if(querySnapshot.empty){
+    loading.value = false;
+  }
   querySnapshot.forEach(async(doc) => {
     let itemsToPrepare = 0;
     let items = [];
@@ -98,7 +111,11 @@ const getItems = async() =>{
       reservationPrepared: doc.data().ReservationPrepared,
       itemsToPrepare: itemsToPrepare
     });
+    if(loading){
+      loading.value = false;
+    }
   });
+
 }
 
 watchEffect(() => {

@@ -51,9 +51,10 @@
   const page = "UserHome";
 
   const addItemToCart = () => {
-      if(dates.dates[Item.Name] === undefined || quantity.getQuantity(Item.Name) == 0){
+      if(dates.general == [] || quantity.getQuantity(Item.Name) == 0){
         console.log("Please select a date range and a quantity")
       }else{
+        dates.updateDate(Item.Name, dates.general)
         console.log(Item);
         cart.addItem(Item);
         console.log(cart.items);        

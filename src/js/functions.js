@@ -1,7 +1,7 @@
 import { db, collection, doc, updateDoc, increment,deleteDoc, query, where,getDocs } from "@/Firebase/Index"
 
 
-export const reservationReturnedOrCanceled = async(reservation) => {
+export const reservationReturnedOrCanceled = async(reservation,warning) => {
     const Serialseries = reservation.ItemSerials
     const Serialnumbers = reservation.allItemSerials
     const itemnames = reservation.allItemNames
@@ -27,7 +27,13 @@ export const reservationReturnedOrCanceled = async(reservation) => {
             itemdoc++
         }
     }
+    if(warning == true){
+        await updateDoc(doc(db, `Users/${reservation.userid}`),{
+            warningCount: increment(1)
+        })
+    }
     await deleteDoc(doc(db, `Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`))
+
 }

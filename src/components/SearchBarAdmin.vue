@@ -20,16 +20,22 @@
     </div>
   </div>
 
-  <div v-else>
+  <div v-if="props.page != 'HomeAdmin'">
     No results found.
   </div>
 </template>
 
 <script setup>
+
 import { getDocs, query, where, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useStore } from '@/Pinia/Store.js';
 import { db } from '../Firebase/Index.js';
+import { getDocs, query, where, collection, orderBy } from 'firebase/firestore';
+import { ref } from 'vue';
+import { useEarlyReturnsReservations, useStore } from '@/Pinia/Store.js';
+import { db } from '../Firebase/Index.js'; 
+
 import { useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
 
 const useSearchedItems = useSearchedItemsFunction();
@@ -37,14 +43,28 @@ const useSearchedItems = useSearchedItemsFunction();
 const querystring = ref('');
 const store = useStore();
 const results = ref([]);
+const reservationsAdmin = useEarlyReturnsReservations()
 let generalItem;
 
+
+const props = defineProps({
+  page: String,
+  class: String
+});
+
+
+
+
 const search = async () => {
-  console.log(querystring.value);
-  store.updateResults([]);
-  await querySnapshot1().then(() => {
-    querySnapshot2();
-  });
+  if(props.page === 'HomeAdmin') {
+    searchAdmin();
+  } else {
+    console.log(querystring.value);
+    store.updateResults([]);
+    await querySnapshot1().then(() => {
+      querySnapshot2();
+    });
+
 
   store.updateResults(results.value);
   console.log(results.value);
@@ -64,7 +84,57 @@ const deleteItem = async (index) => {
   } catch (error) {
     console.error('Error removing document: ', error);
   }
+}};
+
+
+/* const searchAdmin = async () => {
+    store.updateResults(results.value);
+    console.log(results.value);
+    addSearchedItem();
+
+
+    const addSearchedItem = () => {
+      useSearchedItems.addSearchedItem(results.value);
+      const searchedItem = results.value;
+      console.log(searchedItem);
+    }
+	}
+
+}  */
+const searchAdmin = async () => {
+  reservationsAdmin.Reservations = [];
+  const cref = collection(db, 'Utility/Reservations/All Reservations');
+  const qref = query(cref, where('allItemSerials', 'array-contains-any', [querystring.value]));
+  const docs = await getDocs(qref);
+  docs.forEach((doc) => {
+    let reservation = {
+      id: doc.id,
+      User: doc.data().User,
+      UserFirstName: doc.data().UserFirstName,
+      UserLastName: doc.data().UserLastName,
+      allItemSerials: doc.data().allItemSerials,
+      ItemSerials: doc.data().ItemSerials,
+      allItemNames: doc.data().allItemNames,
+      EndDate: doc.data().EndDate,
+      EndMonth: doc.data().EndMonth,
+      ReservationPrepared: doc.data().ReservationPrepared,
+      StartMonth: doc.data().StartMonth,
+      StartDate: doc.data().StartDate,
+      showItems: false,
+      Items: []
+    }
+    for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
+      reservation.Items.push(doc.data()[`Item${i}`])
+    }
+
+    reservationsAdmin.addReservation(reservation);
+  })
+  console.log(reservationsAdmin.Reservations);
 };
+
+
+
+
 
 const querySnapshot1 = async () => {
   const itemQuery1 = query(

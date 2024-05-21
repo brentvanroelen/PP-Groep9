@@ -31,6 +31,7 @@ const handleReservation = async() => {
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
+        dates.updateDate(store.results[0].Name, dates.general)
         itemSelector.setCollectionName(`${store.results[0].Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
