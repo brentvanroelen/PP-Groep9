@@ -285,7 +285,7 @@ export const useSearchedItems = defineStore({
 export const useSelectedUser = defineStore({
   id: 'selectedUser',
   state: () => ({
-    user: {}
+    user: 0
   }),
   actions: {
     selectUser(user){
