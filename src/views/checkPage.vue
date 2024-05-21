@@ -15,25 +15,27 @@
 
 <script setup>
 import { useStore } from '@/Pinia/Store.js'; 
-import {db,setDoc,updateDoc,doc,increment,getDoc} from "../Firebase/Index.js"
+import { db, setDoc, updateDoc, doc, increment, getDoc } from "../Firebase/Index.js"
 import { useSearchedItems } from '@/Pinia/Store.js';
-
-import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { ref } from 'vue';
 
 const route = useRoute();
-const serialNumber = ref(route.query.serialNumber);
-console.log(serialNumber.value);
-console.log(serialNumber.value.Name);
-console.log(serialNumber.value.Serial);
+const serialNumber = ref(route.query.serialNumber || ''); // Als de queryparameter niet wordt ontvangen, zal het leeg zijn
 
-const searchedItem = useSearchedItems.searchedItem;
+console.log(serialNumber.value); // Controleer of de serialNumber correct wordt ontvangen
+
+const store = useStore();
+
+// Haal de prefix uit het serienummer
+const serialNumberValue = serialNumber.value;
+const serialPrefix = serialNumberValue.substring(0, 2); // de prefix altijd 2 tekens lang 
+
+const itemId = serialPrefix + serialNumberValue;
 
 let description = '';
 let selectedIssue = '';
 let image = '';
-
-
 
 const submitFindings = () => {
     const issueData = {
@@ -41,7 +43,7 @@ const submitFindings = () => {
         image,
         type: selectedIssue
     };
-    reportIssueToDatabase(issueData);
+    reportIssueToDatabase(issueData, itemId);
 };
 
 const onFileChange = (event) => {
@@ -53,19 +55,17 @@ const onFileChange = (event) => {
     reader.readAsDataURL(file);
 };
 
-const reportIssueToDatabase = async (issueData) => {
+const reportIssueToDatabase = async (issueData, itemId) => {
     try {
-        const itemRef = doc(db, `Items/${serialNumber.value.Name}/${serialNumber.value.Name} items/${serialNumber.value.Serial}`);
+        const itemDocRef = doc(db, 'Camera items', itemId);
         
-        
-        const itemSnapshot = await getDoc(itemRef);
+        const itemSnapshot = await getDoc(itemDocRef);
         if (!itemSnapshot.exists()) {
-            console.error('Document does not exist:', serialNumber.value);
+            console.error('Document does not exist:', itemId);
             return;
         }
 
-       
-        await updateDoc(itemRef, {
+        await updateDoc(itemDocRef, {
             Issues: {
                 Description: issueData.description,
                 IssueType: issueData.type,
@@ -79,8 +79,4 @@ const reportIssueToDatabase = async (issueData) => {
         console.error('Error reporting issue:', error);
     }
 };
-
-
-
-
 </script>

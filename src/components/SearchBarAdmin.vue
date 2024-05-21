@@ -1,18 +1,17 @@
 <template>
   <div class="search-bar">
     <input type="text" v-model="querystring" @keyup.enter="search" placeholder="Search">
-    <button @click="search" @change="addSearchedItem" >Search</button>
+    <button @click="search">Search</button>
   </div>
 
   <div v-if="results.length > 0" class="items-grid">
-    <div v-for="(item, index) in results" :key="index" class="item" >
+    <div v-for="(item, index) in results" :key="index" class="item">
       <div class="icons">
-        <router-link :to="{ path: '/checkPage', query: { serialNumber: item} }" class="link">
-    <img src="/src/assets/552871.png" alt="">
-    </router-link>
-    <ul>
-  <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt=""></ul>
-        <ul><img src="/src/assets/trash.png" alt=""></ul>
+        <router-link :to="{ path: '/checkPage', query: { serialNumber: item.Serial, item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/552871.png" alt="" class="icon">
+        </router-link>
+        <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+        <img src="/src/assets/trash.png" alt="" class="icon" @click="deleteItem(index)">
       </div>
       <h2>{{ item.Name }}</h2>
       <h3>{{ item.Serial }}</h3>
@@ -27,13 +26,11 @@
 </template>
 
 <script setup>
-import { getDocs, query, where, collection } from 'firebase/firestore';
+import { getDocs, query, where, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useStore } from '@/Pinia/Store.js';
-import { db } from '../Firebase/Index.js'; // Make sure to update this path if it's different
+import { db } from '../Firebase/Index.js';
 import { useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
-
-
 
 const useSearchedItems = useSearchedItemsFunction();
 
@@ -41,9 +38,6 @@ const querystring = ref('');
 const store = useStore();
 const results = ref([]);
 let generalItem;
-
-
-
 
 const search = async () => {
   console.log(querystring.value);
@@ -54,20 +48,23 @@ const search = async () => {
 
   store.updateResults(results.value);
   console.log(results.value);
-  addSearchedItem();
 };
-
-const addSearchedItem = () => {
-  useSearchedItems.addSearchedItem(results.value);
-
-  const searchedItem = results.value;
-  console.log(searchedItem);
-
-} 
-
-
-
-
+const deleteItem = async (index) => {
+  const itemToDelete = results.value[index];
+  console.log('Item to delete:', itemToDelete);
+  try {
+    await deleteDoc(doc(db,`Items/${
+        generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
+      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
+    ),
+    where('Serial', '==', querystring.value)
+  ); 
+    results.value.splice(index, 1);
+    console.log('Item deleted successfully');
+  } catch (error) {
+    console.error('Error removing document: ', error);
+  }
+};
 
 const querySnapshot1 = async () => {
   const itemQuery1 = query(
@@ -87,21 +84,31 @@ const querySnapshot2 = async () => {
       db,
       `Items/${
         generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(
-        1
-      )} items/`
+      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
     ),
     where('Serial', '==', querystring.value)
   );
-  const doc = await getDocs(itemQuery2);
-  doc.forEach((doc) => {
-    results.value.push(doc.data());
+  const snapshot = await getDocs(itemQuery2);
+  snapshot.forEach((doc) => {
+    results.value.push({ id: doc.id, ...doc.data() });
   });
   console.log(results.value);
 };
 </script>
 
 <style scoped>
+.icon-img {
+  width: 20px;
+  height: 20px;
+}
+.link, .icon {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 .search-bar {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -138,7 +145,7 @@ const querySnapshot2 = async () => {
   gap: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
-  min-height: 200px; 
+  min-height: 200px;
 }
 
 .item {
@@ -173,22 +180,9 @@ const querySnapshot2 = async () => {
   margin: 0;
 }
 
-.icons ul img {
+.icons ul img,
+.icons .link img {
   width: 20px;
   height: 20px;
-  background-color: transparent; 
-  box-shadow: none; 
-  
 }
-.icons ul .link img {
-  background-color: transparent; 
-  box-shadow: none; 
-  
-}
-
-
-
-
-
-
 </style>
