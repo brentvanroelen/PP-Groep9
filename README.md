@@ -1,6 +1,25 @@
 # PP-Groep9
 Programming Project groep 9
 
+Dit is een programma geschreven voor de uitleendienst van het medialab van Erasmushogeschool Brussel. Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven van de code, onderverdeeld per teamlid
+
+
+
+Jessy Gencel: 
+Algemene skills Vue: Udemy. Vue JS 3: Composition API (with Pinia, Firebase 9 & Vite) door Danny Connell. (n.d.). Udemy. https://www.udemy.com/course/vue-js-3-composition-api/?couponCode=LEADERSALE24B
+
+Opzoeken hoe teleport werkt en andere basisuitwerking: Vue team documentatie https://vuejs.org
+
+Voor alle communicatie met de database aangezien AI vaak verouderde resultaten geeft: Firebase team documentatie https://firebase.google.com/docs/firestore
+
+Implementatie authentication: Firebase team documentatie https://firebase.google.com/docs/auth
+
+Algemene werking van firebase begrijpen: Firebase team Todd https://www.youtube.com/watch?v=v_hR4K4auoQ&list=PLl-K7zZEsYLluG5MCVEzXAQ7ACZBCuZgZ
+
+Werking van de geimporteerde date picker: Vue date picker team https://vue3datepicker.com/installation/
+
+
+
 Brent Devroey:
 Hoe een popup op de body van een pagina getoont wordt: (https://vuejs.org/guide/built-ins/teleport.html)
 Vue cart page met pinia: (https://chatgpt.com/share/7181079a-5e92-4717-aefe-514313cd2f58)
