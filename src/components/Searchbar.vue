@@ -1,5 +1,4 @@
 <template>
-  <div id="test">
   <div class="search-container" :class="props.page">
     <div class="search-bar">
       <input id="input" type="text" v-model="querystring" @keyup.enter="confirmedSearch" :placeholder="placeholder">
@@ -32,7 +31,6 @@
         </div>
       </div>
     </div>
-  </div>
   </template>
   
 <script setup>
@@ -123,17 +121,18 @@
 
   }
   .search-container {
-  min-width: fit-content;
+  min-width: 400px;
   position: relative; /* This makes the .search-results position relative to this container */
-  background-color: #c1c1c1;
   padding: 0.5em;
+  height: fit-content;
   }
   .search-bar {
     display: flex;
     align-items: center;
     margin-top: 0%;
     justify-content: center;
-    width: 100%;
+    width: fit-content;
+    height: fit-content;
   }
   img{
     width: 120px;
@@ -148,7 +147,6 @@
   #input{
     width: 100%;
   }
-  
   .search-bar button {
      padding: 8px 12px; 
     background-color: #d50000;

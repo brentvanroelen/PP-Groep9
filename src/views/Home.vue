@@ -105,9 +105,6 @@ const maxWaarschuwingen = ref(3);
   }
 
   .searchbar {
-    position: absolute;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%,-50%); /*centreert searchbar*/
     z-index: 2; /*search boven overlay*/
     display: flex;
