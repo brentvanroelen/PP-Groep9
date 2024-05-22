@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="aantalWaarschuwingen">
+    <div v-if="aantalWaarschuwingen < maxWaarschuwingen">
       <div class="searchcontainer">
         <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
         <div class="searchbar-overlay"></div>
@@ -56,7 +56,7 @@ const goProductScreen = () => {
 
 const home = "UserHome";
 
-const aantalWaarschuwingen = ref(1); 
+const aantalWaarschuwingen = ref(4); 
 const maxWaarschuwingen = ref(3); 
 </script>
 
