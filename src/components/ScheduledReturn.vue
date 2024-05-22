@@ -15,8 +15,8 @@
             </details>
           </div>
           <div class="card-actions">
-            <button class="btn">Returned + Check</button>
-            <button @click="itemReturned(isScheduledReturnDefined)" class="btn">Returned</button>
+            <button class="btn btn-return-check">Returned & Check</button>
+            <button @click="itemReturned(isScheduledReturnDefined)" class="btn btn-return">Returned</button>
           </div>
         </div>
       </div>
@@ -56,51 +56,108 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.box {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    overflow-y: auto; /* Enable scrolling for overflow content */
-    max-height: 400px; /* Set a maximum height for the scrolling area */
-  }
-
-  /* Styling for the buttons */
-  .card {
-    background-color: lightblue;
+    
+.card {
+    background-color: #fff;
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card-body {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.card-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+.card-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    color: #666;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+details {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+details summary {
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+details ul {
+    list-style: none;
+    padding: 0;
+}
+
+details li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+details li:last-child {
+    border-bottom: none;
 }
 
 .card-actions {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    width: 40%;
 }
-.btn{
-    background-color: #FF0000;
+
+.card:first-of-type {
+    margin-top: 20px; /* zodat de eerste kaart niet tegen de titel zit */
+}
+.btn {
     border: none;
     padding: 10px;
     cursor: pointer;
     color: white;
-    border-radius: 1em;
-    width: 100%;
-    height: 3.8em;
-  
+    border-radius: 20px; 
+    transition: background-color 0.3s, transform 0.3s;
+    flex: 1;
 }
 
+.btn-return-check {
+    background-color: #28a745; 
+}
+
+.btn-return-check:hover {
+    background-color: #218838; 
+    transform: scale(1.05);
+}
+
+.btn-return-check:active {
+    background-color: #1e7e34;
+}
+
+.btn-return {
+    background-color: #dc3545; 
+}
+
+.btn-return:hover {
+    background-color: #c82333; 
+    transform: scale(1.05);
+}
+
+.btn-return:active {
+    background-color: #bd2130;
+}
 </style>
