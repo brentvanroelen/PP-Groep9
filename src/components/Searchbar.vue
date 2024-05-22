@@ -2,7 +2,7 @@
   <div id="test">
   <div class="search-container" :class="props.page">
     <div class="search-bar">
-      <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
+      <input id="input" type="text" v-model="querystring" @keyup.enter="confirmedSearch" :placeholder="placeholder">
       <div v-if="props.page != 'HomeAdmin'">
         <select v-model="selectedCategory">
           <option value="" disabled>Categories</option>
@@ -49,7 +49,7 @@
   const selectedCategory = ref('');
   const dropdownOptions = useCategories().categories;
   let showPopup = ref();
-
+  let placeholder = ref("Search");
 
   
   const togglePopup = () => {
@@ -101,19 +101,29 @@
 };
   const addToCart = (item) => {
     cart.addItem(item);
+    querystring.value = '';
     console.log(cart.items)
   }
   
+
+  onMounted(async() => {
+    if(props.page == "HomeAdmin"){
+      placeholder.value = "Add items to the reservation"
+    }
+  })
 </script>
   
 
   <style scoped>
   .search-container.HomeAdmin{
-    width: fit-content;
     max-height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
   }
   .search-container {
-  width: 800px; /* Adjust this value to suit your needs */
+  min-width: fit-content;
   position: relative; /* This makes the .search-results position relative to this container */
   background-color: #c1c1c1;
   padding: 0.5em;
@@ -123,6 +133,7 @@
     align-items: center;
     margin-top: 0%;
     justify-content: center;
+    width: 100%;
   }
   img{
     width: 120px;
@@ -133,6 +144,9 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 5px;
+  }
+  #input{
+    width: 100%;
   }
   
   .search-bar button {

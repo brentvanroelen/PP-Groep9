@@ -50,8 +50,10 @@ const handleAvailability = async() => {
         for (let item of cart.items) {
             if(Object.keys(dates.dates).length != 0){
                 console.log(item)
+                if(availableInstances.items[item.Name] !== undefined){
+                    availableInstances.resetCollection(item.Name);
+                }
                 await getAvailableItems(item.Name,item.SerialSeries);
-                /* CALL RESERVATION HANDLER*/
                 console.log(availableInstances)
             }else{
                 console.log("Please select a date range")

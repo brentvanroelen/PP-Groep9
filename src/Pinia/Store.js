@@ -22,7 +22,8 @@ export const useDates = defineStore({
     dates: {
       
     },
-    general: [] 
+    general: [], 
+    allDatesSetToGeneral: false
 
   }),
   actions: {
@@ -35,6 +36,12 @@ export const useDates = defineStore({
     updateGeneralDates(datearray){
       this.general = datearray
     },
+    updateAllDatesToGeneral(){
+      Object.keys(this.dates).forEach(key => {
+        this.dates[key] = this.general;
+      })
+      this.allDatesSetToGeneral = true
+    }
   }
 
 });
@@ -119,6 +126,9 @@ export const useChoiceOfItems = defineStore({
     },
     resetAllItems(){
       this.items = {}
+    },
+    resetCollection(collection){
+      this.items[collection] = []
     }
   }
 
