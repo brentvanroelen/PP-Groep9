@@ -52,8 +52,14 @@
 </template>
 
 <script setup>
+
+
 import { ref } from 'vue';
-import { db, setDoc, updateDoc, doc, increment, getDoc } from '../Firebase/Index.js';
+
+import { db, doc, updateDoc, setDoc, collection, increment, getDoc,  } from "../Firebase/Index.js";
+
+
+
 
 let instance = ref(false);
 
@@ -97,16 +103,15 @@ const Makenewdoc = async () => {
   }
 };
 
+
+
 const addNewItem = async () => {
-
-
-
   const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
+  const serialSeries = docdata.value.SerialSeries.substring(0, 3).toUpperCase(); // Neem alleen de eerste twee tekens en maak deze hoofdletters
 
-
-
+  // Voegt item toe aan de 'Items'-verzameling
   await setDoc(doc(db, 'Items', itemName), {
-    Name: itemName,
+    Name: docdata.value.Name,
     Category: docdata.value.Category,
     Brand: docdata.value.Brand,
     Description: docdata.value.Description,
@@ -116,8 +121,23 @@ const addNewItem = async () => {
     SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
-    SerialSeries: docdata.value.SerialSeries,
+    SerialSeries: serialSeries, // Gebruik alleen de eerste twee tekens en maak ze hoofdletters
     Image: docdata.value.Image
+  });
+
+  // Maak een subverzameling aan voor de serienummers van dit item
+  const itemDocRef = doc(db, 'Items', itemName);
+  const itemItemsCollectionRef = collection(itemDocRef, itemName + ' items');
+
+  // Voegt het eerste serienummer toe
+  const firstSerialRef = doc(itemItemsCollectionRef, `${serialSeries}-01`);
+  await setDoc(firstSerialRef, {
+    Name: itemName,
+    Serial: `${serialSeries}-01`,
+    HasIssues: false, 
+    Issues: {}, 
+    Reserved: false, 
+    Image: docdata.value.Image 
   });
 };
 
@@ -128,12 +148,12 @@ const addNewInstance = async () => {
   const itemDoc = await getDoc(itemRef);
 
   if (itemDoc.exists()) {
-    await setDoc(doc(db, `Items/${instanceName}/${instanceName} items`, serial), {
+    const itemSerialsRef = doc(db, 'Items', instanceName, instanceName + ' items', serial);
+    await setDoc(itemSerialsRef, {
       Name: instanceName,
       Serial: serial,
       HasIssues: instancedata.value.HasIssues,
       Issues: instancedata.value.Issues,
-      SubStrings: generateSubstrings,
       Reserved: instancedata.value.Reserved,
       Image: await getImage(instanceName)
     });

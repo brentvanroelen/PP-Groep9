@@ -1,82 +1,92 @@
 <template>
-    <h1>Report issue</h1><br>  
-    <textarea v-model="description" placeholder="Description:" ></textarea><br>
+  <div>
+    <h1>Report issue</h1><br>
+    <textarea v-model="description" placeholder="Description:"></textarea><br>
     <hr>
     <input type="file" @change="onFileChange" accept="image/*"><br>
     <select v-model="selectedIssue" id="issuesdrop">
-        <option disabled selected>Select an option</option>
-        <option value="Item malfunction">Item malfunction</option>
-        <option value="Item lost">Item lost</option>
-        <option value="Damaged">Damaged</option>
-        <option value="Other">Other</option>
+      <option disabled selected>Select an option</option>
+      <option value="Item malfunction">Item malfunction</option>
+      <option value="Item lost">Item lost</option>
+      <option value="Damaged">Damaged</option>
+      <option value="Other">Other</option>
     </select><br>
     <button @click="submitFindings">Submit findings</button>
+  </div>
 </template>
 
 <script setup>
-import { useStore } from '@/Pinia/Store.js'; 
-import { db, setDoc, updateDoc, doc, increment, getDoc } from "../Firebase/Index.js"
-import { useSearchedItems } from '@/Pinia/Store.js';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { ref } from 'vue';
+import { db, doc, updateDoc } from "../Firebase/Index.js";
 
 const route = useRoute();
-const serialNumber = ref(route.query.serialNumber || ''); // Als de queryparameter niet wordt ontvangen, zal het leeg zijn
+const item = ref(null);
 
-console.log(serialNumber.value); // Controleer of de serialNumber correct wordt ontvangen
+onMounted(() => {
+  const itemData = route.query.item ? JSON.parse(route.query.item) : null;
+  if (itemData) {
+    item.value = itemData;
+    console.log('Item received:', item.value);
+  } else {
+    console.error('No item data received.');
+  }
+});
 
-const store = useStore();
+const description = ref('');
+const selectedIssue = ref('');
+const image = ref('');
 
-// Haal de prefix uit het serienummer
-const serialNumberValue = serialNumber.value;
-const serialPrefix = serialNumberValue.substring(0, 2); // de prefix altijd 2 tekens lang 
+const submitFindings = async () => {
+  if (!item.value) {
+    console.error('No item to report issue for.');
+    return;
+  }
 
-const itemId = serialPrefix + serialNumberValue;
+  const issueData = {
+    description: description.value,
+    image: image.value,
+    type: selectedIssue.value,
+    //user: 'current_user_id'  // Add logic to fetch the current user id
+  };
 
-let description = '';
-let selectedIssue = '';
-let image = '';
-
-const submitFindings = () => {
-    const issueData = {
-        description,
-        image,
-        type: selectedIssue
-    };
-    reportIssueToDatabase(issueData, itemId);
+  await reportIssueToDatabase(issueData, item.value.Serial);
+  //await fetchIssueHistory(item.value.Serial);
 };
 
 const onFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-        image = reader.result;
-    };
-    reader.readAsDataURL(file);
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    image.value = reader.result;
+  };
+  reader.readAsDataURL(file);
 };
-
-const reportIssueToDatabase = async (issueData, itemId) => {
-    try {
-        const itemDocRef = doc(db, 'Camera items', itemId);
-        
-        const itemSnapshot = await getDoc(itemDocRef);
-        if (!itemSnapshot.exists()) {
-            console.error('Document does not exist:', itemId);
-            return;
-        }
-
-        await updateDoc(itemDocRef, {
-            Issues: {
-                Description: issueData.description,
-                IssueType: issueData.type,
-                Image: issueData.image
-            }
-        });
-        
-        store.addReportedIssue(issueData);
-        console.log('Issue reported successfully.');
-    } catch (error) {
-        console.error('Error reporting issue:', error);
+const reportIssueToDatabase = async (issueData, Serial) => {
+  try {
+    if (!item.value) {
+      console.error('No item data available.');
+      return;
     }
+
+    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
+    //const itemType = item.value.Category?.toLowerCase();
+    const itemBundleName = `${itemName} items`;
+    const itemDocRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
+
+    await updateDoc(itemDocRef, {
+      Issues: issueData,
+      HasIssues: true
+    });
+
+    console.log('Issue reported successfully.');
+  } catch (error) {
+    console.error('Error reporting issue:', error);
+  }
 };
+
 </script>
+
+<style scoped>
+/* Add your styles here */
+</style>

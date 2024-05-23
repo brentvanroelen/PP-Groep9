@@ -7,10 +7,17 @@
   <div v-if="results.length > 0" class="items-grid">
     <div v-for="(item, index) in results" :key="index" class="item">
       <div class="icons">
-        <router-link :to="{ path: '/checkPage', query: { serialNumber: item.Serial, item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/552871.png" alt="" class="icon">
+        <router-link :to="{ path: '/checkPage', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/552871.png" alt="" class="icon" >
         </router-link>
-        <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+        <router-link :to="{ path: '/historyPage', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/book-icon-book-icon-simple-sign-book-icon-isolated-on-with-background-illustration-of-book-icon-free-free-vector.jpg" alt="" class="icon" >
+        </router-link>
+
+        <!-- <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+        </router-link> -->
+        
         <img src="/src/assets/trash.png" alt="" class="icon" @click="deleteItem(index)">
       </div>
       <h2>{{ item.Name }}</h2>
@@ -20,21 +27,16 @@
     </div>
   </div>
 
-  <div v-if="props.page != 'HomeAdmin'">
+  <div v-if="props.page != 'HomeAdmin' && results.length === 0">
     No results found.
   </div>
 </template>
 
 <script setup>
-
 import { getDocs, query, where, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref } from 'vue';
-import { useStore } from '@/Pinia/Store.js';
-import { db } from '../Firebase/Index.js';
-import { getDocs, query, where, collection, orderBy } from 'firebase/firestore';
-import { ref } from 'vue';
 import { useEarlyReturnsReservations, useStore } from '@/Pinia/Store.js';
-import { db } from '../Firebase/Index.js'; 
+import { db } from '../Firebase/Index.js';
 
 import { useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
 
@@ -43,20 +45,16 @@ const useSearchedItems = useSearchedItemsFunction();
 const querystring = ref('');
 const store = useStore();
 const results = ref([]);
-const reservationsAdmin = useEarlyReturnsReservations()
+const reservationsAdmin = useEarlyReturnsReservations();
 let generalItem;
-
 
 const props = defineProps({
   page: String,
   class: String
 });
 
-
-
-
 const search = async () => {
-  if(props.page === 'HomeAdmin') {
+  if (props.page === 'HomeAdmin') {
     searchAdmin();
   } else {
     console.log(querystring.value);
@@ -65,42 +63,26 @@ const search = async () => {
       querySnapshot2();
     });
 
-
-  store.updateResults(results.value);
-  console.log(results.value);
+    store.updateResults(results.value);
+    console.log(results.value);
+    //addSearchedItem(results.value); // Add the search result to Pinia store
+  }
 };
+
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
   console.log('Item to delete:', itemToDelete);
   try {
-    await deleteDoc(doc(db,`Items/${
-        generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
-    ),
-    where('Serial', '==', querystring.value)
-  ); 
+    const collectionName = generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1);
+    const docRef = doc(db, `Items/${collectionName}/${collectionName} items`, itemToDelete.id);
+    await deleteDoc(docRef);
     results.value.splice(index, 1);
     console.log('Item deleted successfully');
   } catch (error) {
     console.error('Error removing document: ', error);
   }
-}};
+};
 
-
-/* const searchAdmin = async () => {
-    store.updateResults(results.value);
-    console.log(results.value);
-    addSearchedItem();
-
-
-    const addSearchedItem = () => {
-      useSearchedItems.addSearchedItem(results.value);
-      const searchedItem = results.value;
-      console.log(searchedItem);
-    }
-	}
-
-}  */
 const searchAdmin = async () => {
   reservationsAdmin.Reservations = [];
   const cref = collection(db, 'Utility/Reservations/All Reservations');
@@ -122,19 +104,15 @@ const searchAdmin = async () => {
       StartDate: doc.data().StartDate,
       showItems: false,
       Items: []
-    }
+    };
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
-      reservation.Items.push(doc.data()[`Item${i}`])
+      reservation.Items.push(doc.data()[`Item${i}`]);
     }
 
     reservationsAdmin.addReservation(reservation);
-  })
+  });
   console.log(reservationsAdmin.Reservations);
 };
-
-
-
-
 
 const querySnapshot1 = async () => {
   const itemQuery1 = query(
@@ -154,7 +132,7 @@ const querySnapshot2 = async () => {
       db,
       `Items/${
         generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
+      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items`
     ),
     where('Serial', '==', querystring.value)
   );
@@ -164,14 +142,17 @@ const querySnapshot2 = async () => {
   });
   console.log(results.value);
 };
+
+/* const addSearchedItem = (items) => {
+  useSearchedItems.addSearchedItem(items);
+  console.log('Searched items added to store:', items);
+}; */
 </script>
 
 <style scoped>
-.icon-img {
+.icon {
   width: 20px;
   height: 20px;
-}
-.link, .icon {
   background: none !important;
   box-shadow: none !important;
   border: none !important;
@@ -179,6 +160,18 @@ const querySnapshot2 = async () => {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+#icon1 {
+  width: 20px;
+  height: 20px;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .search-bar {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -254,5 +247,13 @@ const querySnapshot2 = async () => {
 .icons .link img {
   width: 20px;
   height: 20px;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
+
+
 </style>
