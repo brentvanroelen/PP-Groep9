@@ -4,17 +4,10 @@
 
     <div class="items-grid">
         <div v-for="(item, index) in items" :key="index" class="item">
-            <div class="icons">
-                <!-- <router-link class="link" to="/checkPage">
-                    <img class="icon" src="/src/assets/552871.png" alt="">
-                </router-link> -->
+            <div class="icons">  
                 <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
                     <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
                  </router-link>                
-                <!-- <ul><img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt=""></ul> -->
-                <ul @click="deleteItem(item)">
-                    <img src="/src/assets/trash.png" alt="">
-                </ul>
             </div>
             <h2>{{ item.Name }}</h2> 
             <img :src="item.Image" alt="Item Image">
@@ -64,12 +57,12 @@ const fetchItems = async () => {
 };
 
 
-const deleteItem = async (item) => {
+/* const deleteItem = async (item) => {
   if (!item || !item.id) {
     console.error('Item or item id is undefined:', item);
     return;
   }}
-
+ */
 </script>
 
 <style scoped>

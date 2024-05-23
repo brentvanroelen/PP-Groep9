@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
           <label for="serial">Serial Series: </label>
-          <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries">
+          <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries" placeholder="Two or three letters exapmle: MIC, CA, VR,...">
         </div>
       </div>
       <div v-else>
@@ -34,10 +34,10 @@
           <label for="name">Name: </label>
           <input type="text" id="name" name="name" v-model="instancedata.Name" required>
         </div>
-        <div class="form-group">
+       <!--  <div class="form-group">
           <label for="serial">Serial: </label>
           <input type="text" id="serial" name="serial" v-model="instancedata.Serial" required>
-        </div>
+        </div> Dit wordt automatisch gedaan -->
       </div>
       <div class="button-group">
         <button type="button" class="btn" @click="setInstance(false)">Add New Item</button>
@@ -55,7 +55,7 @@
 
 
 import { ref } from 'vue';
-
+import { getDocs } from 'firebase/firestore';
 import { db, doc, updateDoc, setDoc, collection, increment, getDoc,  } from "../Firebase/Index.js";
 
 
@@ -107,7 +107,7 @@ const Makenewdoc = async () => {
 
 const addNewItem = async () => {
   const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
-  const serialSeries = docdata.value.SerialSeries.substring(0, 3).toUpperCase(); // Neem alleen de eerste twee tekens en maak deze hoofdletters
+  const serialSeries = docdata.value.SerialSeries.substring(0, 4).toUpperCase(); // Neem alleen de eerste twee tekens en maak deze hoofdletters
 
   // Voegt item toe aan de 'Items'-verzameling
   await setDoc(doc(db, 'Items', itemName), {
@@ -143,12 +143,21 @@ const addNewItem = async () => {
 
 const addNewInstance = async () => {
   const instanceName = instancedata.value.Name.charAt(0).toUpperCase() + instancedata.value.Name.slice(1);
-  const serial = instancedata.value.Serial.toUpperCase();
   const itemRef = doc(db, 'Items', instanceName);
   const itemDoc = await getDoc(itemRef);
 
   if (itemDoc.exists()) {
-    const itemSerialsRef = doc(db, 'Items', instanceName, instanceName + ' items', serial);
+
+    const serialSeries = itemDoc.data().SerialSeries;
+
+    
+    const lastInstanceRef = collection(db, `Items/${instanceName}/${instanceName} items`);
+    const querySnapshot = await getDocs(lastInstanceRef);
+    const nextSerialNumber = querySnapshot.docs.length + 1;
+    const formattedSerialNumber = nextSerialNumber.toString().padStart(2,'0');
+    const serial = serialSeries + "-" + formattedSerialNumber;
+
+    const itemSerialsRef = doc(db, `Items/${instanceName}/${instanceName} items/${serial}`);
     await setDoc(itemSerialsRef, {
       Name: instanceName,
       Serial: serial,
@@ -158,10 +167,13 @@ const addNewInstance = async () => {
       Image: await getImage(instanceName)
     });
     await changeAmountAvailable(instanceName);
+    return serial;
   } else {
     console.log(`Item with name ${instanceName} does not exist.`);
+    return;
   }
 };
+
 
 const generateSubstrings = (str) => {
   const substrings = [];

@@ -1,26 +1,28 @@
 <template>
-  <h1>Item history</h1>
-
-  <div v-if="hasIssues">
-    <!-- <h2>Item History:</h2> -->
-    <ul>
-      <li v-for="(issue, index) in issueHistory" :key="index">
-        <p>Description: {{ issue.description }}</p>
-        <p>Type: {{ issue.type }}</p>
-        <img v-if="issue.image" :src="issue.image" alt="Issue image">
-      </li>
-    </ul>
-  </div>
-  <div v-else>
-    <p>No item history</p>
+  <div>
+    <h1>Item History</h1>
+    <div class="history-container" v-if="hasIssues">
+      <ul>
+        <li v-for="(issue, index) in issueHistory" :key="index" class="issue-item">
+          <p><strong>Description:</strong> {{ issue.description }}</p>
+          <p><strong>Type:</strong> {{ issue.type }}</p>
+          <img v-if="issue.image" :src="issue.image" alt="Issue image" class="issue-image">
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>No item history</p>
+    </div>
+    <router-link class="link" to="/ManageItems">
+      <button class="btn">Back</button>
+    </router-link>
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { db, doc, getDoc } from "../Firebase/Index.js"; // Gebruik de juiste Firebase-functies
+import { db, doc, getDoc } from "../Firebase/Index.js"; // Use the correct Firebase functions
 
 const item = ref(null);
 const route = useRoute();
@@ -41,7 +43,6 @@ onMounted(async () => {
 const fetchItem = async (Serial) => {
   try {
     const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
-    //const itemType = item.value.Category?.toLowerCase();
     const itemBundleName = `${itemName} items`;
     const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
     const docSnap = await getDoc(docRef);
@@ -67,3 +68,65 @@ const fetchItem = async (Serial) => {
 };
 </script>
 
+<style scoped>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #444;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.history-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.issue-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.issue-item:last-child {
+  border-bottom: none;
+}
+
+.issue-image {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 4px;
+  margin-top: 20px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.link {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+</style>

@@ -4,12 +4,7 @@
       <li id='img'><router-link class="link" to="/HomeAdmin"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
     <div id="links">
       <li><router-link class="link" to="/HomeAdmin">Home</router-link></li>
-        <li><select name="dropdownNav" id="dropdownNav" @change="navigateToRoute">
-          <option disabled selected>Select an option</option>
-          <option value="/ManageItems">Manage items</option>
-          <option value="/ItemPreparationScreen">Item preparation</option>
-         
-        </select></li>
+        <li><router-link class = "link" to="ManageItems">Manage items</router-link></li>
       
         
         <li><select @change="navigateToRoute">

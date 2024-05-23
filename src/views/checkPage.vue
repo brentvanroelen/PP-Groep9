@@ -1,17 +1,29 @@
 <template>
   <div>
-    <h1>Report issue</h1><br>
-    <textarea v-model="description" placeholder="Description:"></textarea><br>
-    <hr>
-    <input type="file" @change="onFileChange" accept="image/*"><br>
-    <select v-model="selectedIssue" id="issuesdrop">
-      <option disabled selected>Select an option</option>
-      <option value="Item malfunction">Item malfunction</option>
-      <option value="Item lost">Item lost</option>
-      <option value="Damaged">Damaged</option>
-      <option value="Other">Other</option>
-    </select><br>
-    <button @click="submitFindings">Submit findings</button>
+    <h1>Report Issue</h1>
+    <div class="form">
+      <div class="form-group">
+        <textarea v-model="description" placeholder="Description:" class="textarea"></textarea>
+      </div>
+      <hr>
+      <div class="form-group">
+        <input id="file-input" type="file" @change="onFileChange" accept="image/*" class="file-input">
+      </div>
+      <div class="form-group">
+        <select v-model="selectedIssue" id="issuesdrop" class="select">
+          <option disabled selected>Select an option</option>
+          <option value="Item malfunction">Item malfunction</option>
+          <option value="Item lost">Item lost</option>
+          <option value="Damaged">Damaged</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button class="btn" @click="submitFindings">Submit findings</button>
+      </div>
+      
+    </div>
+    <router-link class="link" to="/ManageItems"><button class="btn">Back</button></router-link>
   </div>
 </template>
 
@@ -62,6 +74,7 @@ const onFileChange = (event) => {
   };
   reader.readAsDataURL(file);
 };
+
 const reportIssueToDatabase = async (issueData, Serial) => {
   try {
     if (!item.value) {
@@ -84,9 +97,73 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     console.error('Error reporting issue:', error);
   }
 };
-
 </script>
 
 <style scoped>
-/* Add your styles here */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #444;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.textarea {
+  width: calc(100% - 10px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 100px;
+}
+
+.file-input {
+  width: calc(100% - 10px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.select {
+  width: calc(100% - 10px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  /* appearance: none; */
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
 </style>
