@@ -19,7 +19,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler :check-user-cart="false"></ReservationHandler>
+      <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
   </div>
 
   </template>

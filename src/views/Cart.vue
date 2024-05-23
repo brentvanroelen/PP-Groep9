@@ -40,7 +40,7 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">{{ itemCount }}</span>
             </div>
-            <ReservationHandler :check-user-cart="true"></ReservationHandler>
+            <ReservationHandler :check-user-cart="true" :button-text="'Plaats Reservatie'"></ReservationHandler>
         </section>
     </main>
 
@@ -151,6 +151,7 @@
             width: 200px;
             border: 2px white solid;
             border-radius: 1em;
+            height: 200px;
         }
         .item-box img {
             width: 40px;
