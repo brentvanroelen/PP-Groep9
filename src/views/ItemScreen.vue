@@ -14,7 +14,7 @@
     <a href="">&#9432;</a>
   </div>
 </div>
-    </div>
+  </div>
   </div>
   
   <div id="buttons">

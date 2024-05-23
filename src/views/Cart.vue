@@ -14,13 +14,15 @@
         <p><b>Serial Series: </b> {{  item.SerialSeries }}</p>
     </div>
         <p><b>Start date: </b> {{ startDate  }}</p>
-        <span class="calendar" @click="togglePopup(true)">
+        <!-- <span class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
-        </span>
+        </span> -->
+        <VueDatePicker v-model="date" hide-offset-dates :min-date="new Date()" :max-date="length"></VueDatePicker>
         <p><b>End date:</b> {{ endDate }}</p>
-        <span id="calendar" @click="togglePopup(true)">
+        <!-- <span id="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="" >
-        </span>
+        </span> -->
+        <VueDatePicker v-model="date" hide-offset-dates :min-date="new Date()" :max-date="length"></VueDatePicker>
         <div class="item-trash" @click="removeItem()">
             <img src="../assets/trash.png" alt="">
         </div>
@@ -49,19 +51,54 @@
 
 <script setup>
     import Navigation from "../components/Navigation.vue"
-    import { useCart } from '@/Pinia/Store';
+    import { useCart, useUserIdentification } from '@/Pinia/Store';
     import { onMounted, ref } from 'vue';
     import ReservationHandler from "@/components/ReservationHandler.vue";
     import Popup from "@/components/Popup.vue";
     import Calendar from "@/components/Calendar.vue";
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
+    import { doc, setDoc, getDoc } from 'firebase/firestore';
+    
 
+    
+
+    const date = ref();
     let showPopup = ref(false);
     const cart = useCart();
     const items = cart.items;
     const startDate = cart.startDate;
     const endDate = cart.endDate;
     const itemCount = ref(0);
+    let length = ref();
+    const student = ref();
+    const teacher = ref();
+    const userType = useUserIdentification();
+    const studentReservation = ref();
+    const teacherReservation = ref();
 
+  
+    const fetchData = async () => {
+  const docRef = doc(db, "Settings", "Options");
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()){
+    const data = docSnap.data();
+    student.value = data.student;
+    teacher.value = data.teacher;
+    studentReservation.value = data.studentReservation;
+    teacherReservation.value = data.teacherReservation;
+  }}
+    const futureDate = new Date();
+    futureDate.setDate(currentDate.getDate() + length);
+
+    if(userType.user.type === "student" ){
+      length = studentReservation.value * 7 ;
+    }else if(userType.user.type === "docent"){
+      length = teacherReservation.value * 7 ;
+    }else if(userType.user.type === "admin"){
+      length = 365;
+    }
     for (let i = 0; i < items.length; i++) {
         itemCount.value += 1;
     }
@@ -81,7 +118,9 @@
         // console.log(startDate);
         // console.log(endDate);
     }
-
+    onMounted(() => {
+    fetchData();
+  });
 </script>
 
 <style scoped>
@@ -90,7 +129,6 @@
             margin: 0;
             padding: 0;
         }
-
         main {
             display: flex;
             flex-direction: column;

@@ -56,7 +56,7 @@ const goProductScreen = () => {
 
 const home = "UserHome";
 
-const aantalWaarschuwingen = ref(4); 
+const aantalWaarschuwingen = ref(1); 
 const maxWaarschuwingen = ref(3); 
 </script>
 
