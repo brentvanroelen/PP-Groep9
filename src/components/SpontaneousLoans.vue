@@ -31,6 +31,7 @@
               </div>
             </li>
           </ul>
+          <ReservationHandler v-if="allowLoan" :check-user-cart="true" :button-text="'Place loan'"></ReservationHandler>
         </div>
     </div>
     <AvailabilityHandler :page="'HomeAdmin'"></AvailabilityHandler>
@@ -56,6 +57,7 @@ const dates = useDates()
 const fullDate = new Date()
 let selectedDate = ref([new Date()])
 const trigger = useTrigger()
+const allowLoan = ref(false)
 
 
 
@@ -72,6 +74,14 @@ watchEffect(() => {
         }
       }
     }
+    for(let item of cart.items){
+    if(dates.dates[item.Name] == undefined){
+      allowLoan.value = false
+      return
+    }else{
+      allowLoan.value = true
+    }
+  }
     dates.allDatesSetToGeneral = false
 })
 const resetUser = () => {
@@ -84,7 +94,6 @@ const handleDateGlobal = () => {
   selectedDate.value[1].getMonth() + 1])
   dates.updateAllDatesToGeneral()
   trigger.fireTrigger()
-
 }
 const handleDateSpecific = (item) => {
   dates.updateDate(item.Name, 
@@ -176,5 +185,8 @@ button {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-top: 20px;
+}
+div.search-container.HomeAdmin {
+  background-color: red;
 }
 </style>

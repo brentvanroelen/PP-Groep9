@@ -2,11 +2,14 @@
 
     <div v-if="aantalWaarschuwingen >= maxWaarschuwingen">
       <div class="searchcontainer">
-        <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
-        <div class="searchbar-overlay"></div>
+        
+        
+        <div class="searchbar-overlay">
         <div class="searchbar">
           <SearchBar :page="home"/>
+          
         </div>
+      </div>
       </div>
       <button @click="goProductScreen">See catalog</button>
       <Kits />
@@ -62,12 +65,12 @@ const maxWaarschuwingen = ref(3);
 
 <style scoped>
 .searchcontainer {
-  position: relative;
   background: url("../assets/Campus-Kaai.jpg") no-repeat center center/cover;
   overflow: hidden;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  height: 700px;
 }
 
 .searchcontainer:hover {
@@ -88,7 +91,10 @@ const maxWaarschuwingen = ref(3);
   }
 
   .searchbar-overlay {
-    position: absolute;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
     left: 0;
     width: 100%;
@@ -98,6 +104,7 @@ const maxWaarschuwingen = ref(3);
     border-radius: 15px;
     opacity: 0; /* eerst niet zichtbaar */
     transition: opacity 0.3s ease;
+    height: 1000px;
   }
 
   .searchcontainer:hover .searchbar-overlay {
@@ -105,7 +112,6 @@ const maxWaarschuwingen = ref(3);
   }
 
   .searchbar {
-    transform: translate(-50%,-50%); /*centreert searchbar*/
     z-index: 2; /*search boven overlay*/
     display: flex;
     justify-content: center;
@@ -116,6 +122,7 @@ const maxWaarschuwingen = ref(3);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     opacity: 0; /* eerst niet zichtbaar */
     transition: opacity 0.3s ease; 
+    width: 80%;
   }
 
   .searchcontainer:hover .searchbar {

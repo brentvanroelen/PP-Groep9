@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleReservation()">Loan now</button>
+    <button @click="handleReservation()">{{ buttonText }}</button>
 </template>
 <script setup>
 import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
@@ -21,8 +21,9 @@ const user = useUserIdentification();
 let  items = []
 let itemMaps = [];
 let promises = [];
-const {checkUserCart} = defineProps({
-    checkUserCart: Boolean
+const {checkUserCart,buttonText} = defineProps({
+    checkUserCart: Boolean,
+    buttonText: String
 })
 
 

@@ -11,7 +11,7 @@
       <span v-if="props.page != 'HomeAdmin'" class="calendar" @click="togglePopup(true)">
             <img src="../assets/calendar.png" alt="">
       </span>
-      <button @click="confirmedSearch">Search</button>
+      <button class="searchbutton"@click="confirmedSearch">Search</button>
     </div>
   </div>
     <Teleport to="body">
@@ -112,31 +112,36 @@
 </script>
   
 
-  <style scoped>
+<style>
+.calendar{
+  width: 60px;
+  height: 60px
+}
   .search-container.HomeAdmin{
     max-height: fit-content;
+    width: 95%	;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    background-color: #d50000
   }
   .search-container {
-  min-width: 400px;
   position: relative; /* This makes the .search-results position relative to this container */
   padding: 0.5em;
   height: fit-content;
+  width: 100%;
   }
   .search-bar {
     display: flex;
     align-items: center;
     margin-top: 0%;
-    justify-content: center;
-    width: fit-content;
+    justify-content: space-evenly;
+    width: 100%	;
     height: fit-content;
   }
   img{
-    width: 120px;
-    height: 120px;
+    width: 60px;
+    height: 60px;
   }
   .search-bar input {
     padding: 8px;
@@ -145,7 +150,7 @@
     margin-right: 5px;
   }
   #input{
-    width: 100%;
+    width: 40%;
   }
   .search-bar button {
      padding: 8px 12px; 
@@ -181,17 +186,17 @@ img{
   overflow: visible;
   overflow-clip-margin: 2px;
 }
-button {
+.searchbutton {
   background-color: #ff3333;
   color: #fff;
   border: none;
   padding: 5px 5px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  width: 15%;
 }
 
 
   
-  </style>
+</style>
   
