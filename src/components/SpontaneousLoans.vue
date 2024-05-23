@@ -11,7 +11,7 @@
               <img src="../assets/calendar.png" alt="">
             </template>
           </VueDatePicker>
-          <Searchbar id="searchbar" :page="page"></Searchbar>
+          <Searchbar :page="page"></Searchbar>
         </div>   
         <div class="itemInfoBox" v-if="cart.items.length != 0">
           <ul class="ordersList">
@@ -31,7 +31,7 @@
               </div>
             </li>
           </ul>
-          <ReservationHandler v-if="allowLoan" :check-user-cart="true" :button-text="'Place loan'"></ReservationHandler>
+          <ReservationHandler v-if="allowLoan" :check-user-cart="true" :button-text="'Place loan'" :page="'HomeAdmin'"></ReservationHandler>
         </div>
     </div>
     <AvailabilityHandler :page="'HomeAdmin'"></AvailabilityHandler>
@@ -58,6 +58,7 @@ const fullDate = new Date()
 let selectedDate = ref([new Date()])
 const trigger = useTrigger()
 const allowLoan = ref(false)
+
 
 
 

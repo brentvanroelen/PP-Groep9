@@ -2,7 +2,7 @@
     <button @click="handleReservation()">{{ buttonText }}</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
+import { useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
@@ -17,13 +17,15 @@ const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
 const itemSelector = useItemSelector();
 const user = useUserIdentification();
+const selectedUser = useSelectedUser();
 
 let  items = []
 let itemMaps = [];
 let promises = [];
-const {checkUserCart,buttonText} = defineProps({
+const {checkUserCart,buttonText,page} = defineProps({
     checkUserCart: Boolean,
-    buttonText: String
+    buttonText: String,
+    page: String
 })
 
 
@@ -52,6 +54,17 @@ const handleReservation = async() => {
         if(cart.items.length == 0){
             console.log("No items in cart")
         }else{
+            if(page != "HomeAdmin"){
+                selectedUser.selectUser({
+                firstName: user.user.firstName,
+                lastName: user.user.lastName,
+                uid: user.user.id
+                })
+            }
+            if(typeof selectedUser.user != "object"){
+                console.log("No user selected")
+                return
+            }
             filterUnnecessaryDates();
             orderCart();
             if(Object.keys(dates.dates).length != 0){
@@ -61,6 +74,9 @@ const handleReservation = async() => {
                     promises = [];
                     itemMaps = [];
                     for (let item of reservation){
+                        if(quantity.getQuantity(item.Name) == 0){
+                            quantity.setQuantity(item.Name, 1)
+                        }
                         console.log(item)
                         console.log(reservation)
                         itemSelector.setCollectionName(`${item.Name}`);
@@ -133,7 +149,7 @@ const makeItemMap = (items) =>{
 
 }
 const MakeReservation = async(date) => {
-    const docRefUserReservation = doc(collection(db, `Users/${user.user.id}/Reservations`));
+    const docRefUserReservation = doc(collection(db, `Users/${selectedUser.user.uid}/Reservations`));
     const docRefGeneralReservation = doc(db, `Reservations/${docRefUserReservation.id}`);
     const docRefAdminReservation = doc(db, `/Utility/Reservations/All Reservations/${docRefUserReservation.id}`);
     await setDoc(docRefUserReservation,{
@@ -145,9 +161,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
@@ -163,9 +179,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
@@ -182,9 +198,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
