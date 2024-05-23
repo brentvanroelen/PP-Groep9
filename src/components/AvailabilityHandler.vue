@@ -30,6 +30,12 @@ watch(triggergetter, async() => {
 const handleAvailability = async() => {
     console.log(page)
     if(page == "UserHome"){
+        if(store.results.length == 0){
+            const snapshot =  await getDocs(collection(db, "Items"))
+            snapshot.forEach((doc) => {
+                store.results.push(doc.data());
+            });
+        }
         for (let item of store.results) {
             console.log(item)
             console.log(availableInstances.items)
@@ -46,6 +52,7 @@ const handleAvailability = async() => {
                 console.log("Please select a date range")
             }
         }
+        
     }else if(page == "HomeAdmin"){
         for (let item of cart.items) {
             if(Object.keys(dates.dates).length != 0){

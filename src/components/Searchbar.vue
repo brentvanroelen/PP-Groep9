@@ -9,20 +9,24 @@
           <option v-for="(option, index) in dropdownOptions" :key="index" :value="option" >{{ option }}</option>
         </select>
       </div>
-      <span v-if="props.page != 'HomeAdmin'" class="calendar" @click="togglePopup(true)">
+      <span v-if="props.page != 'HomeAdmin'" class="calendar">
+        <VueDatePicker v-model="date" 
+          :min-date="new Date()" 
+          :teleport="true"
+          :max-date="maxDate"
+          :enable-time-picker="false"
+          :disabled-week-days="[6,0]"
+          @update:model-value="log"
+          :range="{ maxRange: maxSelect, minMaxRawRange:true }">
+          <template #trigger>
             <img src="../assets/calendar.png" alt="">
+          </template>
+        </VueDatePicker>
       </span>
+      
       <button @click="confirmedSearch">Search</button>
     </div>
   </div>
-    <Teleport to="body">
-  <Popup v-if="showPopup" @close="togglePopup(false)">
-            <h3>Pick a date</h3>
-            <Calendar></Calendar>
-            <button>Pick date</button>
-    </Popup>
-  </Teleport>
-    
     <div class="search-results" v-if="showResults">
       <div v-for="result in store.results" :key="result.id">
         <div class="iteminfo">
@@ -33,28 +37,84 @@
       </div>
     </div>
   </div>
+  <AvailabilityHandler :page="'UserHome'"></AvailabilityHandler>
   </template>
   
 <script setup>
-  import {onMounted, ref, watch} from '../main.js'
+  import {onMounted, ref, watch, computed} from '../main.js'
   import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
   import router from '@/router';
-  import { useStore,useCart,useCategories} from '@/Pinia/Store.js';
+  import { useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger} from '@/Pinia/Store.js';
   import ItemScreen from '@/views/ItemScreen.vue';
   import Popup from './Popup.vue';
   import Calendar from './Calendar.vue';
+  import VueDatePicker from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css'
+  import { doc, getDoc, orderBy } from 'firebase/firestore';
+  import AvailabilityHandler from './AvailabilityHandler.vue';
   
+  let maxSelect = ref(7);
+  const date = ref();
+  const datesStore = useDates();
 
-  
+  onMounted(() => {
+    fetchData();
+  });
+
+
+  const student = ref();
+  const teacher = ref();
+  const studentReservation = ref();
+  const teacherReservation = ref();
   const selectedCategory = ref('');
   const dropdownOptions = useCategories().categories;
-  let showPopup = ref();
+  const userType = useUserIdentification();
+  const fetchData = async () => {
+  const docRef = doc(db, "Settings", "Options");
+  const docSnap = await getDoc(docRef);
+  const cart = useCart();;
 
 
-  
-  const togglePopup = () => {
-        showPopup.value = !showPopup.value;
+  if (docSnap.exists()){
+    const data = docSnap.data();
+    student.value = data.student;
+    teacher.value = data.teacher;
+    studentReservation.value = data.studentReservation;
+    teacherReservation.value = data.teacherReservation;
+  }}
+
+const log = () => {
+  console.log(date.value)
+
+  let startDate = date.value[0];
+  let endDate = date.value[1];
+
+  let startDay = startDate.getDate();
+  let startMonth = startDate.getMonth() + 1;
+
+  let endDay = endDate.getDate();
+  let endMonth = endDate.getMonth() + 1;
+
+  datesStore.updateGeneralDates([startDay, startMonth, endDay, endMonth])
+}
+  const maxDate = computed(() => {
+    let length = ref();
+    if(userType.user.type === "student" ){
+      length = studentReservation.value * 7 ;
+      maxSelect = student.value * 7;
+    }else if(userType.user.type === "docent"){
+      length = teacherReservation.value * 7 ;
+      maxSelect = teacher.value * 7;
+    }else if(userType.user.type === "admin"){
+      length = 365;
     }
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + length);
+    return futureDate;
+  });
+  
+
+
 
   const showResults = ref(false);
   const props = defineProps({
@@ -63,15 +123,14 @@
   });
   const querystring = ref('');
   const store = useStore();
-  const cart = useCart();
 
   const search = async() => {
+    const trigger = useTrigger()
     let results = [];
     store.updateResults([]);
     const itemquery = query(collection(db, "Items"), 
-    where('SubStrings', 'array-contains', querystring.value.toLowerCase())
+    where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
     );
-    
     const querySnapshot = await getDocs(itemquery);
       querySnapshot.forEach((snap) =>{
         console.log(snap.data())
@@ -79,6 +138,9 @@
     })
     console.log(results)
     store.updateResults(results)
+    if(store.results.length == 0){
+      trigger.fireTrigger();
+    }
   };
   const confirmedSearch = async() => {
     await search();
@@ -125,8 +187,8 @@
     justify-content: center;
   }
   img{
-    width: 120px;
-    height: 120px;
+    width: auto;
+    height: 50px;
   }
   .search-bar input {
     padding: 8px;
