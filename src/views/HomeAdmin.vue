@@ -187,7 +187,7 @@ onUnmounted(() => {
 .spontaneousLoans,
 .earlyReturns {
   background-color: #d0d0d0;
-  max-width: 400px;
+  max-width: 1200px;
 }
 
 .box h2 {

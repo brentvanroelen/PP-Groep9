@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^8.6.0",
     "bulma": "^1.0.0",
     "firebase": "^10.11.0",
     "pinia": "^2.1.7",

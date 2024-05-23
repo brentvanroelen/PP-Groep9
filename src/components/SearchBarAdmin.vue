@@ -33,12 +33,9 @@
 </template>
 
 <script setup>
-import { getDocs, query, where, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref } from 'vue';
-import { useEarlyReturnsReservations, useStore } from '@/Pinia/Store.js';
-import { db } from '../Firebase/Index.js';
-
-import { useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
+import { useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
+import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 
 const useSearchedItems = useSearchedItemsFunction();
 

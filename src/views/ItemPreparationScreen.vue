@@ -315,10 +315,4 @@
   margin-bottom: 20px;
 
 }
-   
-@media (max-width: 600px) {
-  .ItemsToPrepare {
-    padding: 10px;
-  }
-}
 </style>

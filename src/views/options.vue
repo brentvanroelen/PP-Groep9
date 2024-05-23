@@ -4,10 +4,10 @@
     <section class="options">
         <div class="pickUp">
             <div class="availableDays">
-            <h3>Edit available pickup time</h3>
-            <h5>Start time: </h5><input type="time" name="" id="" v-model="startPickupTime"> <h5>End time: </h5><input type="time" name="" id="" v-model="endPickupTime">
+            <h2>Edit available pickup time</h2>
+            <h4>Start time: </h4><input type="time" name="" id="" v-model="startPickupTime"> <h4>End time: </h4><input type="time" name="" id="" v-model="endPickupTime">
             <div id="days">
-            <h5>Available days: </h5>
+            <h4>Available days: </h4>
                 <div class="dayContainer">
                     <label for="switch" class="days">Monday</label><label class="switch">
                         <input type="checkbox" v-model="monday">
@@ -37,7 +37,7 @@
         </div>
 
         <div class="loanDuration">
-            <h3>Edit loans</h3>
+            <h2>Edit loans</h2>
             <h4>Loan duration: </h4>
             <label for="student" class="student">Student: </label> 
             <select name="weken" id="wekenSelect" v-model="student">
@@ -76,8 +76,8 @@
             
         <div class="warningSys">
             <div class="warningSystem">
-                <h3>Edit warning system</h3>
-                    <h5>Overdue time till warning?</h5>
+                <h2>Edit warning system</h2>
+                    <h4>Overdue time till warning?</h4>
                         <select name="" id="minutesOvertime" v-model="overdueTimeTillWarning">
                             <option value="5">5 minutes</option>
                             <option value="10">10 minutes</option>
@@ -97,7 +97,7 @@
 
 
                 <div class="blacklistWarnings">
-                <h5>Required warnings to blacklist: </h5>
+                <h4>Required warnings to blacklist: </h4>
                 <select name="" id="blacklistSelect" v-model="requiredWarningsToBlacklist">
                     <option value="1">1 warning</option>
                     <option value="2">2 warnings</option>
@@ -106,7 +106,7 @@
                     <option value="5">5 warnings</option></select>
                 </div>
                 <div class="dayContainer">
-                <h5>Project requests: </h5>
+                <h4>Project requests: </h4>
                 
                     <label for="switch" class="days">Allow</label><label class="switch">
                         <input type="checkbox" v-model="allowRequests">
@@ -116,18 +116,18 @@
             </div>
             <div class="returns">
                 <div class="editReturns">
-                    <h3>Edit returns</h3>
-                    <h5>Sudden returns: </h5>
+                    <h2>Edit returns</h2>
+                    <h4>Sudden returns: </h4>
                         <div class="dayContainer">
                             <label for="switch" class="days">Allow</label><label class="switch">
                                 <input type="checkbox" v-model="allowSuddenReturns">
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                    <h5> Return start time: </h5><input type="time" name="" id="" v-model="returnStartTime"> <h5>Return end time: </h5><input type="time" name="" id="" v-model="returnEndTime">
+                    <h4> Return start time: </h4><input type="time" name="" id="" v-model="returnStartTime"> <h4>Return end time: </h4><input type="time" name="" id="" v-model="returnEndTime">
                     <div class="editLoaning">
-                        <h3>Edit loaning</h3>
-                            <h5>User loan limit</h5>
+                        <h2>Edit loaning</h2>
+                            <h4>User loan limit</h4>
                             <select name="" id="loanLimit" v-model="userLoanLimit">
                                 <option value="1" >1 item</option>
                                 <option value="2">2 items</option>
@@ -140,7 +140,7 @@
                                 <option value="9">9 items</option>
                                 <option value="10">10 items</option></select>
                                 
-                            <h5>User kit limit</h5>
+                            <h4>User kit limit</h4>
                             <select name="" id="kitLimit" v-model="userKitLimit">
                                 <option value="1">1 kit</option>
                                 <option value="2">2 kits</option>
@@ -259,140 +259,127 @@ const update = () => {
 
 </script>
 
-
 <style scoped>
-h1{
-    padding: 2em;
-}
- .options{
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        margin-top: 50px;
-        margin: auto;
-        width: 1500px;
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-button{
-    background-color: #FF0000;
-    padding: 10px;
-    cursor: pointer;
-    margin: 2em;
-    color: white;
-    border-radius: 1em;
-    width: 300px;
-    height: 50px;
-    border: none;
-}
- .pickUp {
-        padding-top: 1em;
-        height: 500px;
-        width: 300px;
-        background-color: #c1c1c1;
-        border-radius: 1em;
-    }
-#days{
-    margin: 1em;
-}
-.editLoaning{
-    margin: 1em;
+/* Style voor sections container */
+.options {
+    display: flex;
+    justify-content: space-between;
 }
 
-    .availableDays label,
-    .availableDays select  {
-        display: block;
-        margin-bottom: 5px;
-    }
-    .availableDays label {
-    display: inline-block;
-    margin-right: 5px; 
+/* Styling voor aparte sections */
+.options > div {
+    flex: 1;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease; 
 }
 
-.availableDays .switch {
-    display: inline-block;
-    vertical-align: middle; 
+/* Hover effect op option sections */
+.options > div:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* W³ School */
+.options h2 {
+    margin-bottom: 20px;
+}
+
+
+.options label {
+    margin-right: 10px;
+    font-weight: bold;
+}
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 17px;
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
 }
-
 
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color:#909090;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+    background-color: #28a745;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #28a745;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(15px);
-  -ms-transform: translateX(15px);
-  transform: translateX(15px);
+    transform: translateX(20px);
 }
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 17px;
+/* Style for select dropdowns */
+.options select {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
-.slider.round:before {
-  border-radius: 50%;
+.options input[type="time"] {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
-.warningSys {
-    width: 300px;
-    height: 500px;
-    background-color: #c1c1c1;
-    padding-top: 1em;
-    border-radius: 1em;
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #dc3545;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.returns{
-    width: 300px;
-    height: 500px;
-    background-color: #c1c1c1;
-    padding-top: 1em;
-    border-radius: 1em;
+button:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
-
-
-
-
 
 </style>

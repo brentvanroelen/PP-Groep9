@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="aantalWaarschuwingen">
+    <div v-if="aantalWaarschuwingen < maxWaarschuwingen">
       <div class="searchcontainer">
         <img src="../assets/Campus-Kaai.jpg" alt="" id="img">
         <div class="searchbar-overlay"></div>

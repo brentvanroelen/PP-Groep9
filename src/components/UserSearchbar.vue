@@ -1,12 +1,12 @@
 <template>
     <div class="search-bar">
-      <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
+      <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Voornaam + Achternaam student">
     </div>
 </template>
 
 <script setup>
 import {onMounted, ref, watch} from '../main.js'
-import {collection,where,db,query,getDocs,getDoc} from '../Firebase/Index.js'
+import {collection,where,db,query,getDocs,getDoc,and} from '../Firebase/Index.js'
 import { useSelectedUser } from '@/Pinia/Store.js';
 
 const querystring = ref('');
@@ -17,16 +17,30 @@ if(querystring.value.length >= 3){
 }
 
 const confirmedSearch = async() => {
-  const cref = collection(db, 'users');
-  const qref = query(cref, where('firstName', '==', querystring.value));
-  const querySnapshot = await getDoc(qref);
-  let user = {
-    name: querySnapshot.data().firstName + ' ' + querySnapshot.data().lastName,
-    uid: querySnapshot.data().uid,
-    type: querySnapshot.data().type
-  }
-  if(querySnapshot.exists){
-    selectedUser.selectUser(user) 
+  let firstName = querystring.value.split(' ')[0];
+  let lastName = querystring.value.split(' ')[1];
+  console.log(firstName)
+  console.log(lastName)
+  if(firstName == undefined || lastName == undefined){
+    selectedUser.selectUser(1)
+  }else{
+    const cref = collection(db, 'Users');
+    const qref = query(cref, where('firstName', '==', firstName), where( 'lastName', '==', lastName));
+    const querySnapshot = await getDocs(qref);
+    console.log(querySnapshot.size)
+    if(querySnapshot.size != 0){
+      querySnapshot.forEach((doc) => {
+        let user = {
+        name: doc.data().firstName + ' ' + doc.data().lastName,
+        uid: doc.data().uid,
+      }
+        selectedUser.selectUser(user) 
+
+      });
+      console.log(selectedUser.user)
+    }else{
+      selectedUser.selectUser(1)
+    }
   }
 }
 
