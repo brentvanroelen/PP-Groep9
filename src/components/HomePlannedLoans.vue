@@ -82,6 +82,8 @@ const students = ref([])
 let loading = ref(true);
 const allReservations = ref([]);
 const lateReservationArray = ref([]);
+const deletedReservation = ref([]);
+const runAlignFunction = ref(true);
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
@@ -118,12 +120,8 @@ const getItems = async() =>{
           let currentDate = new Date();
           currentDate.setHours(0,0,0,0);
           let date = new Date();
-          console.log(data.EndDate)
-          console.log(props.todayDate)
           date.setDate(data.EndDate);
           date.setMonth(data.EndMonth - 1);
-          console.log(date)
-          console.log(props.todayDate)
           if(date < currentDate){
             const amountOfDaysLate = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
             items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
@@ -158,24 +156,6 @@ const getItems = async() =>{
 
 }
 
-watchEffect(() => {
-  console.log('watcheffect run')
-  const reservations = collection(db, 'Utility/Reservations/All Reservations');
-  const unsubscribe = onSnapshot(reservations, (querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      if(allReservations.value.find(r => r.id === doc.data().id)){
-        return
-      }
-      allReservations.value.push(doc.data());
-      console.log(allReservations.value)
-    });
-    alignWithStudents();
-    console.log(lateReservationArray.value)
-    if(unsub){
-      unsubscribe();
-    }
-  })
-})
 
 const filterAllReservationsOnLateness = () =>{
   const generalReservations = allReservations.value.filter(reservation => {
@@ -331,10 +311,8 @@ const markAllItemsAsPrepared = async(student) => {
 }
 
 const isItemWithSomeoneElse = async(item) => {
-  console.log(item.Serial)
   const q = query(collection(db, 'Utility/Reservations/All Reservations'), where("allItemSerials", "array-contains-any", [item.Serial]));
   const querySnapshot = await getDocs(q);
-  console.log(querySnapshot.size)
   if (querySnapshot.size == 1) {
     return false;
   } else {
@@ -364,6 +342,7 @@ const markAsPickedUp = async (reservation) => {
 
 const discardReservation = async (reservation,warning) => {
   await reservationReturnedOrCanceled(reservation,warning);
+  deletedReservation.value.push(reservation);
   const index = students.value.findIndex(s => s.id === reservation.id);
   const indexLate = lateReservationArray.value.findIndex(s => s.id === reservation.id);
   if (index !== -1) {
@@ -381,6 +360,32 @@ onMounted(() => {
 onUnmounted(() => {
   unsub = true;
 })
+
+const reservations = collection(db, 'Utility/Reservations/All Reservations');
+const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
+  allReservations.value = [];
+  lateReservationArray.value = [];
+  querySnapshot.forEach((doc) => {
+    if(deletedReservation.value.length != 0){
+      if(doc.data().id === deletedReservation.value[0].id){
+        return
+      }
+    }
+    allReservations.value.push(doc.data());
+    console.log(lateReservationArray.value)
+  });
+  if(unsub){
+    unsubscribe();
+  }
+  await alignWithStudents();
+
+})
+  
+
+
+
+
+
 </script>
     
    <style scoped>
