@@ -314,3 +314,14 @@ export const useEarlyReturnsReservations = defineStore({
     }
   }
 });
+export const useItemsToGet = defineStore({
+  id: 'ItemsToGet',
+  state: () => ({
+    items: []
+  }),
+  actions: {
+    addItem(item){
+      this.items.push(item)
+    }
+  }
+});

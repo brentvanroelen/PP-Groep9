@@ -2,7 +2,6 @@
     <div class="centerx">
       <div v-if="isVisible" class="popupContainer">
         <div class="popUp">
-          <p class="popupText">Insert here</p>
           <slot></slot>
           <button @click="closePopup" class="popupButton">Close</button>
         </div>
@@ -10,20 +9,19 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        isVisible: true, 
-      };
-    },
-    methods: {
-      closePopup() {
-        this.isVisible = false;
-      }
-    }
-  };
-  </script>
+<script setup>
+import { ref } from 'vue';
+import { useItemsToGet } from '../Pinia/Store.js';
+
+const isVisible = ref(true)
+const itemsToGet = useItemsToGet()
+
+const closePopup = () => {
+  isVisible.value = false;
+  itemsToGet.items = []
+}
+  
+</script>
   
   <style scoped>
   .centerx {

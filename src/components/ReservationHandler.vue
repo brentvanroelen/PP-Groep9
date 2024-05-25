@@ -2,10 +2,11 @@
     <button @click="handleReservation()">{{ buttonText }}</button>
 </template>
 <script setup>
-import { useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
+import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
+
 
 
 const data = ref([]);
@@ -18,6 +19,7 @@ const availableInstances = useChoiceOfItems();
 const itemSelector = useItemSelector();
 const user = useUserIdentification();
 const selectedUser = useSelectedUser();
+const itemsToGet = useItemsToGet();
 
 let  items = []
 let itemMaps = [];
@@ -34,6 +36,13 @@ const handleReservation = async() => {
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
+        if(page != "HomeAdmin"){
+            selectedUser.selectUser({
+            firstName: user.user.firstName,
+            lastName: user.user.lastName,
+            uid: user.user.id
+            })
+        }
         dates.updateDate(store.results[0].Name, dates.general)
         itemSelector.setCollectionName(`${store.results[0].Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
@@ -109,6 +118,9 @@ const getItem = async() => {
     availableInstances.getCollection(itemSelector.itemName).shift();
     console.log(availableInstances.getInstance(itemSelector.itemName,[0]));
     items.push(chosenitem.value);
+    if(page == "HomeAdmin"){
+        itemsToGet.addItem(chosenitem.value)
+    }
     console.log(items)
     console.log(chosenitem.value)
 }

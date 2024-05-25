@@ -35,9 +35,17 @@
         </div>
     </div>
     <AvailabilityHandler :page="'HomeAdmin'"></AvailabilityHandler>
+    <Teleport to="body">
+      <Popup v-if="itemsToGet.items.length != 0">
+        <ul>
+          <h1>Items to get:</h1>
+          <li v-for="item in itemsToGet.items">{{ item.Serial }}</li>
+        </ul>
+      </Popup>
+    </Teleport>
 </template>
 <script setup>
-import {useStore,useCart,useTrigger, useSelectedUser,useDates} from "../Pinia/Store.js"
+import {useStore,useCart,useTrigger, useSelectedUser,useDates,useItemsToGet} from "../Pinia/Store.js"
 import Calendar from "./Calendar.vue";
 import Items from "./Items.vue";
 import ReservationHandler from "./ReservationHandler.vue";
@@ -45,9 +53,11 @@ import UserSearchbar from "./UserSearchbar.vue";
 import Searchbar from "./Searchbar.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ref, onMounted, onUnmounted, defineEmits, watchEffect, watch } from 'vue';
+import { ref, onMounted, onUnmounted, defineEmits, watchEffect, watch,Teleport } from 'vue';
 import Quantity from "./Quantity.vue";
 import AvailabilityHandler from "./AvailabilityHandler.vue";
+import Popup from "./Popup.vue";
+
 
 
 const store = useStore()
@@ -58,6 +68,7 @@ const fullDate = new Date()
 let selectedDate = ref([new Date()])
 const trigger = useTrigger()
 const allowLoan = ref(false)
+const itemsToGet = useItemsToGet()
 
 
 

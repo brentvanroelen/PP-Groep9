@@ -1,37 +1,72 @@
 <template>
-  <div class="ItemsToPrepare" v-if="!loading">
-    <div v-if="students.length == 0">
-      <p>No Scheduled Loans for {{ displayDate }}</p>
-    </div>
-      <!-- Loept door de students -->
-    <div v-for="student in students" :key="student.id" class="studentContainer">
-      <div class="studentInfo">
-        <p>Student: {{ student.name }}</p>
-        <p>Pick-up date: {{ student.pickUpDate }}</p>
-        <p>Pick-up time: {{ student.pickUpTime }}</p>
-        <p v-if="student.reservationPrepared">The reservation is prepared</p>
-        <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
-      </div>
-      <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
-      <button @click="discardReservation(student)" class="deleteButton">Discard</button>
-      <br>        
-      <button @click="toggleOrders(student)">&#9776;</button>
-      <!-- lijst met reservaties van de studenten-->
-      <ul v-if="student.showOrders" class="ordersList">
-        <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
-      <button class="adjustButton">Adjustments</button>
-        <!-- Loept door de reservaties -->
-        <li v-for="item in student.orders" :key="item.id" class="items">
-          <p>Name: {{ item.ItemName }}</p>
-          <p>Serial: {{ item.Serial }}</p>
-          <p> Status: {{ item.itemStatus }}</p>
-          <button @click="markItemAsPrepared(student, item)" class= readyButton> item prepared</button>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div v-else>
+  <div v-if="loading">
     <p>Loading...</p>
+  </div>
+  <div v-if="!loading">
+    <div class="ItemsToPrepare" v-if="!showLateReservations">
+      <div v-if="students.length == 0">
+        <p>No Scheduled Loans for {{ displayDate }}</p>
+      </div>
+        <!-- Loept door de students -->
+      <div v-for="student in students" :key="student.id" class="studentContainer">
+        <div class="studentInfo">
+          <p>Student: {{ student.name }}</p>
+          <p>Pick-up date: {{ student.pickUpDate }}</p>
+          <p>Pick-up time: {{ student.pickUpTime }}</p>
+          <p v-if="student.reservationPrepared">The reservation is prepared</p>
+          <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
+        </div>
+        <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
+        <button @click="discardReservation(student)" class="deleteButton">Discard</button>
+        <br>        
+        <button @click="toggleOrders(student)">&#9776;</button>
+        <!-- lijst met reservaties van de studenten-->
+        <ul v-if="student.showOrders" class="ordersList">
+          <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
+        <button class="adjustButton">Adjustments</button>
+          <!-- Loept door de reservaties -->
+          <li v-for="item in student.orders" :key="item.id" class="items">
+            <p>Name: {{ item.ItemName }}</p>
+            <p>Serial: {{ item.Serial }}</p>
+            <p> Status: {{ item.itemStatus }}</p>
+            <button @click="markItemAsPrepared(student, item)" class= readyButton> item prepared</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ItemsToPrepare" v-if="showLateReservations">
+      <div v-if="lateReservationArray.length == 0">
+        <p>No late loans</p>
+      </div>
+        <!-- Loept door de students -->
+      <div v-for="student in lateReservationArray" :key="student.id" class="studentContainer">
+        <div class="studentInfo">
+          <p>Student: {{ student.name }}</p>
+          <p>Pick-up date: {{ student.pickUpDate }}</p>
+          <p>Pick-up time: {{ student.pickUpTime }}</p>
+          <p v-if="student.reservationPrepared">The reservation is prepared</p>
+          <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
+        </div>
+        <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
+        <button @click="discardReservation(student,false)" class="deleteButton">Discard</button>
+        <button @click="discardReservation(student,true)" class="deleteButton">Discard + warning</button>
+        <br>        
+        <button @click="toggleOrders(student)">&#9776;</button>
+        <!-- lijst met reservaties van de studenten-->
+        <ul v-if="student.showOrders" class="ordersList">
+          <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
+        <button class="adjustButton">Adjustments</button>
+          <!-- Loept door de reservaties -->
+          <li v-for="item in student.orders" :key="item.id" class="items">
+            <p>Name: {{ item.ItemName }}</p>
+            <p>Serial: {{ item.Serial }}</p>
+            <p> Status: {{ item.itemStatus }}</p>
+            <button @click="markItemAsPrepared(student, item)" class= readyButton> item prepared</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </template>
   
@@ -45,13 +80,16 @@ import { reservationReturnedOrCanceled } from '@/js/functions.js';
 let unsub = false;
 const students = ref([]) 
 let loading = ref(true);
+const allReservations = ref([]);
+const lateReservationArray = ref([]);
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
 }
 
 const props = defineProps({
-  todayDate: Date
+  todayDate: Date,
+  showLateReservations: Boolean
 })
 let displayDate = ref(("0" + props.todayDate.getDate()).slice(-2) + "/" + ("0" + (props.todayDate.getMonth() +1)).slice(-2) + "/" + props.todayDate.getFullYear())
 
@@ -80,12 +118,14 @@ const getItems = async() =>{
           let currentDate = new Date();
           currentDate.setHours(0,0,0,0);
           let date = new Date();
+          console.log(data.EndDate)
+          console.log(props.todayDate)
           date.setDate(data.EndDate);
           date.setMonth(data.EndMonth - 1);
           console.log(date)
           console.log(props.todayDate)
           if(date < currentDate){
-            const amountOfDaysLate = Math.floor((props.todayDate - date) / (1000 * 60 * 60 * 24));
+            const amountOfDaysLate = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
             items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
           }else{
             items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} until ${data.EndDate}/${data.EndMonth}`;
@@ -119,44 +159,138 @@ const getItems = async() =>{
 }
 
 watchEffect(() => {
-  console.log(props.todayDate)
+  console.log('watcheffect run')
   const reservations = collection(db, 'Utility/Reservations/All Reservations');
-  const q = query(reservations, where("EndDate", "==", props.todayDate.getDate()), where("EndMonth", "==", props.todayDate.getMonth()));
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    let itemsToPrepare = 0;
+  const unsubscribe = onSnapshot(reservations, (querySnapshot) => {
     querySnapshot.forEach((doc) => {
-      let items = [];
-      for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
-        console.log(doc.data())
-        items.push(doc.data()[`Item${i}`]);
-        if(doc.data()[`Item${i}`].ItemPrepared == false){
-          itemsToPrepare++;
-        }
+      if(allReservations.value.find(r => r.id === doc.data().id)){
+        return
       }
-      let date = new Date();
-      date.setDate(doc.data().EndDate);
-      date.setMonth(doc.data().EndMonth);
-      let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth())).slice(-2) + "/" + date.getFullYear();
-      students.value.push({
-        id: doc.data().id,
-        name: doc.data().User,
-        ItemsSerials: doc.data().ItemSerials,
-        allItemSerials: doc.data().allItemSerials,
-        allItemNames: doc.data().allItemNames,
-        pickUpDate: formattedDate,
-        pickUpTime: 12,
-        showOrders: false,
-        orders: items,
-        reservationPrepared: doc.data().ReservationPrepared,
-        itemsToPrepare: itemsToPrepare
-      });
-      console.log(students.value)
+      allReservations.value.push(doc.data());
+      console.log(allReservations.value)
     });
+    alignWithStudents();
+    console.log(lateReservationArray.value)
     if(unsub){
       unsubscribe();
     }
   })
 })
+
+const filterAllReservationsOnLateness = () =>{
+  const generalReservations = allReservations.value.filter(reservation => {
+    let reservationDate = new Date(props.todayDate.getFullYear(), reservation.StartMonth - 1, reservation.StartDate);
+    return reservationDate == props.todayDate
+  })
+  const lateReservations = allReservations.value.filter(reservation => {
+    let reservationDate = new Date(props.todayDate.getFullYear(), reservation.StartMonth - 1, reservation.StartDate);
+    console.log(new Date().setHours(0,0,0,0))
+    return reservationDate.setHours(0,0,0,0) < new Date().setHours(0,0,0,0)
+  });
+  return [generalReservations, lateReservations]
+}
+
+const alignWithStudents = async() =>{
+  const [generalReservations, lateReservations] = filterAllReservationsOnLateness();
+  for (let reservation of generalReservations) {
+    if(students.value.find(s => s.id === reservation.id)){
+      generalReservations.splice(generalReservations.indexOf(reservation), 1);
+    }else{
+      let itemsToPrepare = 0;
+      let items = [];
+      for (let i = 1; i <= reservation.allItemSerials.length; i++) {
+        items.push(reservation[`Item${i}`]);
+        if(reservation[`Item${i}`].ItemPrepared == false){
+          itemsToPrepare++;
+        }
+        if(await isItemWithSomeoneElse(items[i-1]) == false){
+          items[i-1].itemStatus = "Item is in the medialab";
+        }else{
+          await isItemWithSomeoneElse(items[i-1]).then((data) => {
+            let currentDate = new Date();
+            currentDate.setHours(0,0,0,0);
+            let date = new Date();
+            date.setDate(data.EndDate);
+            date.setMonth(data.EndMonth - 1);
+            console.log(date)
+            console.log(props.todayDate)
+            if(date < currentDate){
+              const amountOfDaysLate = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
+              items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
+            }else{
+              items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} until ${data.EndDate}/${data.EndMonth}`;
+            }
+          });
+        }
+      }
+      let date = new Date();
+      date.setDate(doc.data().StartDate);
+      date.setMonth(doc.data().StartMonth);
+      let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth())).slice(-2) + "/" + date.getFullYear();
+      students.value.push({
+        id: reservation.id,
+        userid: reservation.User,
+        name: reservation.UserFirstName + " " + reservation.UserLastName,
+        pickUpDate: formattedDate,
+        ItemSerials: reservation.ItemSerials,
+        allItemSerials: reservation.allItemSerials,
+        allItemNames: reservation.allItemNames,
+        pickUpTime: 12,
+        showOrders: false,
+        orders: items,
+        reservationPrepared: reservation.ReservationPrepared,
+        itemsToPrepare: itemsToPrepare
+      })
+    }
+  };	    
+  for(let reservation of lateReservations){
+    let itemsToPrepare = 0;
+    let items = [];
+    for (let i = 1; i <= reservation.allItemSerials.length; i++) {
+      items.push(reservation[`Item${i}`]);
+      if(reservation[`Item${i}`].ItemPrepared == false){
+          itemsToPrepare++;
+        }
+        if(await isItemWithSomeoneElse(items[i-1]) == false){
+          items[i-1].itemStatus = "Item is in the medialab";
+        }else{
+          await isItemWithSomeoneElse(items[i-1]).then((data) => {
+            let currentDate = new Date();
+            currentDate.setHours(0,0,0,0);
+            let date = new Date();
+            date.setDate(data.StartDate);
+            date.setMonth(data.StartMonth - 1);
+            console.log(date)
+            console.log(props.todayDate)
+            if(date < currentDate){
+              const amountOfDaysLate = Math.floor((props.todayDate - date) / (1000 * 60 * 60 * 24));
+              items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
+            }else{
+              items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} until ${data.EndDate}/${data.EndMonth}`;
+            }
+          });
+        }
+    }
+    let date = new Date();
+    date.setDate(reservation.StartDate);
+    date.setMonth(reservation.StartMonth);
+    let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth())).slice(-2) + "/" + date.getFullYear();
+    lateReservationArray.value.push({
+      id: reservation.id,
+      userid: reservation.User,
+      name: reservation.UserFirstName + " " + reservation.UserLastName,
+      pickUpDate: formattedDate,
+      ItemSerials: reservation.ItemSerials,
+      allItemSerials: reservation.allItemSerials,
+      allItemNames: reservation.allItemNames,
+      pickUpTime: 12,
+      showOrders: false,
+      orders: items,
+      reservationPrepared: reservation.ReservationPrepared,
+      itemsToPrepare: itemsToPrepare
+    });
+  };
+}
 
 
 const markItemAsPrepared = async(student, item) => {
@@ -201,14 +335,10 @@ const isItemWithSomeoneElse = async(item) => {
   const q = query(collection(db, 'Utility/Reservations/All Reservations'), where("allItemSerials", "array-contains-any", [item.Serial]));
   const querySnapshot = await getDocs(q);
   console.log(querySnapshot.size)
-  if (querySnapshot.empty) {
+  if (querySnapshot.size == 1) {
     return false;
   } else {
     for (let doc of querySnapshot.docs) {
-      console.log(doc.data())
-      props.todayDate.setHours(0,0,0,0);
-      let startDate = new Date(props.todayDate.getFullYear(), doc.data().StartMonth - 1, doc.data().StartDate);
-      let endDate = new Date(props.todayDate.getFullYear(), doc.data().EndMonth - 1, doc.data().EndDate);
       if (doc.data().CurrentlyWithUser) {
         console.log("Currently with user")
         return doc.data();
@@ -232,12 +362,16 @@ const markAsPickedUp = async (reservation) => {
   };
 };
 
-const discardReservation = async (reservation) => {
-  await reservationReturnedOrCanceled(reservation);
+const discardReservation = async (reservation,warning) => {
+  await reservationReturnedOrCanceled(reservation,warning);
   const index = students.value.findIndex(s => s.id === reservation.id);
+  const indexLate = lateReservationArray.value.findIndex(s => s.id === reservation.id);
   if (index !== -1) {
     students.value.splice(index, 1);
-  };
+  }else if(indexLate !== -1){
+    lateReservationArray.value = [];
+    allReservations.value = [];
+  }
 };
 
 
