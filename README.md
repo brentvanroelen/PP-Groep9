@@ -39,3 +39,23 @@ Vue beste manier om eenfunctie te roepen: https://chatgpt.com/share/303c456f-c78
 Wat is Vue CLI: https://chatgpt.com/share/d81fdeed-a79b-437f-918f-1395dd974ef4
 Logo in footer verplaasten: https://chatgpt.com/share/8708af81-e2e9-46e5-b256-43efeacca272
 De Youtube-playist om Vue 3 te leren: https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ
+
+
+Brent Vanroelen:
+
+De Youtube-playist om Vue 3 te leren: https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ
+Netjes maken van form: https://chatgpt.com/share/992394f4-89ff-4654-a0c5-9df343233239
+Add item & ass instance uit elkaar halen: https://chatgpt.com/share/24a6983a-5cf7-49bb-ad6b-d09674d07613
+Items in een nette grid krijgen: https://chatgpt.com/share/722014ea-5c0e-4acd-ad0a-9081a4be285c , https://chatgpt.com/share/d0364cec-613c-4339-a20e-1392aa49e63e
+Opgezochte items in dezelfde stijl krijgen: https://chatgpt.com/share/7a80ab33-7a26-4384-b903-d03d6286166d
+Lelijke bug van router-link proberen oplossen: https://chatgpt.com/share/371253e3-f6ef-4358-b760-565d00560f73
+Isuues report: https://chatgpt.com/share/69b5fd5e-daed-4a06-8944-70814155c5c1
+Nog steeds lelijke bug: https://chatgpt.com/share/2a988002-3735-467c-9fc5-72a1d1d15cf6
+Extra info bij het updaten van een doc in firebase: https://chatgpt.com/share/b516e5d6-935d-41d6-ba66-3eaef897f08b
+Add items verbeteren: https://chatgpt.com/share/f53c8702-1051-4ee1-bcb4-9a7dff1c1047
+Serienummers automatiseren: https://chatgpt.com/share/98d72dad-b6b1-4c61-9770-135f60235280
+Verschillende pages indezelfde stijl laten opmaken: https://chatgpt.com/share/c25d990c-5214-4d81-93d1-069aa82cc625
+Automatiseren van serienummers: https://chatgpt.com/share/98ed5bd9-75a4-49fc-a220-e94709c32f7e
+
+
+

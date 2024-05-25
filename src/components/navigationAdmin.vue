@@ -33,7 +33,7 @@
 </script>
 
 
-<style>
+<style scoped>
 .navAdmin{
   background-color: #c1c1c1;
 }

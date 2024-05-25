@@ -24,10 +24,10 @@
           <label for="image">Image: </label>
           <input type="text" id="image" name="image" v-model="docdata.Image">
         </div>
-        <div class="form-group">
+       <!--  <div class="form-group">
           <label for="serial">Serial Series: </label>
           <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries" placeholder="Two or three letters exapmle: MIC, CA, VR,...">
-        </div>
+        </div> -->
       </div>
       <div v-else>
         <div class="form-group">
@@ -75,7 +75,7 @@ const docdata = ref({
   SubStrings: [],
   Available: true,
   AvailableAmount: 0,
-  SerialSeries: ''
+  //SerialSeries: ''
 });
 
 const instancedata = ref({
@@ -107,7 +107,19 @@ const Makenewdoc = async () => {
 
 const addNewItem = async () => {
   const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
-  const serialSeries = docdata.value.SerialSeries.substring(0, 4).toUpperCase(); // Neem alleen de eerste twee tekens en maak deze hoofdletters
+  let serialSeries = itemName.substring(0, 3).toUpperCase(); // Neem de eerste drie tekens en maak ze hoofdletters
+
+  // Controleer of de serialSeries al bestaat in de database
+  const itemRef = collection(db, 'Items');
+  const querySnapshot = await getDocs(itemRef);
+  querySnapshot.forEach((doc) => {
+    const existingItem = doc.data();
+    if (existingItem.SerialSeries === serialSeries) {
+      // Voeg een willekeurige letter toe aan de serialSeries
+      const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Genereer een willekeurige letter (A-Z)
+      serialSeries += randomLetter;
+    }
+  });
 
   // Voegt item toe aan de 'Items'-verzameling
   await setDoc(doc(db, 'Items', itemName), {
@@ -121,7 +133,7 @@ const addNewItem = async () => {
     SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
-    SerialSeries: serialSeries, // Gebruik alleen de eerste twee tekens en maak ze hoofdletters
+    SerialSeries: serialSeries, // Gebruik de gegenereerde serialSeries
     Image: docdata.value.Image
   });
 
@@ -185,12 +197,24 @@ const generateSubstrings = (str) => {
   return substrings;
 };
 
-const changeAmountAvailable = async (queryname) => {
-  const docRef = doc(db, `Items/${queryname}`);
-  await updateDoc(docRef, {
-    AvailableAmount: increment(1)
-  });
+const changeAmountAvailable = async (instanceName) => {
+  const itemRef = doc(db, 'Items', instanceName);
+  const itemDoc = await getDoc(itemRef);
+
+  if (itemDoc.exists()) {
+    const currentAvailableAmount = itemDoc.data().AvailableAmount || 0;
+    const updatedAmount = currentAvailableAmount + 1;
+    
+    await updateDoc(itemRef, {
+      AvailableAmount: updatedAmount
+    });
+
+    console.log(`Available amount for item ${instanceName} updated to ${updatedAmount}.`);
+  } else {
+    console.log(`Item with name ${instanceName} does not exist.`);
+  }
 };
+
 
 const getImage = async (queryname) => {
   const docRef = doc(db, `Items/${queryname}`);

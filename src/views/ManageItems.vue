@@ -57,15 +57,10 @@ const fetchItems = async () => {
 };
 
 
-/* const deleteItem = async (item) => {
-  if (!item || !item.id) {
-    console.error('Item or item id is undefined:', item);
-    return;
-  }}
- */
+
 </script>
 
-<style scoped>
+<style scoped >
 .icon {
   background: none !important;
   box-shadow: none !important;
