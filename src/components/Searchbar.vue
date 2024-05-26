@@ -45,9 +45,6 @@
   import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
   import router from '@/router';
   import { useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger} from '@/Pinia/Store.js';
-  import ItemScreen from '@/views/ItemScreen.vue';
-  import Popup from './Popup.vue';
-  import Calendar from './Calendar.vue';
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
   import { doc, getDoc, orderBy } from 'firebase/firestore';
@@ -72,7 +69,7 @@
   const fetchData = async () => {
   const docRef = doc(db, "Settings", "Options");
   const docSnap = await getDoc(docRef);
-  const cart = useCart();;
+  const cart = useCart();
 
 
   if (docSnap.exists()){

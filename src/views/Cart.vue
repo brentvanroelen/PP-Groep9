@@ -13,26 +13,34 @@
         <p><b>Description: </b> {{ item.Description }}</p>
         <p><b>Serial Series: </b> {{  item.SerialSeries }}</p>
     </div>
-        <p><b>Start date: </b> {{ startDate  }}</p>
-        <!-- <span class="calendar" @click="togglePopup(true)">
+        <p><b>Start date: </b> {{ itemDate.general[0] + "/" + itemDate.general[1]  }}</p>
+        <VueDatePicker class="datepicker" v-model="beginDate" 
+          :min-date="new Date()" 
+          :teleport="true"
+          :max-date="maxDate"
+          :enable-time-picker="false"
+          :disabled-week-days="[6,0]"
+          @update:model-value="updateBeginDate">
+          <template #trigger>
             <img src="../assets/calendar.png" alt="">
-        </span> -->
-        <VueDatePicker v-model="date" hide-offset-dates :min-date="new Date()" :max-date="length"></VueDatePicker>
-        <p><b>End date:</b> {{ endDate }}</p>
-        <!-- <span id="calendar" @click="togglePopup(true)">
-            <img src="../assets/calendar.png" alt="" >
-        </span> -->
-        <VueDatePicker v-model="date" hide-offset-dates :min-date="new Date()" :max-date="length"></VueDatePicker>
+          </template>
+        </VueDatePicker>
+        <p><b>End date:</b> {{ itemDate.general[2] + "/" + itemDate.general[3] }}</p>
+        <VueDatePicker class="datepicker" v-model="endDate" 
+          :min-date="new Date()" 
+          :teleport="true"
+          :max-date="maxDate"
+          :enable-time-picker="false"
+          :disabled-week-days="[6,0]"
+          @update:model-value="updateEndDate">
+          <template #trigger>
+            <img src="../assets/calendar.png" alt="">
+          </template>
+        </VueDatePicker>
         <div class="item-trash" @click="removeItem()">
             <img src="../assets/trash.png" alt="">
         </div>
       </div>
-      <Popup v-if="showPopup" @close="togglePopup(false)">
-            <h3>{{ item.Name }}</h3>
-            <Calendar></Calendar>
-            <br>
-            <button>Edit date</button>
-    </Popup>
         
     </div>
     
@@ -46,29 +54,24 @@
         </section>
     </main>
 
-
 </template>
 
 <script setup>
-    import Navigation from "../components/Navigation.vue"
-    import { useCart, useUserIdentification } from '@/Pinia/Store';
-    import { onMounted, ref } from 'vue';
+    import { useCart, useUserIdentification, useDates } from '@/Pinia/Store';
+    import { onMounted, ref, computed } from 'vue';
     import ReservationHandler from "@/components/ReservationHandler.vue";
-    import Popup from "@/components/Popup.vue";
-    import Calendar from "@/components/Calendar.vue";
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css'
     import { doc, setDoc, getDoc } from 'firebase/firestore';
-    
+    import { db } from '@/Firebase/Index.js';
 
     
 
-    const date = ref();
+    const beginDate = ref();
+    const endDate = ref();
     let showPopup = ref(false);
     const cart = useCart();
     const items = cart.items;
-    const startDate = cart.startDate;
-    const endDate = cart.endDate;
     const itemCount = ref(0);
     let length = ref();
     const student = ref();
@@ -76,6 +79,12 @@
     const userType = useUserIdentification();
     const studentReservation = ref();
     const teacherReservation = ref();
+    const currentDate = new Date();
+    const itemDate = useDates();
+    let maxSelect = ref(7);
+
+
+
 
   
     const fetchData = async () => {
@@ -92,32 +101,48 @@
     const futureDate = new Date();
     futureDate.setDate(currentDate.getDate() + length);
 
+    const maxDate = computed(() => {
+    let length = ref();
     if(userType.user.type === "student" ){
       length = studentReservation.value * 7 ;
+      maxSelect = student.value * 7;
     }else if(userType.user.type === "docent"){
       length = teacherReservation.value * 7 ;
+      maxSelect = teacher.value * 7;
     }else if(userType.user.type === "admin"){
       length = 365;
     }
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + length);
+    return futureDate;
+  });
+
     for (let i = 0; i < items.length; i++) {
         itemCount.value += 1;
-    }
-
-    const togglePopup = (value) => {
-        showPopup.value = !showPopup.value;
     }
 
     const removeItem = (index) => {
         cart.removeItem(index);
         itemCount.value -= 1;
     }
-
-    const test = () => {
-        console.log(cart.items)
-        // console.log(items);
-        // console.log(startDate);
-        // console.log(endDate);
+    
+    const updateBeginDate = (newDate) => {
+        if (newDate > endDate.value) {
+            alert('Start date cannot be after end date');
+            return;
+        }
+        itemDate.general[0] = newDate.getDate();
+        itemDate.general[1] = newDate.getMonth() + 1;
     }
+    const updateEndDate = (newDate) => {
+        if (newDate < beginDate.value) {
+            alert('End date cannot be before start date');
+            return;
+        }
+        itemDate.general[2] = newDate.getDate();
+        itemDate.general[3] = newDate.getMonth() + 1;
+    }
+
     onMounted(() => {
     fetchData();
   });
@@ -140,7 +165,9 @@
             margin-top: 20px;
             text-align: center;
         }
-
+        .datepicker{
+            width: 50px;
+        }
         hr {
             margin: 20px 0;
             width: 80%;
