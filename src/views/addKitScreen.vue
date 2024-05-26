@@ -1,7 +1,7 @@
 <template>
     <div class="addKitScreen">
       <div class="inputKits">
-        <label for="kitName" class="labels">Kit name: </label><input type="text" name="" id="kitNameInput">
+        <SearchBarAdmin :page="'AddKit'"></SearchBarAdmin>
         <label for="number" class="labels">Number (optional): </label> <input type="number" name="" id="numberInput">
         <label for="kitDescription" class="labels">Kit description: </label><input type="text" name="" id="descriptionInput">
       </div>
@@ -23,35 +23,61 @@
         </div>
       </div>
       
-      <button class="buttonsClass largerButton">Add Kit</button>
+      <button class="buttonsClass largerButton" @click="addKit">Add Kit</button>
     </div>
   </template>
   
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
-  import { useKitItems } from '@/Pinia/Store';
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { collection, query, getDocs,db, where } from '../Firebase/Index.js';
+import { useKitItems } from '@/Pinia/Store';
+import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
+import { imageGetter } from '@/js/functions.js';
 
-  
-  const kitItems = useKitItems();
-  
-
-  
-  const router = useRouter();
-  const selectedItems = ref(kitItems.selectedItems);
+const kitItems = useKitItems();
+const router = useRouter();
+const selectedItems = ref(kitItems.selectedItems);
+let kitName = ref('');
   
   
-  const removeItem = (index) => {
-    selectedItems.value.splice(index, 1);
-  };
+const removeItem = (index) => {
+  selectedItems.value.splice(index, 1);
+};
   
  
-  const route = router.currentRoute.value;
-  if (route.query.items) {
-    selectedItems.value = route.query.items;
+const route = router.currentRoute.value;
+if (route.query.items) {
+  selectedItems.value = route.query.items;
+}
+const addKit = async () => {
+  const kitsCollection = collection(db, 'Kits');
+  const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
+  const querySnapshot = await getDocs(query);
+  if(querySnapshot.size > 0){
+    
   }
-  </script>
+  const kitDescription = document.getElementById('descriptionInput').value;
+  const number = document.getElementById('numberInput').value;
+  const items = selectedItems.value;
+  const kit = {
+    Name: kitName,
+    Description: kitDescription,
+    Number: number,
+    Items: items,
+  };
+  await kitsCollection.add(kit);
+  router.push('/kits');
+};
+onMounted(() => {
+  for (let item of selectedItems.value){
+    imageGetter(`ItemImages/${item.Image}`).then((res) => {
+      item.Image = res;
+    })
+  }
+});
+
+</script>
   
 
   

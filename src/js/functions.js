@@ -1,5 +1,5 @@
 import { db, collection, doc, updateDoc, increment,deleteDoc, query, where,getDocs } from "@/Firebase/Index"
-
+import { storage,getDownloadURL,ref } from "@/Firebase/Index"
 
 export const reservationReturnedOrCanceled = async(reservation,warning) => {
     const Serialseries = reservation.ItemSerials
@@ -36,4 +36,14 @@ export const reservationReturnedOrCanceled = async(reservation,warning) => {
     await deleteDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`))
 
+}
+export const imageGetter = async (image) =>{
+    const imageref = ref(storage, `${image}`);
+    console.log(imageref)
+    try{
+        const url = await getDownloadURL(imageref);
+        return url;
+    }catch(error){
+        console.log(error);
+    }
 }

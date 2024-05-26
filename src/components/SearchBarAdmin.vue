@@ -19,14 +19,20 @@
       <p>{{ item.Description }}</p>
     </div>
   </div>
-
-  <div v-if="props.page != 'HomeAdmin'">
-    No results found.
+  <div class="search-results" v-if="showResults">
+    <div v-for="result in store.results" :key="result.id">
+      <div class="iteminfo" @click="setPage(result)">
+        <img :src="result.Image" alt="item">
+        <p>{{ result.Name }}</p>
+      </div>
+    </div>
   </div>
+
+
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,watch } from 'vue';
 import { useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
 import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 
@@ -37,6 +43,7 @@ const store = useStore();
 const results = ref([]);
 const reservationsAdmin = useEarlyReturnsReservations()
 let generalItem;
+const showResults = ref(false);
 
 
 const props = defineProps({
@@ -44,23 +51,48 @@ const props = defineProps({
   class: String
 });
 
+const log = () => {
+  console.log(querystring.value);
+};
+
+
+watch(querystring, async(newVal, oldVal) => {
+  console.log('Querystring changed:', newVal);
+  if(props.page == 'AddKit'){
+    if (newVal.length >= 3) {
+      console.log('Searching for:', newVal);
+      await searchKit();
+      store.results.push({id: 10000, Name: querystring, Image: '/src/assets/plus.jpg'});
+      showResults.value = store.results.length > 0;
+    }else{
+      showResults.value = false;
+    }
+  }
+})
+
 
 
 
 const search = async () => {
-  if(props.page === 'HomeAdmin') {
-    searchAdmin();
-  } else {
-    console.log(querystring.value);
-    store.updateResults([]);
-    await querySnapshot1().then(() => {
-      querySnapshot2();
-    });
+    if(props.page === 'HomeAdmin') {
+      searchAdmin();
+    }else {
+      console.log(querystring.value);
+      store.updateResults([]);
+      await querySnapshot1().then(() => {
+        querySnapshot2();
+      });
 
 
-  store.updateResults(results.value);
-  console.log(results.value);
-};
+    store.updateResults(results.value);
+    console.log(results.value);
+  };
+}
+
+
+
+
+
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
   console.log('Item to delete:', itemToDelete);
@@ -76,7 +108,7 @@ const deleteItem = async (index) => {
   } catch (error) {
     console.error('Error removing document: ', error);
   }
-}};
+};
 
 
 /* const searchAdmin = async () => {
@@ -123,8 +155,29 @@ const searchAdmin = async () => {
   })
   console.log(reservationsAdmin.Reservations);
 };
-
-
+const searchKit = async () => {
+  let kits = [];
+  store.updateResults([]);
+  const itemQuery = query(
+    collection(db, 'Kits'),
+    where('SubStrings', 'array-contains', querystring.value.toLowerCase())
+  );
+  const docs = await getDocs(itemQuery);
+  if(docs.empty){
+    console.log('No matching documents.');
+    return;
+  }
+  docs.forEach((doc) => {
+    kits.push(doc.data());
+    store.updateResults(kits);
+  });
+  console.log(store.results);
+};
+const setPage = (result) => {
+  if(result.id === 10000){
+    
+  };
+}
 
 
 

@@ -3,7 +3,7 @@
       <div id="itemMain">
         <h3>{{item.Name}}</h3>
         <br>
-        <img :src="item.Image" alt="" id="img">
+        <img :src="image" alt="" id="img">
       </div>
       <div id="itemInfo">
         <p><b>Brand: </b>{{ item.Brand }}</p>
@@ -20,12 +20,24 @@
 </template>
 
 <script setup>
+import {onMounted, ref as vueRef} from 'vue';
 import Quantity from './Quantity.vue';
-
+import { imageGetter } from '@/js/functions';
+const image = vueRef('');
 const {item,loan,arraynumber} = defineProps({
     item: Object,
     loan: Boolean,
 })
+
+
+
+onMounted(() => {
+  imageGetter(`ItemImages/${item.Image}`).then((res) => {
+  image.value = res;
+})
+})
+
+console.log(item.Name)
 
 </script>
  

@@ -18,46 +18,50 @@
     </div>
   </template>
   
-  <script setup>
-    import { ref, onMounted } from 'vue';
-    import { useRouter } from 'vue-router';
-    import adminSearchBarAddItem from '../components/adminSearchBarAddItem.vue';
-    import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
-    import { useKitItems } from '@/Pinia/Store';
-    import { useStore } from '@/Pinia/Store';
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import adminSearchBarAddItem from '../components/adminSearchBarAddItem.vue';
+import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
+import { useKitItems } from '@/Pinia/Store';
+import { useStore } from '@/Pinia/Store';
+import { imageGetter } from '@/js/functions';
   
-    const router = useRouter();
-    const db = getFirestore();
-    const items = ref([]);
-    const selectedItems = ref([]);
-    const kitItems = useKitItems();
-    const store = useStore();
+const router = useRouter();
+const db = getFirestore();
+const items = ref([]);
+const selectedItems = ref([]);
+const kitItems = useKitItems();
+const store = useStore();
   
-    onMounted(async () => {
-        await fetchItems();
+onMounted(async () => {
+    await fetchItems();
+    for (let item of items.value){
+        imageGetter(`ItemImages/${item.Image}`).then((res) => {
+            item.Image = res;
+        })
+    }
+});
+  
+const fetchItems = async () => {
+    const itemCollection = collection(db, 'Items');
+    const itemSnapshot = await getDocs(itemCollection);
+    const itemsData = [];
+    itemSnapshot.forEach((doc) => {
+        itemsData.push(doc.data());
     });
+    items.value = itemsData;
+};
   
-    const fetchItems = async () => {
-        const itemCollection = collection(db, 'Items');
-        const itemSnapshot = await getDocs(itemCollection);
-        const itemsData = [];
-        itemSnapshot.forEach((doc) => {
-            itemsData.push(doc.data());
-        });
-        items.value = itemsData;
-    };
-  
-    const addToSelectedKit = () => {
+const addToSelectedKit = () => {
+    kitItems.addItem(selectedItems.value);
+    router.push({ path: '/addKitScreen'});
+};
 
-        kitItems.addItem(selectedItems.value);
-
-        router.push({ path: '/addKitScreen'});
-    };
-
-    const isSelected = (item) => {
+const isSelected = (item) => {
   return selectedItems.value.includes(item);
 };
-  </script>
+</script>
 
 <style>
   #SearchBar {

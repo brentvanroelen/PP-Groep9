@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { getStorage, ref,uploadBytes,getDownloadURL } from "firebase/storage";
 
 
 import {Firestore,collection, 
@@ -21,17 +22,20 @@ const firebaseConfig = {
   storageBucket: "fir-newtech.appspot.com",
   messagingSenderId: "646664658925",
   appId: "1:646664658925:web:3cc3a1377ab76d7100d1e4",
-  measurementId: "G-DH8VH2X17Z"
+  measurementId: "G-DH8VH2X17Z",
+  storageBucket: 'gs://fir-newtech.appspot.com'
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db =  getFirestore(app)
 const auth = getAuth(app);
+const storage = getStorage()
+
 export {
     db,auth,collection,getDocs,Firestore,orderBy,where,CollectionReference,
     query,startAt,endAt,setDoc,updateDoc,doc,addDoc,increment,getDoc,onSnapshot,
     deleteDoc,createUserWithEmailAndPassword,signInWithEmailAndPassword,
-    deleteField,and
+    deleteField,and,storage,ref,uploadBytes,getDownloadURL
 }
 

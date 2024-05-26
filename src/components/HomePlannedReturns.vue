@@ -81,7 +81,7 @@ let displayDate = ref(("0" + props.todayDate.getDate()).slice(-2) + "/" + ("0" +
 
 const getItems = async() =>{
   const reservations = collection(db, 'Utility/Reservations/All Reservations');
-  const q = query(reservations, where("EndDate", "==", props.todayDate.getDate()), where("EndMonth", "==", props.todayDate.getMonth() + 1),where ("CurrentlyWithUser", "==", false));
+  const q = query(reservations, where("EndDate", "==", props.todayDate.getDate()), where("EndMonth", "==", props.todayDate.getMonth() + 1),where ("CurrentlyWithUser", "==", true));
   const querySnapshot = await getDocs(q);
   if(querySnapshot.empty){
     loading.value = false;
@@ -144,7 +144,7 @@ const filterAllReservationsOnLateness = () =>{
   })
   const lateReservations = allReservations.value.filter(reservation => {
     let reservationDate = new Date(props.todayDate.getFullYear(), reservation.EndMonth - 1, reservation.EndDate);
-    return reservationDate < props.todayDate
+    return reservationDate < new Date()
   });
   return [generalReservations, lateReservations]
 }

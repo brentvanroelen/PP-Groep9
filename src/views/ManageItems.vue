@@ -37,7 +37,7 @@ import { collection, getFirestore, query, getDocs } from 'firebase/firestore';
 import { useKitItems } from '@/Pinia/Store';
 import { useStore } from '@/Pinia/Store';
 import { doc, deleteDoc } from 'firebase/firestore';
-
+import { imageGetter } from '@/js/functions';
 
 const router = useRouter();
 const db = getFirestore();
@@ -48,6 +48,11 @@ const store = useStore();
 
 onMounted(async () => {
     await fetchItems();
+    for (let item of items.value){
+    imageGetter(`ItemImages/${item.Image}`).then((res) => {
+        item.Image = res;
+    })
+}
 });
 
 const fetchItems = async () => {
@@ -65,7 +70,9 @@ const deleteItem = async (item) => {
   if (!item || !item.id) {
     console.error('Item or item id is undefined:', item);
     return;
-  }}
+}}
+
+
 
 </script>
 

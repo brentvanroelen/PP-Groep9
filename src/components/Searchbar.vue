@@ -39,137 +39,133 @@
   </template>
   
 <script setup>
-  import {onMounted, ref, watch, computed} from '../main.js'
-  import {collection,where,db,query,getDocs} from '../Firebase/Index.js'
-  import router from '@/router';
-  import { useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger} from '@/Pinia/Store.js';
-  import VueDatePicker from '@vuepic/vue-datepicker';
-  import '@vuepic/vue-datepicker/dist/main.css'
-  import { doc, getDoc, orderBy } from 'firebase/firestore';
-  import AvailabilityHandler from './AvailabilityHandler.vue';
-  
-  let maxSelect = ref(7);
-  const date = ref();
-  const datesStore = useDates();
+import {onMounted, ref, watch, computed} from '../main.js'
+import {collection,where,db,query,getDocs,doc, getDoc,} from '../Firebase/Index.js'
+import router from '@/router';
+import { useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger} from '@/Pinia/Store.js';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import AvailabilityHandler from './AvailabilityHandler.vue';
+import { imageGetter } from '@/js/functions.js';
 
-  onMounted(() => {
-    fetchData();
-  });
+let maxSelect = ref(7);
+const date = ref();
+const datesStore = useDates();
+const student = ref();
+const teacher = ref();
+const studentReservation = ref();
+const teacherReservation = ref();
+const selectedCategory = ref('');
+const dropdownOptions = useCategories().categories;
+const userType = useUserIdentification();
+const cart = useCart();
+let showPopup = ref();
+let placeholder = ref("Search");
+const showResults = ref(false);
+const props = defineProps({
+  page: String,
+  class: String
+});
+const querystring = ref('');
+const store = useStore();
 
 
-  const student = ref();
-  const teacher = ref();
-  const studentReservation = ref();
-  const teacherReservation = ref();
-  const selectedCategory = ref('');
-  const dropdownOptions = useCategories().categories;
-  const userType = useUserIdentification();
-  const fetchData = async () => {
+const fetchData = async () => {
   const docRef = doc(db, "Settings", "Options");
   const docSnap = await getDoc(docRef);
-  const cart = useCart();
-
-  let showPopup = ref();
-  let placeholder = ref("Search");
-
   if (docSnap.exists()){
     const data = docSnap.data();
     student.value = data.student;
     teacher.value = data.teacher;
     studentReservation.value = data.studentReservation;
     teacherReservation.value = data.teacherReservation;
-  }}
+  }
+}
 
 const log = () => {
   console.log(date.value)
-
   let startDate = date.value[0];
   let endDate = date.value[1];
-
   let startDay = startDate.getDate();
   let startMonth = startDate.getMonth() + 1;
-
   let endDay = endDate.getDate();
   let endMonth = endDate.getMonth() + 1;
-
   datesStore.updateGeneralDates([startDay, startMonth, endDay, endMonth])
 }
-  const maxDate = computed(() => {
-    let length = ref();
-    if(userType.user.type === "student" ){
-      length = studentReservation.value * 7 ;
-      maxSelect = student.value * 7;
-    }else if(userType.user.type === "docent"){
-      length = teacherReservation.value * 7 ;
-      maxSelect = teacher.value * 7;
-    }else if(userType.user.type === "admin"){
-      length = 365;
-    }
-    const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + length);
-    return futureDate;
-  });
-  
-
-
-
-  const showResults = ref(false);
-  const props = defineProps({
-    page: String,
-    class: String
-  });
-  const querystring = ref('');
-  const store = useStore();
-
-  const search = async() => {
-    const trigger = useTrigger()
-    let results = [];
-    store.updateResults([]);
-    const itemquery = query(collection(db, "Items"), 
-    where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
-    );
-    const querySnapshot = await getDocs(itemquery);
-      querySnapshot.forEach((snap) =>{
-        console.log(snap.data())
-        results.push(snap.data())
-    })
-    console.log(results)
-    store.updateResults(results)
-    if(store.results.length == 0){
-      trigger.fireTrigger();
-    }
-  };
-  const confirmedSearch = async() => {
-    await search();
-    if(props.page == "UserHome"){
-        router.push({name: "productscreen"})
-      }else if(props.page == "AdminHome"){
-        console.log("AdminHome")
-      }
+const maxDate = computed(() => {
+  let length = ref();
+  if(userType.user.type === "student" ){
+    length = studentReservation.value * 7 ;
+    maxSelect = student.value * 7;
+  }else if(userType.user.type === "docent"){
+    length = teacherReservation.value * 7 ;
+    maxSelect = teacher.value * 7;
+  }else if(userType.user.type === "admin"){
+    length = 365;
   }
-  if(props.page == "HomeAdmin"){
-    watch(querystring, async(newVal, oldVal) => {
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + length);
+  return futureDate;
+});
+
+const search = async() => {
+  const trigger = useTrigger()
+  let results = [];
+  store.updateResults([]);
+  const itemquery = query(collection(db, "Items"), 
+  where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
+  );
+  const querySnapshot = await getDocs(itemquery);
+    querySnapshot.forEach((snap) =>{
+      console.log(snap.data())
+      results.push(snap.data())
+  })
+  console.log(results)
+  store.updateResults(results)
+  if(store.results.length == 0){
+    trigger.fireTrigger();
+  }
+};
+
+const confirmedSearch = async() => {
+  await search();
+  if(props.page == "UserHome"){
+    router.push({name: "productscreen"})
+  }else if(props.page == "AdminHome"){
+    console.log("AdminHome")
+  }
+}
+
+if(props.page == "HomeAdmin"){
+  watch(querystring, async(newVal, oldVal) => {
     // If the new value has 3 or more characters, trigger the search
     if (newVal.length >= 3) {
       await search();
+      for (let item of store.results){
+        imageGetter(`ItemImages/${item.Image}`).then((res) => {
+          item.Image = res;
+        })
+      }
       showResults.value = store.results.length > 0;
     }else{
       showResults.value = false;
     }
   })
 };
-  const addToCart = (item) => {
-    cart.addItem(item);
-    querystring.value = '';
-    console.log(cart.items)
+const addToCart = (item) => {
+  cart.addItem(item);
+  querystring.value = '';
+  console.log(cart.items)
+}
+onMounted(() => {
+  if(props.page == "HomeAdmin"){
+    placeholder.value = "Add items to the reservation"
   }
+  fetchData();
+});
+
   
 
-  onMounted(async() => {
-    if(props.page == "HomeAdmin"){
-      placeholder.value = "Add items to the reservation"
-    }
-  })
 </script>
   
 

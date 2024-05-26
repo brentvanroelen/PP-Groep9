@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="aantalWaarschuwingen >= maxWaarschuwingen">
+    <div v-if="aantalWaarschuwingen <= maxWaarschuwingen">
       <div class="searchcontainer">
         
         
