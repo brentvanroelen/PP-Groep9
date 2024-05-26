@@ -1,8 +1,7 @@
 <template>
-  <div id="test">
   <div class="search-container" :class="props.page">
     <div class="search-bar">
-      <input type="text" v-model="querystring" @keyup.enter="confirmedSearch" placeholder="Search">
+      <input id="input" type="text" v-model="querystring" @keyup.enter="confirmedSearch" :placeholder="placeholder">
       <div v-if="props.page != 'HomeAdmin'">
         <select v-model="selectedCategory">
           <option value="" disabled>Categories</option>
@@ -23,8 +22,7 @@
           </template>
         </VueDatePicker>
       </span>
-      
-      <button @click="confirmedSearch">Search</button>
+      <button class="searchbutton"@click="confirmedSearch">Search</button>
     </div>
   </div>
     <div class="search-results" v-if="showResults">
@@ -36,7 +34,7 @@
         </div>
       </div>
     </div>
-  </div>
+
   <AvailabilityHandler :page="'UserHome'"></AvailabilityHandler>
   </template>
   
@@ -71,6 +69,8 @@
   const docSnap = await getDoc(docRef);
   const cart = useCart();
 
+  let showPopup = ref();
+  let placeholder = ref("Search");
 
   if (docSnap.exists()){
     const data = docSnap.data();
@@ -160,32 +160,49 @@ const log = () => {
 };
   const addToCart = (item) => {
     cart.addItem(item);
+    querystring.value = '';
     console.log(cart.items)
   }
   
+
+  onMounted(async() => {
+    if(props.page == "HomeAdmin"){
+      placeholder.value = "Add items to the reservation"
+    }
+  })
 </script>
   
 
-  <style scoped>
+<style>
+.calendar{
+  width: 60px;
+  height: 60px
+}
   .search-container.HomeAdmin{
-    width: fit-content;
     max-height: fit-content;
+    width: 95%	;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d50000
   }
   .search-container {
-  width: 800px; /* Adjust this value to suit your needs */
   position: relative; /* This makes the .search-results position relative to this container */
-  background-color: #c1c1c1;
   padding: 0.5em;
+  height: fit-content;
+  width: 100%;
   }
   .search-bar {
     display: flex;
     align-items: center;
     margin-top: 0%;
-    justify-content: center;
+    justify-content: space-evenly;
+    width: 100%	;
+    height: fit-content;
   }
   img{
-    width: auto;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
   .search-bar input {
     padding: 8px;
@@ -193,7 +210,9 @@ const log = () => {
     border-radius: 4px;
     margin-right: 5px;
   }
-  
+  #input{
+    width: 40%;
+  }
   .search-bar button {
      padding: 8px 12px; 
     background-color: #d50000;
@@ -228,17 +247,17 @@ img{
   overflow: visible;
   overflow-clip-margin: 2px;
 }
-button {
+.searchbutton {
   background-color: #ff3333;
   color: #fff;
   border: none;
   padding: 5px 5px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  width: 15%;
 }
 
 
   
-  </style>
+</style>
   

@@ -19,7 +19,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler :check-user-cart="false"></ReservationHandler>
+      <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
   </div>
 
   </template>
@@ -51,9 +51,12 @@
   const page = "UserHome";
 
   const addItemToCart = () => {
-      if(dates.general == [] || quantity.getQuantity(Item.Name) == 0){
+      if(dates.general == []){
         console.log("Please select a date range and a quantity")
       }else{
+        if(quantity.getQuantity(Item.Name) == 0){
+          quantity.setQuantity(Item.Name, 1)
+        }
         dates.updateDate(Item.Name, dates.general)
         console.log(Item);
         cart.addItem(Item);

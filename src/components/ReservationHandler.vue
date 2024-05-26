@@ -1,11 +1,12 @@
 <template>
-    <button @click="handleReservation()">Loan now</button>
+    <button @click="handleReservation()">{{ buttonText }}</button>
 </template>
 <script setup>
-import { useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
+import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
+
 
 
 const data = ref([]);
@@ -17,12 +18,16 @@ const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
 const itemSelector = useItemSelector();
 const user = useUserIdentification();
+const selectedUser = useSelectedUser();
+const itemsToGet = useItemsToGet();
 
 let  items = []
 let itemMaps = [];
 let promises = [];
-const {checkUserCart} = defineProps({
-    checkUserCart: Boolean
+const {checkUserCart,buttonText,page} = defineProps({
+    checkUserCart: Boolean,
+    buttonText: String,
+    page: String
 })
 
 
@@ -31,6 +36,13 @@ const handleReservation = async() => {
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
+        if(page != "HomeAdmin"){
+            selectedUser.selectUser({
+            firstName: user.user.firstName,
+            lastName: user.user.lastName,
+            uid: user.user.id
+            })
+        }
         dates.updateDate(store.results[0].Name, dates.general)
         itemSelector.setCollectionName(`${store.results[0].Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
@@ -51,6 +63,17 @@ const handleReservation = async() => {
         if(cart.items.length == 0){
             console.log("No items in cart")
         }else{
+            if(page != "HomeAdmin"){
+                selectedUser.selectUser({
+                firstName: user.user.firstName,
+                lastName: user.user.lastName,
+                uid: user.user.id
+                })
+            }
+            if(typeof selectedUser.user != "object"){
+                console.log("No user selected")
+                return
+            }
             filterUnnecessaryDates();
             orderCart();
             if(Object.keys(dates.dates).length != 0){
@@ -60,6 +83,9 @@ const handleReservation = async() => {
                     promises = [];
                     itemMaps = [];
                     for (let item of reservation){
+                        if(quantity.getQuantity(item.Name) == 0){
+                            quantity.setQuantity(item.Name, 1)
+                        }
                         console.log(item)
                         console.log(reservation)
                         itemSelector.setCollectionName(`${item.Name}`);
@@ -92,6 +118,9 @@ const getItem = async() => {
     availableInstances.getCollection(itemSelector.itemName).shift();
     console.log(availableInstances.getInstance(itemSelector.itemName,[0]));
     items.push(chosenitem.value);
+    if(page == "HomeAdmin"){
+        itemsToGet.addItem(chosenitem.value)
+    }
     console.log(items)
     console.log(chosenitem.value)
 }
@@ -132,7 +161,7 @@ const makeItemMap = (items) =>{
 
 }
 const MakeReservation = async(date) => {
-    const docRefUserReservation = doc(collection(db, `Users/${user.user.id}/Reservations`));
+    const docRefUserReservation = doc(collection(db, `Users/${selectedUser.user.uid}/Reservations`));
     const docRefGeneralReservation = doc(db, `Reservations/${docRefUserReservation.id}`);
     const docRefAdminReservation = doc(db, `/Utility/Reservations/All Reservations/${docRefUserReservation.id}`);
     await setDoc(docRefUserReservation,{
@@ -144,9 +173,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
@@ -162,9 +191,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,
@@ -181,9 +210,9 @@ const MakeReservation = async(date) => {
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: user.user.id,
-        UserFirstName: user.user.firstName,
-        UserLastName: user.user.lastName,
+        User: selectedUser.user.uid,
+        UserFirstName: selectedUser.user.firstName,
+        UserLastName: selectedUser.user.lastName,
         ForProject: false,
         Extended: false,
         CurrentlyWithUser: false,

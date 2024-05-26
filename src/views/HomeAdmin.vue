@@ -3,23 +3,26 @@
 <div class="container">
 
     <div class="head">
-      <button @click="decrementDate" class="readyButton">&larr;</button><h1>Date: {{ displayDate }}</h1><button @click="incrementDate" class="readyButton">&rarr;</button>
+      <button :class="{disabledbutton: disableDecrement()}" @click="decrementDate" class="readyButton">&larr;</button><h1>Date: {{ displayDate }}</h1><button @click="incrementDate" class="readyButton">&rarr;</button>
     </div>
 
     <div class="box-container">
       <div class="box scheduledLoans">
-        <h2>Scheduled loans</h2>
+        <h2 v-if="!showLateReservations">Scheduled loans</h2>
+        <h2 v-else>Late reservations</h2>
         <div v-if="todayDate != undefined">
-          <HomePlannedLoans v-if="dateChanged" :today-date="todayDate"></HomePlannedLoans>
+          <HomePlannedLoans v-if="dateChanged" :today-date="todayDate" :show-late-reservations="showLateReservations"></HomePlannedLoans>
+          <button v-if="!showLateReservations" @click="showLateReservations = !showLateReservations">See late reservations</button>
+          <button v-else @click="showLateReservations = !showLateReservations">See Today's Reservation</button>
         </div>
       </div>
 
       <div class="box scheduledReturns">
-        <h2 v-if="!showLateReservations">Scheduled returns</h2>
-        <h2 v-else>Late reservations</h2>
-        <HomePlannedReturns v-if="dateChanged" :today-date="todayDate" :show-late-reservations="showLateReservations"></HomePlannedReturns>
-        <button v-if="!showLateReservations" @click="showLateReservations = !showLateReservations">See late reservations</button>
-        <button v-else @click="showLateReservations = !showLateReservations">See Today's Reservation</button>
+        <h2 v-if="!showLateReturns">Scheduled returns</h2>
+        <h2 v-else>Late returns</h2>
+        <HomePlannedReturns v-if="dateChanged" :today-date="todayDate" :show-late-reservations="showLateReturns"></HomePlannedReturns>
+        <button v-if="!showLateReturns" @click="showLateReturns = !showLateReturns">See late returns</button>
+        <button v-else @click="showLateReturns = !showLateReturns">See Today's returns</button>
       </div>
     
   
@@ -51,12 +54,20 @@ import HomePlannedReturns from "@/components/HomePlannedReturns.vue";
 import EarlyReturns from "@/components/EarlyReturns.vue";
 
 let unssub = false;
+const showLateReturns = ref(false);
 const showLateReservations = ref(false);
 const reservationslist = ref([]);
 let amountLeftToPrepare = ref(0);
-let todayDate = new Date();
-let displayDate = ref(("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() +1)).slice(-2) + "/" + todayDate.getFullYear())
+let todayDate = ref(new Date());
+let displayDate = ref(("0" + todayDate.value.getDate()).slice(-2) + "/" + ("0" + (todayDate.value.getMonth() +1)).slice(-2) + "/" + todayDate.value.getFullYear())
 let dateChanged = ref(true);
+const disableDecrement = () => {
+  if(todayDate.value.getDate() == new Date().getDate() && todayDate.value.getMonth() == new Date().getMonth() && todayDate.value.getFullYear() == new Date().getFullYear()){
+    return true
+  }else{
+    return false
+  }
+}
 
 const user = useUserIdentification()
 const router = useRouter()
@@ -73,18 +84,21 @@ if(testing == false){
   }
 }
 const decrementDate = () => {
+  if(todayDate.value.getDate() == new Date().getDate() && todayDate.value.getMonth() == new Date().getMonth() && todayDate.value.getFullYear() == new Date().getFullYear()){
+    return
+  }
   dateChanged.value = false
   setTimeout(() => {
-    todayDate.setDate(todayDate.getDate() - 1);
-    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    todayDate.value.setDate(todayDate.value.getDate() - 1);
+    displayDate.value = ("0" + todayDate.value.getDate()).slice(-2) + "/" + ("0" + (todayDate.value.getMonth() + 1)).slice(-2) + "/" + todayDate.value.getFullYear()
     dateChanged.value = true  
   }, 1);
 }
 const incrementDate = () => {
   dateChanged.value = false
   setTimeout(() => {
-    todayDate.setDate(todayDate.getDate() + 1);
-    displayDate.value = ("0" + todayDate.getDate()).slice(-2) + "/" + ("0" + (todayDate.getMonth() + 1)).slice(-2) + "/" + todayDate.getFullYear()
+    todayDate.value.setDate(todayDate.value.getDate() + 1);
+    displayDate.value = ("0" + todayDate.value.getDate()).slice(-2) + "/" + ("0" + (todayDate.value.getMonth() + 1)).slice(-2) + "/" + todayDate.value.getFullYear()
     dateChanged.value = true
   }, 1);
 }
@@ -169,6 +183,11 @@ onUnmounted(() => {
   grid-row: 2 / 4;
   margin: 0 20px;
   
+}
+.disabledbutton{
+  background-color: #f0f0f0;
+  color: #666;
+  cursor: not-allowed;
 }
 
 

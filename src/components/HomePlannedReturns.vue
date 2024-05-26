@@ -28,6 +28,9 @@
       </div>
     </div>
     <div class="ItemsToPrepare" v-else>
+      <div v-if="lateReservationArray.length == 0">
+        <p>No late returns</p>
+      </div>
         <!-- Loept door de students -->
       <div v-for="student in lateReservationArray" :key="student.id" class="studentContainer">
         <div class="studentInfo">

@@ -1,5 +1,5 @@
 <template>
-    <div id="quantity">
+    <div id="quantity" v-if="item">
         <p><b>Quantity:</b></p>
         <select @change="setQuantity" v-model="selectedOption">
             <option v-for="value in options" :key="value"> {{ options[value-1] }}</option>
@@ -20,7 +20,6 @@ const {item} = defineProps({
 
 let options = computed(() => {
 let amountAvailable = [];
-console.log(availableInstances.getCollection(item.Name))
 if(availableInstances.getCollection(item.Name) !== undefined){
     for (let i = 1; i <= availableInstances.getCollection(item.Name).length ; i++) {
         amountAvailable.push(i);

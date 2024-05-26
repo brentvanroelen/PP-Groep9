@@ -32,6 +32,8 @@ const confirmedSearch = async() => {
       querySnapshot.forEach((doc) => {
         let user = {
         name: doc.data().firstName + ' ' + doc.data().lastName,
+        firstName: doc.data().firstName,
+        lastName: doc.data().lastName,
         uid: doc.data().uid,
       }
         selectedUser.selectUser(user) 
