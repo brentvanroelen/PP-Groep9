@@ -106,9 +106,10 @@ const Makenewdoc = async () => {
 
 
 const addNewItem = async () => {
-  const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
-  let serialSeries = itemName.substring(0, 3).toUpperCase(); // Neem de eerste drie tekens en maak ze hoofdletters
+  const itemName = docdata.value.Name.toLowerCase(); // Converteer de naam naar kleine letters
+  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1); // Capitalize de eerste letter
 
+  let serialSeries = capitalizedItemName.substring(0, 3).toUpperCase();
   // Controleer of de serialSeries al bestaat in de database
   const itemRef = collection(db, 'Items');
   const querySnapshot = await getDocs(itemRef);
@@ -122,15 +123,15 @@ const addNewItem = async () => {
   });
 
   // Voegt item toe aan de 'Items'-verzameling
-  await setDoc(doc(db, 'Items', itemName), {
-    Name: docdata.value.Name,
+  await setDoc(doc(db, 'Items', capitalizedItemName), {
+    Name: capitalizedItemName,
     Category: docdata.value.Category,
     Brand: docdata.value.Brand,
     Description: docdata.value.Description,
     DamagedItems: docdata.value.DamagedItems,
     IsInKit: docdata.value.IsInKit,
     Quantity: docdata.value.Quantity,
-    SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
+    SubStrings: generateSubstrings(itemName),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
     SerialSeries: serialSeries, // Gebruik de gegenereerde serialSeries
@@ -138,13 +139,13 @@ const addNewItem = async () => {
   });
 
   // Maak een subverzameling aan voor de serienummers van dit item
-  const itemDocRef = doc(db, 'Items', itemName);
-  const itemItemsCollectionRef = collection(itemDocRef, itemName + ' items');
+  const itemDocRef = doc(db, 'Items', capitalizedItemName);
+  const itemItemsCollectionRef = collection(itemDocRef, capitalizedItemName + ' items');
 
   // Voegt het eerste serienummer toe
   const firstSerialRef = doc(itemItemsCollectionRef, `${serialSeries}-01`);
   await setDoc(firstSerialRef, {
-    Name: itemName,
+    Name: capitalizedItemName,
     Serial: `${serialSeries}-01`,
     HasIssues: false, 
     Issues: {}, 

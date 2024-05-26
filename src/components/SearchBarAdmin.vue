@@ -11,7 +11,7 @@
           <img src="/src/assets/552871.png" alt="" class="icon" >
         </router-link>
         <router-link :to="{ path: '/historyPage', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/book-icon-book-icon-simple-sign-book-icon-isolated-on-with-background-illustration-of-book-icon-free-free-vector.jpg" alt="" class="icon" >
+          <img src="/src/assets/book.png" alt="" class="icon" >
         </router-link>
 
         <!-- <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
@@ -56,15 +56,27 @@ const search = async () => {
   } else {
     console.log(querystring.value);
     store.updateResults([]);
-    await querySnapshot1().then(() => {
+    await Promise.all([querySnapshot1(), querySnapshotByName()]).then(() => {
       querySnapshot2();
     });
 
     store.updateResults(results.value);
     console.log(results.value);
-    //addSearchedItem(results.value); // Add the search result to Pinia store
   }
 };
+
+const querySnapshotByName = async () => {
+  const nameQuery = query(
+    collection(db, 'Items'),
+    where('Name', '==', querystring.value)
+  );
+  const snapshot = await getDocs(nameQuery);
+  snapshot.forEach((doc) => {
+    results.value.push({ id: doc.id, ...doc.data() });
+  });
+  console.log(results.value);
+};
+
 
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
@@ -124,6 +136,7 @@ const querySnapshot1 = async () => {
 };
 
 const querySnapshot2 = async () => {
+  if (!generalItem) return; // Ensure generalItem is defined
   const itemQuery2 = query(
     collection(
       db,
@@ -139,6 +152,8 @@ const querySnapshot2 = async () => {
   });
   console.log(results.value);
 };
+
+
 
 /* const addSearchedItem = (items) => {
   useSearchedItems.addSearchedItem(items);

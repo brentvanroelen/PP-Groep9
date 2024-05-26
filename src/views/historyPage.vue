@@ -3,7 +3,8 @@
     <h1>Item History</h1>
     <div class="history-container" v-if="hasIssues">
       <ul>
-        <li v-for="(issue, index) in issueHistory" :key="index" class="issue-item">
+        <li v-for="(issue, key) in issueHistory" :key="key" class="issue-item">
+          <h3>Issue {{ key }}</h3>
           <p><strong>Description:</strong> {{ issue.description }}</p>
           <p><strong>Type:</strong> {{ issue.type }}</p>
           <img v-if="issue.image" :src="issue.image" alt="Issue image" class="issue-image">
@@ -26,7 +27,7 @@ import { db, doc, getDoc } from "../Firebase/Index.js"; // Use the correct Fireb
 
 const item = ref(null);
 const route = useRoute();
-const issueHistory = ref([]);
+const issueHistory = ref({});
 const hasIssues = ref(false);
 
 onMounted(async () => {
@@ -52,7 +53,7 @@ const fetchItem = async (Serial) => {
       console.log('Document data:', itemData);
 
       if (itemData.Issues) {
-        issueHistory.value.push(itemData.Issues);
+        issueHistory.value = itemData.Issues;
         hasIssues.value = true;
       } else {
         hasIssues.value = false;

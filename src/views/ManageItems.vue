@@ -60,14 +60,14 @@ const fetchItems = async () => {
 
 </script>
 
-<style scoped >
+<style  >
 .icon {
-  background: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  display: inline-block !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  background: none ;
+  box-shadow: none ;
+  border: none ;
+  display: inline-block ;
+  margin: 0 ;
+  padding: 0 ;
   width: 50px; 
   height: 16px; 
 }

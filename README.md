@@ -56,6 +56,8 @@ Add items verbeteren: https://chatgpt.com/share/f53c8702-1051-4ee1-bcb4-9a7dff1c
 Serienummers automatiseren: https://chatgpt.com/share/98d72dad-b6b1-4c61-9770-135f60235280
 Verschillende pages indezelfde stijl laten opmaken: https://chatgpt.com/share/c25d990c-5214-4d81-93d1-069aa82cc625
 Automatiseren van serienummers: https://chatgpt.com/share/98ed5bd9-75a4-49fc-a220-e94709c32f7e
+Nieuwe objecten aanmaken binnen een bestaande map in firebase: https://chatgpt.com/share/e7d65fad-1b34-4d07-b89c-a5f75244423d
+Hulp bioj het verbeteren van reeds bestaande code: https://chatgpt.com/share/f6e60cc1-d6a5-4df4-86bc-0221f3cf5a04
 
 
 

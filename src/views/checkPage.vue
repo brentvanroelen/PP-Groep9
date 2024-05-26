@@ -30,7 +30,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { db, doc, updateDoc } from "../Firebase/Index.js";
+import { db, doc, getDoc, updateDoc } from "../Firebase/Index.js";
 
 const route = useRoute();
 const item = ref(null);
@@ -59,11 +59,10 @@ const submitFindings = async () => {
     description: description.value,
     image: image.value,
     type: selectedIssue.value,
-    //user: 'current_user_id'  // Add logic to fetch the current user id
+    // user: 'current_user_id'  // Voeg logica toe om de huidige gebruikers-id op te halen
   };
 
   await reportIssueToDatabase(issueData, item.value.Serial);
-  //await fetchIssueHistory(item.value.Serial);
 };
 
 const onFileChange = (event) => {
@@ -83,21 +82,51 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     }
 
     const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
-    //const itemType = item.value.Category?.toLowerCase();
     const itemBundleName = `${itemName} items`;
     const itemDocRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
+    
+    // Haal het huidige itemdocument op
+    const itemDocSnapshot = await getDoc(itemDocRef);
+    const itemData = itemDocSnapshot.data();
 
-    await updateDoc(itemDocRef, {
-      Issues: issueData,
+    console.log('Current item data:', itemData);
+
+    // Bepaal het volgende issue nummer
+    const currentIssues = itemData.Issues || {};
+    const issueKeys = Object.keys(currentIssues);
+    const nextIssueNumber = issueKeys.length + 1;
+    const issueKey = `issue${nextIssueNumber}`;
+
+    // Voeg het nieuwe issue toe aan de Issues map
+    const updatedIssues = {
+      ...currentIssues,
+      [issueKey]: issueData
+    };
+
+    // Update het document met de nieuwe Issues map en zet beschikbaarheid op false indien nodig
+    const updateData = {
+      Issues: updatedIssues,
       HasIssues: true
-    });
+    };
 
-    console.log('Issue reported successfully.');
+    if (issueData.type === 'Item malfunction' || issueData.type === 'Damaged') {
+      updateData.Available = false;
+    }
+
+    await updateDoc(itemDocRef, updateData);
+
+    console.log('Issue reported successfully and item availability updated.');
   } catch (error) {
     console.error('Error reporting issue:', error);
   }
 };
 </script>
+
+
+
+
+
+
 
 <style scoped>
 body {
