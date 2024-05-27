@@ -58,6 +58,18 @@ Verschillende pages indezelfde stijl laten opmaken: https://chatgpt.com/share/c2
 Automatiseren van serienummers: https://chatgpt.com/share/98ed5bd9-75a4-49fc-a220-e94709c32f7e
 Nieuwe objecten aanmaken binnen een bestaande map in firebase: https://chatgpt.com/share/e7d65fad-1b34-4d07-b89c-a5f75244423d
 Hulp bioj het verbeteren van reeds bestaande code: https://chatgpt.com/share/f6e60cc1-d6a5-4df4-86bc-0221f3cf5a04
+Bug uit de code halen: https://chatgpt.com/share/f38c0bbf-bf4a-4f1a-95e4-17d7a226e288
+Video met de basics van Firebase: https://www.youtube.com/watch?v=84mhLKUM04E&ab_channel=MakeAppswithDanny
+Het hele gevonden Object van reservations: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
+Een array omdraaien: https://www.freecodecamp.org/news/how-to-reverse-an-array-in-javascript-js-reverse-function/#:~:text=You%20can%20use%20the%20reverse,is%20used%20on%20is%20modified.&text=As%20you%20can%20see%20in,method%20is%20applied%20to%20it.
+Functie om de datum van vandaag aan te maken: https://blog.devops.dev/vue-js-get-current-date-and-time-e748c5191025
+Dynamic route params: https://router.vuejs.org/guide/essentials/dynamic-matching
+How to stringify: https://www.w3schools.com/js/js_json_stringify.asp
+Een image als URL opslaan: https://www.w3docs.com/learn-javascript/file-and-filereader.html
+Info over Objec.keys: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+Extra info over LocalDateString ( na tip van Jessy):https://stackoverflow.com/questions/27939773/tolocaledatestring-short-format ,
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+
 
 
 

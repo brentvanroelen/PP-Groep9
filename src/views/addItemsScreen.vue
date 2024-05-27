@@ -108,7 +108,7 @@ const Makenewdoc = async () => {
 const addNewItem = async () => {
   const itemName = docdata.value.Name.toLowerCase();
   const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
-  const currentDate = new Date().toLocaleDateString('nl-NL'); 
+  const currentDate = new Date().toLocaleDateString('en-GB'); 
 
   let serialSeries = capitalizedItemName.substring(0, 3).toUpperCase();
 
@@ -162,7 +162,7 @@ const addNewInstance = async () => {
 
   if (itemDoc.exists()) {
     const serialSeries = itemDoc.data().SerialSeries;
-    const currentDate = new Date().toLocaleDateString('nl-NL'); 
+    const currentDate = new Date().toLocaleDateString('en-GB'); 
 
     const lastInstanceRef = collection(db, `Items/${instanceName}/${instanceName} items`);
     const querySnapshot = await getDocs(lastInstanceRef);
