@@ -12,8 +12,8 @@
         {{ extension.reason }}
       </div>
       <div class="actions">
-        <button class="action-btn1">V</button>
-        <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">X</button>
+        <button class="action-btn1">Accept</button>
+        <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">Deny</button>
       </div>
     </div>
   </div>
@@ -92,57 +92,88 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
 .info-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
+  width: auto;
 }
 
+/* Individual extension info */
 .info {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  padding: 10px;
-  background-color: #c1c1c1;
-  font-size: large;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   width: 80%;
+  max-width: 600px;
 }
 
+.info:hover {
+  transform: translateY(-5px);
+}
+
+/* Details */
 .details, .tekst, .actions {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-right: 20px;
+  justify-content: space-around;
 }
 
+/* Action buttons */
 .actions {
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .action-btn1,
 .action-btn2 {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   color: white;
   cursor: pointer;
-  margin-right: 10px;
+  transition: all 0.3s ease;
 }
 
 .action-btn1 {
   background-color: #4CAF50;
+  margin-bottom: 5px;
 }
 
 .action-btn2 {
-  background-color: red;
+  background-color: #FF5733;
+}
+
+.action-btn1:hover,
+.action-btn2:hover {
+  transform: scale(1.1);
+}
+
+/* Text styles */
+.details p {
+  margin: 5px 0;
+  font-size: 14px;
+  text-align: start;
 }
 
 .tekst {
-  font-size: small;
+  font-size: 12px;
+  color: #5d5d5d;
 }
 </style>
-
-
