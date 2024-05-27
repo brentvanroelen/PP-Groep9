@@ -30,7 +30,7 @@
 <script setup>
 import { ref, onMounted,computed,watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { collection, query, getDocs,db, where } from '../Firebase/Index.js';
+import { collection, query, getDocs,db, where, setDoc,doc } from '../Firebase/Index.js';
 import { useKitItems,useKitToBeMade } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions.js';
 import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
@@ -64,11 +64,18 @@ if (route.query.items) {
   selectedItems.value = route.query.items;
 }
 const addKit = async () => {
+  let kitId = 1
   if(kitName.value == '' || kitDescription.value == '' || selectedItems.value.length == 0){
     alert('Please fill in all fields');
     return;
   }
   const kitsCollection = collection(db, 'Kits');
+  const allkits = await getDocs(collection(db, 'Kits'));
+  for(let kit of allkits.docs){
+    if(kit.data().Id >= kitId){
+      kitId = kit.data().Id + 1;
+    }
+  }
   if(kitToBeMade.kit.id != 10000){
     const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
     const querySnapshot = await getDocs(query);
@@ -80,7 +87,9 @@ const addKit = async () => {
       Name: kitName.value,
       Description: kitDescription.value,
       Items: [],
-      SubStrings: []
+      SubStrings: [],
+      KitImage: 'test',
+      Id: kitId
     };
     console.log(selectedItems.value)
     for(let item of selectedItems.value){
@@ -96,9 +105,16 @@ const addKit = async () => {
         let changeableItem = Object.assign({}, item);
         delete changeableItem.loadedImage;
         delete changeableItem.SubStrings;
+        changeableItem = {
+            ...changeableItem,
+            Quantity: 1
+        }
         kit[`Item${index + 1}`] = changeableItem;
     });
     console.log(kit)
+    setDoc(doc(collection(db, 'Kits')),{
+      ...kit
+    })
   }
   
 };

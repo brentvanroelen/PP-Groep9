@@ -28,7 +28,7 @@
       <p v-if="selectedStartDate && selectedEndDate">
         Selected Date Range: {{ displayDate[0] }}/{{ String(displayDate[1]).padStart(2, '0') }} to {{ displayDate[2] }}/{{ String(displayDate[3]).padStart(2, '0') }}
             </p>
-      <AvailabilityHandler :page="page"></AvailabilityHandler>
+      <AvailabilityHandler :isKit="isKit" :page="page"></AvailabilityHandler>
     </div>
 </template>
   
@@ -87,12 +87,13 @@
   const currentDate = new Date();
   const trigger = useTrigger();
 
-  const {page,item} = defineProps({
+  const {page,item,isKit} = defineProps({
     page: String,
     item: {
       type: String,
       default: "global"
-    }
+    },
+    isKit: Boolean
   });
 
 
