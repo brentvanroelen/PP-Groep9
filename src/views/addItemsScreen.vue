@@ -106,23 +106,23 @@ const Makenewdoc = async () => {
 
 
 const addNewItem = async () => {
-  const itemName = docdata.value.Name.toLowerCase(); // Converteer de naam naar kleine letters
-  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1); // Capitalize de eerste letter
+  const itemName = docdata.value.Name.toLowerCase();
+  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+  const currentDate = new Date().toLocaleDateString('nl-NL'); 
 
   let serialSeries = capitalizedItemName.substring(0, 3).toUpperCase();
-  // Controleer of de serialSeries al bestaat in de database
+
   const itemRef = collection(db, 'Items');
   const querySnapshot = await getDocs(itemRef);
   querySnapshot.forEach((doc) => {
     const existingItem = doc.data();
     if (existingItem.SerialSeries === serialSeries) {
-      // Voeg een willekeurige letter toe aan de serialSeries
-      const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Genereer een willekeurige letter (A-Z)
+  
+      const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); 
       serialSeries += randomLetter;
     }
   });
 
-  // Voegt item toe aan de 'Items'-verzameling
   await setDoc(doc(db, 'Items', capitalizedItemName), {
     Name: capitalizedItemName,
     Category: docdata.value.Category,
@@ -134,11 +134,11 @@ const addNewItem = async () => {
     SubStrings: generateSubstrings(itemName),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
-    SerialSeries: serialSeries, // Gebruik de gegenereerde serialSeries
-    Image: docdata.value.Image
+    SerialSeries: serialSeries,
+    Image: docdata.value.Image,
+    DateAdded: currentDate 
   });
 
-  // Maak een subverzameling aan voor de serienummers van dit item
   const itemDocRef = doc(db, 'Items', capitalizedItemName);
   const itemItemsCollectionRef = collection(itemDocRef, capitalizedItemName + ' items');
 
@@ -150,7 +150,8 @@ const addNewItem = async () => {
     HasIssues: false, 
     Issues: {}, 
     Reserved: false, 
-    Image: docdata.value.Image 
+    Image: docdata.value.Image,
+    DateAdded: currentDate 
   });
 };
 
@@ -160,10 +161,9 @@ const addNewInstance = async () => {
   const itemDoc = await getDoc(itemRef);
 
   if (itemDoc.exists()) {
-
     const serialSeries = itemDoc.data().SerialSeries;
+    const currentDate = new Date().toLocaleDateString('nl-NL'); 
 
-    
     const lastInstanceRef = collection(db, `Items/${instanceName}/${instanceName} items`);
     const querySnapshot = await getDocs(lastInstanceRef);
     const nextSerialNumber = querySnapshot.docs.length + 1;
@@ -177,7 +177,8 @@ const addNewInstance = async () => {
       HasIssues: instancedata.value.HasIssues,
       Issues: instancedata.value.Issues,
       Reserved: instancedata.value.Reserved,
-      Image: await getImage(instanceName)
+      Image: await getImage(instanceName),
+      DateAdded: currentDate 
     });
     await changeAmountAvailable(instanceName);
     return serial;

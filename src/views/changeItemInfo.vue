@@ -2,6 +2,15 @@
   <div>
     <h1>Change Item Information</h1>
     <div class="form">
+      <!-- <div class="form-group">
+        <input v-model="name" type="text" placeholder="Name" class="input-text">
+      </div> -->
+      <div class="form-group">
+        <input v-model="category" type="text" placeholder="Category" class="input-text">
+      </div>
+      <div class="form-group">
+        <input v-model="brand" type="text" placeholder="Brand" class="input-text">
+      </div>
       <div class="form-group">
         <textarea v-model="description" placeholder="Description" class="textarea"></textarea>
       </div>
@@ -10,6 +19,7 @@
       </div>
     </div>
     <router-link class="link" to="/ManageItems"><button class="btn">Back</button></router-link>
+    <div>Last Updated: {{ lastUpdated }}</div>
   </div>
 </template>
 
@@ -20,7 +30,11 @@ import { db, updateDoc, doc } from "../Firebase/Index.js";
 
 const route = useRoute();
 const item = ref(null);
+const name = ref('');
+const category = ref('');
+const brand = ref('');
 const description = ref('');
+const lastUpdated = ref('');
 
 const updateItem = async () => {
   if (!item.value) {
@@ -30,18 +44,6 @@ const updateItem = async () => {
 
   try {
     const itemData = item.value;
-
-    if (!itemData.hasOwnProperty('Description')) {
-      console.error('Description property is missing in the item data.');
-      return;
-    }
-
-    const descriptionToUpdate = itemData.Description;
-
-    if (descriptionToUpdate === description.value) {
-      console.log('Description is unchanged. No update needed.');
-      return;
-    }
 
     const { Name } = itemData;
 
@@ -54,10 +56,15 @@ const updateItem = async () => {
     const itemDocRef = doc(db, `Items/${itemNameWithCapitalizedFirstLetter}`);
     
     await updateDoc(itemDocRef, {
-      Description: description.value
+      //Name: name.value,
+      Category: category.value,
+      Brand: brand.value,
+      Description: description.value,
+      lastUpdated: new Date().toLocaleString() // Update lastUpdated with local time
     });
 
     console.log('Item updated successfully.');
+    lastUpdated.value = new Date().toLocaleString(); // Update lastUpdated locally
   } catch (error) {
     console.error('Error updating item:', error);
   }
@@ -67,7 +74,11 @@ const fetchItemData = () => {
   const itemData = route.query.item ? JSON.parse(route.query.item) : null;
   if (itemData) {
     item.value = itemData;
+    name.value = itemData.Name || '';
+    category.value = itemData.Category || '';
+    brand.value = itemData.Brand || '';
     description.value = itemData.Description || '';
+    lastUpdated.value = itemData.lastUpdated || '';
 
     console.log('Item received:', item.value);
     console.log('Name:', itemData.Name);
@@ -80,6 +91,8 @@ onMounted(() => {
   fetchItemData();
 });
 </script>
+
+
 
 <style scoped>
 body {

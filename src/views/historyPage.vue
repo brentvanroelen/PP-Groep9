@@ -1,45 +1,87 @@
 <template>
   <div>
     <h1>Item History</h1>
+        
     <div class="history-container" v-if="hasIssues">
+      <h2>Issues</h2>
       <ul>
-        <li v-for="(issue, key) in issueHistory" :key="key" class="issue-item">
+        <li v-for="key in sortedIssueKeys" :key="key" class="issue-item">
           <h3>Issue {{ key }}</h3>
-          <p><strong>Description:</strong> {{ issue.description }}</p>
-          <p><strong>Type:</strong> {{ issue.type }}</p>
-          <img v-if="issue.image" :src="issue.image" alt="Issue image" class="issue-image">
+          <p><strong>Description:</strong> {{ issueHistory[key].description }}</p>
+          <p><strong>Type:</strong> {{ issueHistory[key].type }}</p>
+          <img v-if="issueHistory[key].image" :src="issueHistory[key].image" alt="Issue image" class="issue-image">
         </li>
       </ul>
     </div>
-    <div v-else>
-      <p>No item history</p>
+    <div class="history-container" v-if="hasReservations">
+      <h2>Reservations</h2>
+      <ul>
+        <li v-for="(reservation, index) in reservationHistory" :key="index" class="reservation-item">
+          <h3>Reservation {{ index + 1 }}</h3>
+          <p><strong>User:</strong> {{ reservation.UserFirstName }} {{ reservation.UserLastName }}</p>
+          <p><strong>Start Date:</strong> {{ reservation.StartDate }}/{{ reservation.StartMonth }}</p>
+          <p><strong>End Date:</strong> {{ reservation.EndDate }}/{{ reservation.EndMonth }}</p>
+          <!-- If you want to display item image -->
+          <!-- <img v-if="reservation.ItemImage" :src="reservation.ItemImage" alt="Item image" class="reservation-image"> -->
+        </li>
+      </ul>
     </div>
+
+    <!-- Display DateAdded for instance item -->
+    <div class="history-container" v-if="addedItem">
+      <h2>Date Added (Instance)</h2>
+      <p><strong>Date Added:</strong> {{ addedItem }}</p>
+    </div>
+
+    <!-- Display DateAdded for general item -->
+    <div class="history-container" v-if="addedItem && !item.Serial">
+      <h2>Date Added (Item)</h2>
+      <p><strong>Date Added:</strong> {{ addedItem }}</p>
+    </div>
+
     <router-link class="link" to="/ManageItems">
       <button class="btn">Back</button>
     </router-link>
   </div>
 </template>
 
+
+
+
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { db, doc, getDoc } from "../Firebase/Index.js"; // Use the correct Firebase functions
+import { db, doc, getDoc, collection, query, where, getDocs } from "../Firebase/Index.js"; // Use the correct Firebase functions
 
 const item = ref(null);
 const route = useRoute();
 const issueHistory = ref({});
 const hasIssues = ref(false);
+const reservationHistory = ref([]);
+const hasReservations = ref(false);
+const addedItem = ref(null);
+
+
 
 onMounted(async () => {
   const itemData = route.query.item ? JSON.parse(route.query.item) : null;
   if (itemData) {
     item.value = itemData;
     console.log('Item received:', item.value);
-    await fetchItem(item.value.Serial);
+    if (item.value.Serial) {
+      await fetchItem(item.value.Serial);
+      await fetchInstanceItemData(item.value.Serial);
+    } else {
+      await fetchGeneralItem(item.value.Name);
+    }
+    await fetchReservations(item.value.Serial);
   } else {
     console.error('No item data received.');
   }
 });
+
+
+
 
 const fetchItem = async (Serial) => {
   try {
@@ -67,7 +109,64 @@ const fetchItem = async (Serial) => {
     hasIssues.value = false;
   }
 };
+
+  const fetchInstanceItemData = async (Serial) => {
+  try {
+    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
+    const itemBundleName = `${itemName} items`;
+    const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const itemData = docSnap.data();
+      console.log('Document data:', itemData);
+
+      if (itemData.DateAdded) {
+        addedItem.value = itemData.DateAdded;
+      }
+    } else {
+      console.log('No such document!');
+    }
+  } catch (error) {
+    console.error('Error fetching instance item data:', error);
+  }
+};
+
+
+
+const fetchReservations = async (Serial) => {
+  try {
+    const q = query(collection(db, 'Utility/Reservations/All Reservations'));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const reservations = querySnapshot.docs.map(doc => doc.data());
+
+         reservationHistory.value = reservations.filter(reservation => {
+        
+        return Object.values(reservation).some(item => item.Serial === Serial);
+      });
+
+      
+      reservationHistory.value.reverse();
+
+      
+      hasReservations.value = reservationHistory.value.length > 0;
+    } else {
+      console.log('No reservations found for this item.');
+      hasReservations.value = false;
+    }
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+    hasReservations.value = false;
+  }
+};
+
+const sortedIssueKeys = computed(() => {
+  return Object.keys(issueHistory.value).sort((a, b) => a - b);
+});
 </script>
+
 
 <style scoped>
 body {
