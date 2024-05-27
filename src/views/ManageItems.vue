@@ -20,12 +20,14 @@
     </div>
 
     <div class="buttons">
+        <router-link class="link" to="/modifyItemScreen">
         <button class="buttonsClass">
-            <router-link class="link" to="/modifyItemScreen">Add new kit</router-link>
-        </button>
+           <p>Add new kit</p>
+        </button></router-link>
+        <router-link class="link" to="/addItemsScreen">
         <button class="buttonsClass">
-            <router-link class="link" to="/addItemsScreen">Add item</router-link>
-        </button>
+            <p>Add item</p>
+        </button></router-link>
     </div>
 </template>
 
