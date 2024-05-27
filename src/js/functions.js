@@ -47,3 +47,12 @@ export const imageGetter = async (image) =>{
         console.log(error);
     }
 }
+export const generateSubstrings = (str) => {
+    const substrings = [];
+    for (let i = 0; i < str.length; i++) {
+        for (let j = i + 1; j <= str.length; j++) {
+            substrings.push(str.substring(i, j));
+        }
+    }
+    return substrings;
+};

@@ -19,7 +19,7 @@
                 <button @click="removeItem(index)">Remove</button></div>
                 </div>
             </div>
-            <button class="buttonsClass largerButton" @click="log">
+            <button class="buttonsClass largerButton" @click="addKit">
                 <p v-if="kitToBeMade.kit.id == 10000">Add new Kit</p>
                 <p v-else>Add to existing Kit</p>
             </button>
@@ -34,6 +34,7 @@ import { useKitItems,useKitToBeMade } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions.js';
 import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
 import NewKitHandler from '@/components/NewKitHandler.vue';
+import { generateSubstrings } from '@/js/functions.js';
 
 const kitItems = useKitItems();
 const kitToBeMade = useKitToBeMade();
@@ -69,25 +70,24 @@ const addKit = async () => {
       Name: kitName.value,
       Description: kitDescription.value,
       Items: selectedItems.value,
+      SubStrings: []
     };
-    console.log()
+    console.log(selectedItems.value)
+    for(let item of selectedItems.value){
+        generateSubstrings(item.Name).forEach((substring) => {
+            kit.SubStrings.push(substring);
+        })
+    }
+    generateSubstrings(kitName.value).forEach((substring) => {
+        kit.SubStrings.push(substring);
+    })
+    selectedItems.value.forEach((item, index) => {
+        console.log(item)
+        item.SubStrings
+        kit[`item${index + 1}`] = item;
+    });
+    console.log(kit)
   }
-  const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
-  const querySnapshot = await getDocs(query);
-  if(querySnapshot.size > 0){
-    
-  }
-  const kitDescription = document.getElementById('descriptionInput').value;
-  const number = document.getElementById('numberInput').value;
-  const items = selectedItems.value;
-  const kit = {
-    Name: kitName,
-    Description: kitDescription,
-    Number: number,
-    Items: items,
-  };
-  await kitsCollection.add(kit);
-  router.push('/kits');
 };
 onMounted(() => {
   for (let item of selectedItems.value){
