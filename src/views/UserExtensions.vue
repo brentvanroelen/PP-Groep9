@@ -21,7 +21,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getDocs, getDoc, doc, collection, deleteDoc } from 'firebase/firestore';
+import { getDocs, getDoc, doc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 
 const allExtensions = ref([]);
@@ -38,16 +38,18 @@ const fetchUserExtensionsData = async () => {
       for (const extensionDoc of userExtensionsQuerySnapshot.docs) {
         const extensionData = extensionDoc.data();
 
-        allExtensionsData.push({
-          extensionId: extensionDoc.id,
-          userId: userId,
-          studentName: extensionData.studentName,
-          extensionDuration: extensionData.extensionDuration,
-          status: extensionData.status,
-          reason: extensionData.reason,
-          reservationId: extensionData.reservationId,
-          productName: await getProductByReservatieId(userId, extensionData.reservationId)
-        });
+        if (extensionData.ForProject) {
+          allExtensionsData.push({
+            extensionId: extensionDoc.id,
+            userId: userId,
+            studentName: extensionData.studentName,
+            extensionDuration: extensionData.extensionDuration,
+            status: extensionData.status,
+            reason: extensionData.reason,
+            reservationId: extensionData.reservationId,
+            productName: await getProductByReservatieId(userId, extensionData.reservationId)
+          });
+        }
       }
     }
 
@@ -76,6 +78,54 @@ const getProductByReservatieId = async (userId, reservationId) => {
   }
 }
 
+const approveRequest = async (userId, extensionId, index, extensionDuration, reservationId) => {
+  try {
+    const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
+    const reservationDoc = await getDoc(reservationDocRef);
+    const reservationData = reservationDoc.data();
+
+    let { EndDate, EndMonth, StartMonth, StartDate } = reservationData;
+    let year = new Date().getFullYear();
+    
+    EndDate += extensionDuration;
+
+    while (EndDate > 28) {
+      let daysInMonth;
+      switch (EndMonth) {
+        case 2:
+          daysInMonth = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0) ? 29 : 28;
+          break;
+        case 4: case 6: case 9: case 11:
+          daysInMonth = 30;
+          break;
+        default:
+          daysInMonth = 31;
+      }
+
+      if (EndDate > daysInMonth) {
+        EndDate -= daysInMonth;
+        EndMonth++;
+        if (EndMonth > 12) {
+          EndMonth = 1;
+          year++;
+        }
+      } else {
+        break;
+      }
+    }
+
+    await updateDoc(reservationDocRef, {
+      EndDate,
+      EndMonth
+    });
+
+    await deleteDoc(doc(db, `Users/${userId}/ExtensionRequests/${extensionId}`));
+    allExtensions.value.splice(index, 1);
+  } catch (error) {
+    console.error('Error approving request:', error);
+  }
+}
+
 const denyRequest = async (userId, extensionId, index) => {
   try {
     await deleteDoc(doc(db, `Users/${userId}/ExtensionRequests/${extensionId}`));
@@ -88,8 +138,8 @@ const denyRequest = async (userId, extensionId, index) => {
 onMounted(() => {
   fetchUserExtensionsData();
 });
-
 </script>
+
 
 <style scoped>
 .info-container {
