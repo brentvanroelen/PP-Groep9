@@ -1,23 +1,23 @@
-  <template>
-    <div class="info-container">
-      <div class="info" v-for="(extension, index) in allExtensions" :key="index">
-        <div class="details">
-          <p>Student: {{ extension.studentName }}</p>
-          <p>Extension duration: {{ extension.extensionDuration }} days</p>
-        </div>
-        <div class="details">
-          Product: {{ extension.productName }}
-        </div>
-        <div class="tekst">
-          {{ extension.reason }}
-        </div>
-        <div class="actions">
-          <button class="action-btn1">V</button>
-          <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">X</button>
-        </div>
+<template>
+  <div class="info-container">
+    <div class="info" v-for="(extension, index) in allExtensions" :key="index">
+      <div class="details">
+        <p>Student: {{ extension.studentName }}</p>
+        <p>Extension duration: {{ extension.extensionDuration }} days</p>
+      </div>
+      <div class="details">
+        Product: {{ extension.productName }}
+      </div>
+      <div class="tekst">
+        {{ extension.reason }}
+      </div>
+      <div class="actions">
+        <button class="action-btn1">Accept</button>
+        <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">Deny</button>
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
   <script setup>
   import { onMounted, ref } from 'vue';
@@ -138,63 +138,94 @@
   }
 
   onMounted(() => {
-    fetchUserExtensionsData();
-  });
+  fetchUserExtensionsData();
+});
   </script>
 
 
-  <style scoped>
-  .info-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+<style scoped>
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
 
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #c1c1c1;
-    font-size: large;
-    width: 80%;
-  }
+/* Container */
+.info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: auto;
+}
 
-  .details, .tekst, .actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-right: 20px;
-  }
+/* Individual extension info */
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  width: 80%;
+  max-width: 600px;
+}
 
-  .actions {
-    display: flex;
-    align-items: center;
-  }
+.info:hover {
+  transform: translateY(-5px);
+}
 
-  .action-btn1,
-  .action-btn2 {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-right: 10px;
-  }
+/* Details */
+.details, .tekst, .actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
 
-  .action-btn1 {
-    background-color: #4CAF50;
-  }
+/* Action buttons */
+.actions {
+  align-items: flex-end;
+}
 
-  .action-btn2 {
-    background-color: red;
-  }
+.action-btn1,
+.action-btn2 {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .tekst {
-    font-size: small;
-  }
-  </style>
+.action-btn1 {
+  background-color: #4CAF50;
+  margin-bottom: 5px;
+}
 
+.action-btn2 {
+  background-color: #FF5733;
+}
 
+.action-btn1:hover,
+.action-btn2:hover {
+  transform: scale(1.1);
+}
+
+/* Text styles */
+.details p {
+  margin: 5px 0;
+  font-size: 14px;
+  text-align: start;
+}
+
+.tekst {
+  font-size: 12px;
+  color: #5d5d5d;
+}
+</style>

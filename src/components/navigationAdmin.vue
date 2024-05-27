@@ -4,12 +4,7 @@
       <li id='img'><router-link class="link" to="/HomeAdmin"><img src="../assets/EhB-logo-transparant.png" alt="" ></router-link></li>
     <div id="links">
       <li><router-link class="link" to="/HomeAdmin">Home</router-link></li>
-        <li><select name="dropdownNav" id="dropdownNav" @change="navigateToRoute">
-          <option disabled selected>Select an option</option>
-          <option value="/ManageItems">Manage items</option>
-          <option value="/ItemPreparationScreen">Item preparation</option>
-         
-        </select></li>
+        <li><router-link class = "link" to="ManageItems">Manage items</router-link></li>
       
         
         <li><select @change="navigateToRoute">
@@ -38,7 +33,7 @@
 </script>
 
 
-<style>
+<style scoped>
 .navAdmin{
   background-color: #c1c1c1;
 }
@@ -48,23 +43,23 @@
   margin-left: 0.5em;
 }
 .navAdminLinks{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width:100%;
-  height:75px;
-  list-style: none;
-  justify-content: space-between;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width:100%  !important;
+  height:75px !important;
+  list-style: none !important;
+  justify-content: space-between !important;
 }
 .link{
-  text-decoration: none;
-  padding: 0 1em 0 1em;
+  text-decoration: none !important;
+  padding: 0 1em 0 1em !important;
 }
 #links{
-  display: flex;
-  flex-direction: row;
-  justify-content: end;
-  align-items: center;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: end !important;
+  align-items: center !important;
   width: 80%;
 }
 .img{
