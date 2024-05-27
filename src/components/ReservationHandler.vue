@@ -46,6 +46,9 @@ const handleReservation = async() => {
         dates.updateDate(store.results[0].Name, dates.general)
         itemSelector.setCollectionName(`${store.results[0].Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
+            if(quantity.getQuantity(itemSelector.itemName) == 0){
+                quantity.setQuantity(itemSelector.itemName, 1)
+            }
             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                 const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
                 .then(changeAmountAvailable(chosenitem.value.Name));

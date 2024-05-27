@@ -25,34 +25,34 @@ const logOut = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .Main_nav{
   background-color: #D9D9D9;
 }
 .Main_nav_links li img{
-  max-width: 80px;
-  height: auto;
-  margin-left: 0.5em;
+  max-width: 80px !important;
+  height: auto !important;
+  margin-left: 0.5em  !important;
 }
 .Main_nav_links{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width:100%;
-  height:75px;
-  list-style: none;
-  justify-content: space-between;
+  display: flex   !important;
+  flex-direction: row  !important;
+  align-items: center !important;
+  width:100% !important;
+  height:75px !important;
+  list-style: none !important;
+  justify-content: space-between !important;
 }
 .link{
-  text-decoration: none;
-  padding: 0 1em 0 1em;
+  text-decoration: none !important;
+  padding: 0 1em 0 1em !important;
 }
 #links{
-  display: flex;
-  flex-direction: row;
-  justify-content: end;
-  align-items: center;
-  width: 80%;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: end   !important;
+  align-items: center !important;
+  width: 80% !important;
 }
 .img{
   width: 20px;

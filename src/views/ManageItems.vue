@@ -4,14 +4,10 @@
 
     <div class="items-grid">
         <div v-for="(item, index) in items" :key="index" class="item">
-            <div class="icons">
-                <router-link class="link" to="/checkPage">
-                    <img class="icon" src="/src/assets/552871.png" alt="">
-                </router-link>                
-                <ul><img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt=""></ul>
-                <ul @click="deleteItem(item)">
-                    <img src="/src/assets/trash.png" alt="">
-                </ul>
+            <div class="icons">  
+                <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
+                    <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+                 </router-link>                
             </div>
             <h2>{{ item.Name }}</h2> 
             <img :src="item.Image" alt="Item Image">
@@ -20,12 +16,14 @@
     </div>
 
     <div class="buttons">
+        <router-link class="link" to="/modifyItemScreen">
         <button class="buttonsClass">
-            <router-link class="link" to="/modifyItemScreen">Add new kit</router-link>
-        </button>
+           <p>Add new kit</p>
+        </button></router-link>
+        <router-link class="link" to="/addItemsScreen">
         <button class="buttonsClass">
-            <router-link class="link" to="/addItemsScreen">Add item</router-link>
-        </button>
+            <p>Add item</p>
+        </button></router-link>
     </div>
 </template>
 
@@ -66,24 +64,19 @@ const fetchItems = async () => {
 };
 
 
-const deleteItem = async (item) => {
-  if (!item || !item.id) {
-    console.error('Item or item id is undefined:', item);
-    return;
-}}
 
 
 
 </script>
 
-<style scoped>
+<style  >
 .icon {
-  background: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  display: inline-block !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  background: none ;
+  box-shadow: none ;
+  border: none ;
+  display: inline-block ;
+  margin: 0 ;
+  padding: 0 ;
   width: 50px; 
   height: 16px; 
 }

@@ -24,20 +24,20 @@
           <label for="image">Image: </label>
           <input type="text" id="image" name="image" v-model="docdata.Image">
         </div>
-        <div class="form-group">
+       <!--  <div class="form-group">
           <label for="serial">Serial Series: </label>
-          <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries">
-        </div>
+          <input type="text" id="serial" name="serial" v-model="docdata.SerialSeries" placeholder="Two or three letters exapmle: MIC, CA, VR,...">
+        </div> -->
       </div>
       <div v-else>
         <div class="form-group">
           <label for="name">Name: </label>
           <input type="text" id="name" name="name" v-model="instancedata.Name" required>
         </div>
-        <div class="form-group">
+       <!--  <div class="form-group">
           <label for="serial">Serial: </label>
           <input type="text" id="serial" name="serial" v-model="instancedata.Serial" required>
-        </div>
+        </div> Dit wordt automatisch gedaan -->
       </div>
       <div class="button-group">
         <button type="button" class="btn" @click="setInstance(false)">Add New Item</button>
@@ -52,8 +52,14 @@
 </template>
 
 <script setup>
+
+
 import { ref } from 'vue';
-import { db, setDoc, updateDoc, doc, increment, getDoc } from '../Firebase/Index.js';
+import { getDocs } from 'firebase/firestore';
+import { db, doc, updateDoc, setDoc, collection, increment, getDoc,  } from "../Firebase/Index.js";
+
+
+
 
 let instance = ref(false);
 
@@ -69,7 +75,7 @@ const docdata = ref({
   SubStrings: [],
   Available: true,
   AvailableAmount: 0,
-  SerialSeries: ''
+  //SerialSeries: ''
 });
 
 const instancedata = ref({
@@ -97,51 +103,91 @@ const Makenewdoc = async () => {
   }
 };
 
+
+
 const addNewItem = async () => {
+  const itemName = docdata.value.Name.toLowerCase();
+  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+  const currentDate = new Date().toLocaleDateString('en-GB'); 
 
+  let serialSeries = capitalizedItemName.substring(0, 3).toUpperCase();
 
+  const itemRef = collection(db, 'Items');
+  const querySnapshot = await getDocs(itemRef);
+  querySnapshot.forEach((doc) => {
+    const existingItem = doc.data();
+    if (existingItem.SerialSeries === serialSeries) {
+  
+      const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); 
+      serialSeries += randomLetter;
+    }
+  });
 
-  const itemName = docdata.value.Name.charAt(0).toUpperCase() + docdata.value.Name.slice(1);
-
-
-
-  await setDoc(doc(db, 'Items', itemName), {
-    Name: itemName,
+  await setDoc(doc(db, 'Items', capitalizedItemName), {
+    Name: capitalizedItemName,
     Category: docdata.value.Category,
     Brand: docdata.value.Brand,
     Description: docdata.value.Description,
     DamagedItems: docdata.value.DamagedItems,
     IsInKit: docdata.value.IsInKit,
     Quantity: docdata.value.Quantity,
-    SubStrings: generateSubstrings(docdata.value.Name.toLowerCase()),
+    SubStrings: generateSubstrings(itemName),
     Available: docdata.value.Available,
     AvailableAmount: docdata.value.AvailableAmount,
-    SerialSeries: docdata.value.SerialSeries,
-    Image: docdata.value.Image
+    SerialSeries: serialSeries,
+    Image: docdata.value.Image,
+    DateAdded: currentDate 
+  });
+
+  const itemDocRef = doc(db, 'Items', capitalizedItemName);
+  const itemItemsCollectionRef = collection(itemDocRef, capitalizedItemName + ' items');
+
+  // Voegt het eerste serienummer toe
+  const firstSerialRef = doc(itemItemsCollectionRef, `${serialSeries}-01`);
+  await setDoc(firstSerialRef, {
+    Name: capitalizedItemName,
+    Serial: `${serialSeries}-01`,
+    HasIssues: false, 
+    Issues: {}, 
+    Reserved: false, 
+    Image: docdata.value.Image,
+    DateAdded: currentDate 
   });
 };
 
 const addNewInstance = async () => {
   const instanceName = instancedata.value.Name.charAt(0).toUpperCase() + instancedata.value.Name.slice(1);
-  const serial = instancedata.value.Serial.toUpperCase();
   const itemRef = doc(db, 'Items', instanceName);
   const itemDoc = await getDoc(itemRef);
 
   if (itemDoc.exists()) {
-    await setDoc(doc(db, `Items/${instanceName}/${instanceName} items`, serial), {
+    const serialSeries = itemDoc.data().SerialSeries;
+    const currentDate = new Date().toLocaleDateString('en-GB'); 
+
+    const lastInstanceRef = collection(db, `Items/${instanceName}/${instanceName} items`);
+    const querySnapshot = await getDocs(lastInstanceRef);
+    const nextSerialNumber = querySnapshot.docs.length + 1;
+    const formattedSerialNumber = nextSerialNumber.toString().padStart(2,'0');
+    const serial = serialSeries + "-" + formattedSerialNumber;
+
+    const itemSerialsRef = doc(db, `Items/${instanceName}/${instanceName} items/${serial}`);
+    await setDoc(itemSerialsRef, {
       Name: instanceName,
       Serial: serial,
       HasIssues: instancedata.value.HasIssues,
       Issues: instancedata.value.Issues,
-      SubStrings: generateSubstrings,
       Reserved: instancedata.value.Reserved,
-      Image: await getImage(instanceName)
+      Image: await getImage(instanceName),
+      DateAdded: currentDate 
     });
     await changeAmountAvailable(instanceName);
+    return serial;
   } else {
     console.log(`Item with name ${instanceName} does not exist.`);
+    return;
   }
 };
+
 
 const generateSubstrings = (str) => {
   const substrings = [];
@@ -153,12 +199,24 @@ const generateSubstrings = (str) => {
   return substrings;
 };
 
-const changeAmountAvailable = async (queryname) => {
-  const docRef = doc(db, `Items/${queryname}`);
-  await updateDoc(docRef, {
-    AvailableAmount: increment(1)
-  });
+const changeAmountAvailable = async (instanceName) => {
+  const itemRef = doc(db, 'Items', instanceName);
+  const itemDoc = await getDoc(itemRef);
+
+  if (itemDoc.exists()) {
+    const currentAvailableAmount = itemDoc.data().AvailableAmount || 0;
+    const updatedAmount = currentAvailableAmount + 1;
+    
+    await updateDoc(itemRef, {
+      AvailableAmount: updatedAmount
+    });
+
+    console.log(`Available amount for item ${instanceName} updated to ${updatedAmount}.`);
+  } else {
+    console.log(`Item with name ${instanceName} does not exist.`);
+  }
 };
+
 
 const getImage = async (queryname) => {
   const docRef = doc(db, `Items/${queryname}`);

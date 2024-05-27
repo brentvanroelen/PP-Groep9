@@ -269,6 +269,28 @@ export const useCategories = defineStore({
     }
   }
 });
+export const useReportedItems = defineStore({
+  id: 'reportedItems',
+  state: () => ({
+    itemImage: '',
+    itemName: '',
+    itemSerial: '',
+  
+
+  }),
+  actions: {
+    addName(itemName){
+      this.itemName = itemName
+    },
+    addImage(itemImage){
+      this.itemImage = itemImage
+    },
+    addSerial(itemSerial){
+      this.itemSerial= itemSerial
+    },
+    
+  }
+});
 export const useKitItems = defineStore({
   id: 'kitItems',
   state: () => ({
@@ -344,6 +366,17 @@ export const useItemsToGet = defineStore({
   actions: {
     addItem(item){
       this.items.push(item)
+    }
+  }
+});
+export const useKitToBeMade = defineStore({
+  id: 'KitToBeMade',
+  state: () => ({
+    kit: ''
+  }),
+  actions: {
+    addKit(kit){
+      this.kit = kit
     }
   }
 });

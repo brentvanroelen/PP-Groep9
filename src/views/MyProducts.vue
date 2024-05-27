@@ -74,7 +74,7 @@
   
   <script setup>
   import { computed, onMounted, ref } from "vue";
-  import { db, collection, getDocs } from "../Firebase/Index.js";
+  import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
   import { reservationReturnedOrCanceled } from "../js/functions.js";
   import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
   
@@ -87,11 +87,33 @@
   let cancellableReservations = ref([]);
   const year = ref(new Date().getFullYear());
   const user = useUserIdentification();
+  let startDate = ref(new Date());
   const visibleReservations = ref({});
   
   
-  const displayReservations = computed(() => [cancellableReservationsCalc()[0], cancellableReservationsCalc()[1]]);
-  
+  const displayReservations = computed(() => {
+    let test = cancellableReservationsCalc();
+    let array = [test[0], test[1]];
+    return array;
+});
+const arrayifier = computed(() => {
+    let array = [];
+    for (let reservation of reservations.value){
+        console.log(reservations.value)
+        for (let i = 1; i <= 10; i++){
+            if (reservation[`Item${i}`] != undefined){
+                array.push(reservation[`Item${i}`]);
+            }else{
+                break;
+            }
+        }
+    }
+    return array;
+});
+
+
+
+
   const getItems = (reservation) => {
     const items = [];
     if (reservation) {
@@ -120,27 +142,48 @@
   };
   
   const getReservations = async () => {
-    if (user.user.id) {
-      const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);
-      const querySnapshot = await getDocs(collectionRef);
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => reservations.value.push(doc.data()));
-      }
+    if(user.user.id){
+        const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);
+        const querySnapshot = await getDocs(collectionRef);
+        if (querySnapshot.empty) {
+            console.log('No Reservations found!');
+            return;
+        }else{
+            querySnapshot.forEach((doc) => {
+            reservations.value.push(doc.data());
+            });
+        }
+        
     }
-  };
+}
   
   const cancellableReservationsCalc = () => {
-    for (const reservation of reservations.value) {
-      const startDate = new Date(reservation.StartYear, reservation.StartMonth - 1, reservation.StartDate);
-      const adjustedStartDate = new Date(startDate);
-      adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
-      if (!reservation.CurrentlyWithUser && new Date() < adjustedStartDate) {
-        reservations.value.splice(reservations.value.indexOf(reservation), 1);
-        cancellableReservations.value.push(reservation);
-      }
+    if (reservations.value == undefined){
+        console.log("loading...")
+    } else {
+        let cancellableReservations = [];
+        let remainingReservations = [];
+
+        for (let reservation of reservations.value){
+            console.log(reservations.value)
+            startDate.value.setDate(reservation.StartDate);
+            startDate.value.setMonth(reservation.StartMonth);
+            let adjustedStartDate = new Date(startDate.value);
+            adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
+            adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
+            adjustedStartDate.setHours(0,0,0,0);
+            console.log(adjustedStartDate)
+            
+            if (!reservation.CurrentlyWithUser && new Date().setHours(0,0,0,0) <= adjustedStartDate){
+                cancellableReservations.push(reservation);
+            } else {
+                remainingReservations.push(reservation);
+            }
+        }
+
+        return [cancellableReservations, remainingReservations];
     }
-    return [cancellableReservations.value, reservations.value];
-  };
+};
   
   const toggleReservationDetails = (index) => {
     visibleReservations.value[index] = !visibleReservations.value[index];

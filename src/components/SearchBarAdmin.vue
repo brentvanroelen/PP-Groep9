@@ -1,16 +1,23 @@
 <template>
   <div class="search-bar">
-    <input type="text" v-model="querystring" @keyup.enter="search" placeholder="Search">
-    <button @click="search">Search</button>
+    <input type="text" :class="props.page" v-model="querystring" @keyup.enter="search" :placeholder="placeholder">
+    <button @click="search" v-if="props.page != 'AddKit'">Search</button>
   </div>
 
   <div v-if="results.length > 0" class="items-grid">
     <div v-for="(item, index) in results" :key="index" class="item">
       <div class="icons">
-        <router-link :to="{ path: '/checkPage', query: { serialNumber: item.Serial, item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/552871.png" alt="" class="icon">
+        <router-link :to="{ path: '/checkPage', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/552871.png" alt="" class="icon" >
         </router-link>
-        <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+        <router-link :to="{ path: '/historyPage', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/book.png" alt="" class="icon" >
+        </router-link>
+
+        <!-- <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
+          <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
+        </router-link> -->
+        
         <img src="/src/assets/trash.png" alt="" class="icon" @click="deleteItem(index)">
       </div>
       <h2>{{ item.Name }}</h2>
@@ -23,7 +30,9 @@
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
         <img :src="result.Image" alt="item">
-        <p>{{ result.Name }}</p>
+        <p v-if="result.id != 10000 ">{{ result.Name }}</p>
+        <p v-else> Make a new kit with name: {{ result.Name }}</p>
+        <p></p>
       </div>
     </div>
   </div>
@@ -32,18 +41,19 @@
 </template>
 
 <script setup>
-import { ref,watch } from 'vue';
-import { useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
+import { onMounted, ref,watch } from 'vue';
+import { useKitToBeMade,useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
 import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 
 const useSearchedItems = useSearchedItemsFunction();
-
+const kitToBeMade = useKitToBeMade();
 const querystring = ref('');
 const store = useStore();
 const results = ref([]);
-const reservationsAdmin = useEarlyReturnsReservations()
+const reservationsAdmin = useEarlyReturnsReservations();
 let generalItem;
 const showResults = ref(false);
+const placeholder = ref('Search')
 
 
 const props = defineProps({
@@ -62,7 +72,7 @@ watch(querystring, async(newVal, oldVal) => {
     if (newVal.length >= 3) {
       console.log('Searching for:', newVal);
       await searchKit();
-      store.results.push({id: 10000, Name: querystring, Image: '/src/assets/plus.jpg'});
+      store.results.push({id: 10000, Name: querystring.value, Image: '/src/assets/plus.jpg'});
       showResults.value = store.results.length > 0;
     }else{
       showResults.value = false;
@@ -83,26 +93,31 @@ const search = async () => {
         querySnapshot2();
       });
 
-
     store.updateResults(results.value);
     console.log(results.value);
-  };
-}
+  }
+};
 
-
-
+const querySnapshotByName = async () => {
+  const nameQuery = query(
+    collection(db, 'Items'),
+    where('Name', '==', querystring.value)
+  );
+  const snapshot = await getDocs(nameQuery);
+  snapshot.forEach((doc) => {
+    results.value.push({ id: doc.id, ...doc.data() });
+  });
+  console.log(results.value);
+};
 
 
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
   console.log('Item to delete:', itemToDelete);
   try {
-    await deleteDoc(doc(db,`Items/${
-        generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
-    ),
-    where('Serial', '==', querystring.value)
-  ); 
+    const collectionName = generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1);
+    const docRef = doc(db, `Items/${collectionName}/${collectionName} items`, itemToDelete.id);
+    await deleteDoc(docRef);
     results.value.splice(index, 1);
     console.log('Item deleted successfully');
   } catch (error) {
@@ -111,20 +126,6 @@ const deleteItem = async (index) => {
 };
 
 
-/* const searchAdmin = async () => {
-    store.updateResults(results.value);
-    console.log(results.value);
-    addSearchedItem();
-
-
-    const addSearchedItem = () => {
-      useSearchedItems.addSearchedItem(results.value);
-      const searchedItem = results.value;
-      console.log(searchedItem);
-    }
-	}
-
-}  */
 const searchAdmin = async () => {
   reservationsAdmin.Reservations = [];
   const cref = collection(db, 'Utility/Reservations/All Reservations');
@@ -146,13 +147,13 @@ const searchAdmin = async () => {
       StartDate: doc.data().StartDate,
       showItems: false,
       Items: []
-    }
+    };
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
-      reservation.Items.push(doc.data()[`Item${i}`])
+      reservation.Items.push(doc.data()[`Item${i}`]);
     }
 
     reservationsAdmin.addReservation(reservation);
-  })
+  });
   console.log(reservationsAdmin.Reservations);
 };
 const searchKit = async () => {
@@ -173,10 +174,11 @@ const searchKit = async () => {
   });
   console.log(store.results);
 };
+
 const setPage = (result) => {
-  if(result.id === 10000){
-    
-  };
+  kitToBeMade.addKit(result);
+  console.log(kitToBeMade.kit);
+  querystring.value = '';
 }
 
 
@@ -194,12 +196,13 @@ const querySnapshot1 = async () => {
 };
 
 const querySnapshot2 = async () => {
+  if (!generalItem) return; // Ensure generalItem is defined
   const itemQuery2 = query(
     collection(
       db,
       `Items/${
         generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items/`
+      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items`
     ),
     where('Serial', '==', querystring.value)
   );
@@ -209,14 +212,20 @@ const querySnapshot2 = async () => {
   });
   console.log(results.value);
 };
+
+
+onMounted(() => {
+  placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
+});
 </script>
 
 <style scoped>
+.AddKit{
+  width: 60%;
+}
 .icon-img {
   width: 20px;
   height: 20px;
-}
-.link, .icon {
   background: none !important;
   box-shadow: none !important;
   border: none !important;
@@ -224,6 +233,18 @@ const querySnapshot2 = async () => {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+#icon1 {
+  width: 20px;
+  height: 20px;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .search-bar {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -299,5 +320,13 @@ const querySnapshot2 = async () => {
 .icons .link img {
   width: 20px;
   height: 20px;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
+
+
 </style>

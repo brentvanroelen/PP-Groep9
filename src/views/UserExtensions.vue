@@ -19,77 +19,129 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue';
-import { getDocs, getDoc, doc, collection, deleteDoc } from 'firebase/firestore';
-import { db } from '@/Firebase/Index.js';
+  <script setup>
+  import { onMounted, ref } from 'vue';
+  import { getDocs, getDoc, doc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
+  import { db } from '@/Firebase/Index.js';
 
-const allExtensions = ref([]);
+  const allExtensions = ref([]);
 
-const fetchUserExtensionsData = async () => {
-  try {
-    const usersQuerySnapshot = await getDocs(collection(db, 'Users'));
-    const allExtensionsData = [];
+  const fetchUserExtensionsData = async () => {
+    try {
+      const usersQuerySnapshot = await getDocs(collection(db, 'Users'));
+      const allExtensionsData = [];
 
-    for (const userDoc of usersQuerySnapshot.docs) {
-      const userId = userDoc.id;
-      const userExtensionsQuerySnapshot = await getDocs(collection(db, `Users/${userId}/ExtensionRequests`));
+      for (const userDoc of usersQuerySnapshot.docs) {
+        const userId = userDoc.id;
+        const userExtensionsQuerySnapshot = await getDocs(collection(db, `Users/${userId}/ExtensionRequests`));
 
-      for (const extensionDoc of userExtensionsQuerySnapshot.docs) {
-        const extensionData = extensionDoc.data();
+        for (const extensionDoc of userExtensionsQuerySnapshot.docs) {
+          const extensionData = extensionDoc.data();
 
-        allExtensionsData.push({
-          extensionId: extensionDoc.id,
-          userId: userId,
-          studentName: extensionData.studentName,
-          extensionDuration: extensionData.extensionDuration,
-          status: extensionData.status,
-          reason: extensionData.reason,
-          reservationId: extensionData.reservationId,
-          productName: await getProductByReservatieId(userId, extensionData.reservationId)
-        });
+          if (extensionData.ForProject) {
+            allExtensionsData.push({
+              extensionId: extensionDoc.id,
+              userId: userId,
+              studentName: extensionData.studentName,
+              extensionDuration: extensionData.extensionDuration,
+              status: extensionData.status,
+              reason: extensionData.reason,
+              reservationId: extensionData.reservationId,
+              productName: await getProductByReservatieId(userId, extensionData.reservationId)
+            });
+          }
+          console.log('All Extensions Data:', allExtensionsData);
+ 
+        }
       }
+
+      allExtensions.value = allExtensionsData;
+    } catch (error) {
+      console.error('Error fetching user extensions:', error);
     }
-
-    allExtensions.value = allExtensionsData;
-  } catch (error) {
-    console.error('Error fetching user extensions:', error);
   }
-}
 
-const getProductByReservatieId = async (userId, reservationId) => {
-  try {
-    const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
-    const reservationDoc = await getDoc(reservationDocRef);
-    const reservationData = reservationDoc.data();
+  const getProductByReservatieId = async (userId, reservationId) => {
+    try {
+      const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
+      const reservationDoc = await getDoc(reservationDocRef);
+      const reservationData = reservationDoc.data();
 
-    const item1 = reservationData?.Item1;
+      const item1 = reservationData?.Item1;
 
-    if (item1) {
-      return item1.ItemName || 'Product not found';
-    } else {
+      if (item1) {
+        return item1.ItemName || 'Product not found';
+      } else {
+        return 'Product not found';
+      }
+    } catch (error) {
+      console.error('Error fetching product name:', error);
       return 'Product not found';
     }
-  } catch (error) {
-    console.error('Error fetching product name:', error);
-    return 'Product not found';
   }
-}
 
-const denyRequest = async (userId, extensionId, index) => {
-  try {
-    await deleteDoc(doc(db, `Users/${userId}/ExtensionRequests/${extensionId}`));
-    allExtensions.value.splice(index, 1);
-  } catch (error) {
-    console.error('Error denying request:', error);
+  const approveRequest = async (userId, extensionId, index, extensionDuration, reservationId) => {
+    try {
+      const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
+      const reservationDoc = await getDoc(reservationDocRef);
+      const reservationData = reservationDoc.data();
+
+      let { EndDate, EndMonth, StartMonth, StartDate } = reservationData;
+      let year = new Date().getFullYear();
+      
+      EndDate += extensionDuration;
+
+      while (EndDate > 28) {
+        let daysInMonth;
+        switch (EndMonth) {
+          case 2:
+            daysInMonth = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0) ? 29 : 28;
+            break;
+          case 4: case 6: case 9: case 11:
+            daysInMonth = 30;
+            break;
+          default:
+            daysInMonth = 31;
+        }
+
+        if (EndDate > daysInMonth) {
+          EndDate -= daysInMonth;
+          EndMonth++;
+          if (EndMonth > 12) {
+            EndMonth = 1;
+            year++;
+          }
+        } else {
+          break;
+        }
+      }
+
+      await updateDoc(reservationDocRef, {
+        EndDate,
+        EndMonth
+      });
+
+      await deleteDoc(doc(db, `Users/${userId}/ExtensionRequests/${extensionId}`));
+      allExtensions.value.splice(index, 1);
+    } catch (error) {
+      console.error('Error approving request:', error);
+    }
   }
-}
 
-onMounted(() => {
+  const denyRequest = async (userId, extensionId, index) => {
+    try {
+      await deleteDoc(doc(db, `Users/${userId}/ExtensionRequests/${extensionId}`));
+      allExtensions.value.splice(index, 1);
+    } catch (error) {
+      console.error('Error denying request:', error);
+    }
+  }
+
+  onMounted(() => {
   fetchUserExtensionsData();
 });
+  </script>
 
-</script>
 
 <style scoped>
 /* General styles */
