@@ -333,6 +333,9 @@ export const useKitToBeMade = defineStore({
   actions: {
     addKit(kit){
       this.kit = kit
+    },
+    getKitName(){
+      return this.kit.Name
     }
   }
 });

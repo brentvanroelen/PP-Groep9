@@ -55,13 +55,7 @@ const addKit = async () => {
   await kitsCollection.add(kit);
   router.push('/kits');
 };
-onMounted(() => {
-  for (let item of selectedItems.value){
-    imageGetter(`ItemImages/${item.Image}`).then((res) => {
-      item.Image = res;
-    })
-  }
-});
+
 
 </script>
   

@@ -14,7 +14,7 @@
                 </ul>
             </div>
             <h2>{{ item.Name }}</h2> 
-            <img :src="item.Image" alt="Item Image">
+            <img :src="item.loadedImage" alt="Item Image">
             <p>{{ item.Description }}</p>
         </div>
     </div>
@@ -52,8 +52,9 @@ onMounted(async () => {
     await fetchItems();
     for (let item of items.value){
     imageGetter(`ItemImages/${item.Image}`).then((res) => {
-        item.Image = res;
+        item.loadedImage = res;
     })
+    console.log(items.value)
 }
 });
 
