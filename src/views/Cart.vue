@@ -154,34 +154,106 @@
             margin: 0;
             padding: 0;
         }
+
+        header {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        }
+    
+        .cart-title {
+            font-size: 24px;
+        }
+    
         main {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
-        .cart-title {
-            font-size: 24px;
-            margin-top: 20px;
-            text-align: center;
+        .item-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #D9D9D9;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 1500px;
+        padding: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+        margin-bottom: 30px;
+        transition: transform 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .item-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #itemImg {
+            width: 200px;
+            border: 2px white solid;
+            border-radius: 16px;
+            height: 200px;
+            transition: transform 0.3s;
+        }
+
+        #itemImg:hover {
+        transform: scale(1.05);
+        }
+
+          #itemInfo-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 300px;
+            height: 150px;
+        }
+
         .datepicker{
             width: 50px;
         }
-        hr {
-            margin: 20px 0;
-            width: 80%;
-            border: 0;
-            border-top: 1px solid #ccc;
+
+        .datepicker img {
+        width: 25px;
+        height: 25px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .datepicker img:hover {
+        transform: scale(1.1);
+        }
+
+        .item-trash {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin: 0 20px;
+        }
+    
+    .item-trash img {
+        width: 25px;
+        height: 25px;
+        margin-bottom: 5px;
+        transition: transform 0.3s;
+        }
+
+    .item-trash:hover img {
+            transform: scale(1.2);
         }
 
         .selected-items-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 80%;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            width: 90%;
+            margin: 20px 0;
         }
 
         #item-count {
@@ -197,38 +269,13 @@
             padding: 10px 20px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         .confirm-button:hover {
             background-color: darkred;
         }
-        .item-box {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            background-color: #D9D9D9;
-            border-radius: 2em;
-            margin: 1em 0 1em 0;
-            width: 1500px;
-            padding: 1em 0em 1em 0em;
-        }
-        #itemImg {
-            width: 200px;
-            border: 2px white solid;
-            border-radius: 1em;
-            height: 200px;
-        }
-        .item-box img {
-            width: 40px;
-        }
-        #itemInfo-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            width: 300px;
-            height: 150px;
-        }
+      
         button{
             padding: 10px 20px;
             background-color: #d50000;
@@ -237,6 +284,6 @@
             border-radius: 20px;
             cursor: pointer;
             outline: none;
-            margin: 1em;
+            margin: 16px;
         }
 </style>
