@@ -70,7 +70,8 @@ let startDate = ref(new Date());
 const user = useUserIdentification();
 
 const displayReservations = computed(() => {
-    let array = [cancellableReservationsCalc()[0], cancellableReservationsCalc()[1]];
+    let test = cancellableReservationsCalc();
+    let array = [test[0], test[1]];
     return array;
 });
 const arrayifier = computed(() => {
@@ -121,24 +122,39 @@ const getReservations = async () => {
     }
 }
 
+
+
+
+
 const cancellableReservationsCalc = () => {
     if (reservations.value == undefined){
         console.log("loading...")
     } else {
+        let cancellableReservations = [];
+        let remainingReservations = [];
+
         for (let reservation of reservations.value){
+            console.log(reservations.value)
             startDate.value.setDate(reservation.StartDate);
             startDate.value.setMonth(reservation.StartMonth);
             let adjustedStartDate = new Date(startDate.value);
             adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
             adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
-            if (!reservation.CurrentlyWithUser && new Date() < adjustedStartDate){
-                reservations.value.splice(reservations.value.indexOf(reservation), 1);
-                cancellableReservations.value.push(reservation);
+            adjustedStartDate.setHours(0,0,0,0);
+            console.log(adjustedStartDate)
+            
+            if (!reservation.CurrentlyWithUser && new Date().setHours(0,0,0,0) <= adjustedStartDate){
+                cancellableReservations.push(reservation);
+            } else {
+                remainingReservations.push(reservation);
             }
         }
-        return [cancellableReservations.value, reservations.value];
+
+        return [cancellableReservations, remainingReservations];
     }
 };
+
+;
 
 
 onMounted( async() => {
