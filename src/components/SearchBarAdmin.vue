@@ -67,10 +67,8 @@ const log = () => {
 
 
 watch(querystring, async(newVal, oldVal) => {
-  console.log('Querystring changed:', newVal);
   if(props.page == 'AddKit'){
     if (newVal.length >= 3) {
-      console.log('Searching for:', newVal);
       await searchKit();
       store.results.push({id: 10000, Name: querystring.value, Image: '/src/assets/plus.jpg'});
       showResults.value = store.results.length > 0;

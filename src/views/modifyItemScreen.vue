@@ -41,7 +41,7 @@ onMounted(async () => {
         imageGetter(`ItemImages/${item.Image}`).then((res) => {
             item.loadedImage = res;
         })
-    }
+    }console.log(items.value)
 });
   
 const fetchItems = async () => {
