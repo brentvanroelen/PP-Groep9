@@ -59,7 +59,6 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { db,collection,query,where,getDocs,doc } from "../Firebase/Index.js";
-import SearchBar from "../components/Searchbar.vue"
 import {reservationReturnedOrCanceled} from "../js/functions.js"
 import { useUserIdentification } from "@/Pinia/Store.js";
 

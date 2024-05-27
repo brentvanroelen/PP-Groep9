@@ -1,89 +1,210 @@
 <template>
     <div class="product">
-            <div class="title">
-                <h1>Product</h1>
-                <h4>Category:</h4>
-                <h4>Brand:</h4>
-            </div>
-    
-            <div class="image">Image</div>
+        <div class="title">
+            <h1>{{ ItemName }}</h1>
         </div>
-        <div class="info">
-            <div class="date">
-                <p class="how">How long is the extension you want to request?</p>
-                <div class="calendar">
-                    <Calendar></Calendar>
-                </div>
-            </div>
-
-            <div class="reason">
-                <p class="why">Why do you want the extension?</p>
-                <div class="text">
-                    <input type="text" style="padding-bottom: 200px; padding-right: 200px;" placeholder="Enter reason here">
-
-                </div>
-                <button>Request extension</button>
+        <div class="image"></div>
+        <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
+            <p v-else>Image not available</p>
+    </div>
+    <div class="info">
+        <div class="date">
+            <p class="how">How long is the extension you want to request?</p>
+            <div class="calendar">
+                <VueDatePicker
+                    v-model="selectedDates"
+                    inline
+                    auto-apply
+                    :range="{ fixedStart: true }"
+                    :min-date="fullDate"
+                    :clearable="false"
+                />
             </div>
         </div>
-        
-        <div>
-            <h2></h2>
+        <div class="reason">
+            <p class="why">Why do you want the extension?</p>
+            <div class="text">
+                <input
+                    type="text"
+                    v-model="reason"
+                    placeholder="Enter reason here"
+                />
+            </div>
+            <button @click="requestExtension">Request extension</button>
         </div>
+    </div>
+    <div>
+        <h2></h2>
+    </div>
 </template>
+
 <script setup>
-import Calendar from '@/components/Calendar.vue';
+import { ref, onMounted, computed } from 'vue';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/Firebase/Index.js';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+const reservationId = 'qYaBImSutAsIXCUySE1Z';
+const reason = ref('');
+const userId = ref('');
+const selectedDates = ref([new Date(), new Date()]);
+const fullDate = new Date();
+const ItemName = ref('');
+const ItemImage = ref('');
+
+const extensionDuration = computed(() => {
+    if (selectedDates.value.length === 2) {
+        const [startDate, endDate] = selectedDates.value;
+        const duration = (endDate - startDate) / (1000 * 60 * 60 * 24);
+        return Math.ceil(duration); 
+    }
+    return 0;
+});
+
+const fetchReservationDetails = async () => {
+    try {
+        const reservationDocRef = doc(db, `Reservations/${reservationId}`);
+        const reservationDoc = await getDoc(reservationDocRef);
+        
+        if (reservationDoc.exists()) {
+            const reservationData = reservationDoc.data();
+            userId.value = reservationData.User;
+            await fetchProductDetails();
+        } else {
+            console.log('Reservation does not exist');
+        }
+    } catch (error) {
+        console.error('Error fetching reservation details:', error);
+    }
+};
+
+const fetchProductDetails = async () => {
+    try {
+        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
+        const reservationDoc = await getDoc(reservationDocRef);
+        
+        if (reservationDoc.exists()) {
+            const reservationData = reservationDoc.data();
+            const item1 = reservationData?.Item1;
+            if (item1) {
+                ItemName.value = item1.ItemName || 'Product not found';
+                ItemImage.value = item1.ItemImage || '';
+            } else {
+                ItemName.value = 'Product not found';
+                ItemImage.value = '';
+            }
+        } else {
+            console.log('Reservation does not exist');
+        }
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        ItemName.value = 'Product not found';
+        ItemImage.value = '';
+    }
+};
+
+const requestExtension = async () => {
+    if (!userId.value) {
+        console.error('User ID is not set');
+        return;
+    }
+
+    try {
+        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
+        const reservationDoc = await getDoc(reservationDocRef);
+        
+        if (reservationDoc.exists()) {
+            const reservationData = reservationDoc.data();
+            console.log('Reservation Data:', reservationData);
+            
+            let { EndDate, EndMonth } = reservationData;
+            let newEndDate = EndDate + extensionDuration.value;
+            let newEndMonth = EndMonth;
+            const year = new Date().getFullYear();
+
+            const getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
+
+            while (newEndDate > getDaysInMonth(year, newEndMonth)) {
+                newEndDate -= getDaysInMonth(year, newEndMonth);
+                newEndMonth++;
+                if (newEndMonth > 12) {
+                    newEndMonth = 1;
+                }
+            }
+
+            await updateDoc(reservationDocRef, {
+                EndDate: newEndDate,
+                EndMonth: newEndMonth,
+                Extended: true,
+            });
+
+            console.log('End date updated successfully');
+            alert('End date updated successfully');
+        } else {
+            console.log('Reservation does not exist');
+        }
+    } catch (error) {
+        console.error('Error processing extension request:', error);
+    }
+};
+
+onMounted(fetchReservationDetails);
 </script>
-<style scoped>  
-.product{
+
+
+<style scoped>
+.product {
     display: flex;
     text-align: center;
 }
 
-.title{
+.title {
     margin-left: 30em;
     margin-top: 1.2em;
 }
 
-.image{
+.image {
     margin-left: auto;
     padding-right: 26em;
     padding-top: 2em;
 }
 
-h1, h4{
+h1, h4 {
     margin: 3px;
 }
-h1{
+
+h1 {
     margin-left: 4em;
 }
-.info{
+
+.info {
     display: flex;
     margin-top: 1em;
-    margin-left: 2em
-    }
+    margin-left: 2em;
+}
 
-.reason{
+.reason {
     padding-right: 15em;
 }
 
-.text{
-    width: 400px; 
-    height: 250px; 
+.text {
+    width: 400px;
+    height: 250px;
 }
 
-
-p{
+p {
     text-align: center;
 }
 
-.date{
+.date {
     margin-right: auto;
 }
 
-button{
-    flex: 1; 
-    height: 40px; 
-    padding: 5px 20px; 
+button {
+    flex: 1;
+    height: 40px;
+    padding: 5px 20px;
     border: none;
     border-radius: 20px;
     background-color: red;
@@ -92,18 +213,20 @@ button{
     margin-bottom: 5px;
 }
 
-.how{
+.how {
     padding-bottom: 1em;
     margin-left: 2em;
 }
-.why{
+
+.why {
     margin-top: 4em;
 }
-.calendar{
+
+.calendar {
     margin-left: 2em;
 }
 
-input{
+input {
     background-color: #c1c1c1;
 }
 </style>
