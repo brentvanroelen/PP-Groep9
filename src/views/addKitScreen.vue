@@ -1,29 +1,13 @@
 <template>
     <div class="addKitScreen">
-      <div class="inputKits">
-        <SearchBarAdmin :page="'AddKit'"></SearchBarAdmin>
-        <label for="number" class="labels">Number (optional): </label> <input type="number" name="" id="numberInput">
-        <label for="kitDescription" class="labels">Kit description: </label><input type="text" name="" id="descriptionInput">
-      </div>
-      
+      <SearchBarAdmin :page="'AddKit'"></SearchBarAdmin>
+      <NewKitHandler></NewKitHandler>
       <div class="buttons">   
         <button class="buttonsClass">Add more items</button>
         <div class="fileInputWrapper">
-          <input type="file" name="file" id="file">
           <button class="buttonsClass">Upload IMG</button>
-        </div>
+        </div> 
       </div>
-      
-      <div class="items highlighted">
-        <div v-for="(item, index) in selectedItems" :key="index" class="item">
-          <div class="itemPanel"><h2>{{ item.Name }}</h2>
-          <img :src="item.Image" alt="Selected Item Image">
-          <p>{{ item.Description }}</p>
-          <button @click="removeItem(index)">Remove</button></div>
-        </div>
-      </div>
-      
-      <button class="buttonsClass largerButton" @click="addKit">Add Kit</button>
     </div>
   </template>
   
@@ -31,11 +15,13 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { collection, query, getDocs,db, where } from '../Firebase/Index.js';
-import { useKitItems } from '@/Pinia/Store';
-import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
+import { useKitItems,useKitToBeMade } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions.js';
+import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
+import NewKitHandler from '@/components/NewKitHandler.vue';
 
 const kitItems = useKitItems();
+const kitToBeMade = useKitToBeMade();
 const router = useRouter();
 const selectedItems = ref(kitItems.selectedItems);
 let kitName = ref('');

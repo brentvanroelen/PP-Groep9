@@ -4,9 +4,9 @@
     <div class="modifyItems">
         <div v-for="(item, index) in items" :key="index" class="item">
             <h2>{{ item.Name }}</h2>
-            <img :src="item.Image" alt="Item Image">
+            <img :src="item.loadedImage" alt="Item Image">
             <p>{{ item.Description }}</p>
-            <input type="checkbox" v-model="selectedItems" :value="item" class="item-checkbox">
+            <input v-if="item.Image != undefined" type="checkbox" v-model="selectedItems" :value="item" class="item-checkbox">
 
         </div>
     </div>
@@ -35,10 +35,11 @@ const kitItems = useKitItems();
 const store = useStore();
   
 onMounted(async () => {
+    kitItems.selectedItems = [];
     await fetchItems();
     for (let item of items.value){
         imageGetter(`ItemImages/${item.Image}`).then((res) => {
-            item.Image = res;
+            item.loadedImage = res;
         })
     }
 });
@@ -54,13 +55,18 @@ const fetchItems = async () => {
 };
   
 const addToSelectedKit = () => {
+    for(let item of selectedItems.value){
+        console.log(item)
+    }
     kitItems.addItem(selectedItems.value);
+    console.log(kitItems.selectedItems);
     router.push({ path: '/addKitScreen'});
 };
 
 const isSelected = (item) => {
   return selectedItems.value.includes(item);
 };
+
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 <template>
   <div class="search-bar">
-    <input type="text" v-model="querystring" @keyup.enter="search" placeholder="Search">
-    <button @click="search">Search</button>
+    <input type="text" :class="props.page" v-model="querystring" @keyup.enter="search" :placeholder="placeholder">
+    <button @click="search" v-if="props.page != 'AddKit'">Search</button>
   </div>
 
   <div v-if="results.length > 0" class="items-grid">
@@ -23,7 +23,9 @@
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
         <img :src="result.Image" alt="item">
-        <p>{{ result.Name }}</p>
+        <p v-if="result.id != 10000 ">{{ result.Name }}</p>
+        <p v-else> Make a new kit with name: {{ result.Name }}</p>
+        <p></p>
       </div>
     </div>
   </div>
@@ -32,18 +34,19 @@
 </template>
 
 <script setup>
-import { ref,watch } from 'vue';
-import { useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
+import { onMounted, ref,watch } from 'vue';
+import { useKitToBeMade,useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
 import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 
 const useSearchedItems = useSearchedItemsFunction();
-
+const kitToBeMade = useKitToBeMade();
 const querystring = ref('');
 const store = useStore();
 const results = ref([]);
 const reservationsAdmin = useEarlyReturnsReservations()
 let generalItem;
 const showResults = ref(false);
+const placeholder = ref('Search')
 
 
 const props = defineProps({
@@ -62,7 +65,7 @@ watch(querystring, async(newVal, oldVal) => {
     if (newVal.length >= 3) {
       console.log('Searching for:', newVal);
       await searchKit();
-      store.results.push({id: 10000, Name: querystring, Image: '/src/assets/plus.jpg'});
+      store.results.push({id: 10000, Name: querystring.value, Image: '/src/assets/plus.jpg'});
       showResults.value = store.results.length > 0;
     }else{
       showResults.value = false;
@@ -173,10 +176,11 @@ const searchKit = async () => {
   });
   console.log(store.results);
 };
+
 const setPage = (result) => {
-  if(result.id === 10000){
-    
-  };
+  kitToBeMade.addKit(result);
+  console.log(kitToBeMade.kit);
+  querystring.value = '';
 }
 
 
@@ -209,9 +213,17 @@ const querySnapshot2 = async () => {
   });
   console.log(results.value);
 };
+
+
+onMounted(() => {
+  placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
+});
 </script>
 
 <style scoped>
+.AddKit{
+  width: 60%;
+}
 .icon-img {
   width: 20px;
   height: 20px;

@@ -325,3 +325,14 @@ export const useItemsToGet = defineStore({
     }
   }
 });
+export const useKitToBeMade = defineStore({
+  id: 'KitToBeMade',
+  state: () => ({
+    kit: ''
+  }),
+  actions: {
+    addKit(kit){
+      this.kit = kit
+    }
+  }
+});
