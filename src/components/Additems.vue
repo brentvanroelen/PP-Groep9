@@ -124,4 +124,69 @@
 </script>
 
 <style scoped>
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555; /* donkere label text kleur */
+    }
+
+    /* Styling van text inputs */
+    input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 24px;
+        border: 1px solid #ccc;
+        border-radius: 6px; 
+        box-sizing: border-box;
+        transition: border-color 0.3s ease; 
+    }
+
+    /* Hover effect op text inputs */
+    input[type="text"]:hover {
+        border-color: #007bff; /* border color verandert op hover */
+    }
+
+   
+    input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+    
+    button {
+        padding: 12px 24px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #c82333; 
+    }
+
+
+    h1 {
+        margin-bottom: 24px;
+        font-size: 28px; 
+        color: #000; 
+    }
+
+    
+    form {
+        padding: 24px; 
+        background-color: #f9f9f9; 
+        border-radius: 12px; 
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+        margin-bottom: 48px; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    }
+
+
+    form:hover {
+        transform: translateY(-6px); 
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1); 
+    }
 </style>

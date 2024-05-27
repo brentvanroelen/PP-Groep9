@@ -191,33 +191,106 @@
       flex-direction: column;
       align-items: center;
       gap: 20px;
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
     }
     
     .title {
       text-align: center;
+      font-size: 32px;
+      color: #444;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
     }
     
     .actions {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 80%;
+      max-width: 1200px;
       align-items: center;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto; /* border tussen actions en tabel */
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
     }
     
     .actions label {
+      font-weight: bold;
       margin-right: 10px;
     }
     
     .actions form {
-      margin-left: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .actions input[type="text"] {
+      padding: 8px; 
+      border: 1px solid #ccc;
+      border-radius: 20px; 
+    }
+  
+    .actions button {
+      padding: 8px 12px; 
+      border: none;
+      background-color: #5cb85c;
+      color: white;
+      border-radius: 20px; 
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    }
+
+    .actions button:hover {
+      background-color: #4cae4c;
     }
     
     table {
-      width: 100%;
+      width: 80%;
       border-collapse: separate;
       border-spacing: 0;
-      border-radius: 5px;
-      border: 1px solid #000;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+    }
+
+    th,
+    td {
+      padding: 12px; /*padding van cel */
+      border: 1px solid #e9e9e9;
+      text-align: center;
+    }
+  
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+  
+    td {
+      background-color: #fff;
+    }
+  
+    tr:hover td {
+      background-color: #f1f1f1; 
+    }
+  
+   
+     tr:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+     .content:hover {
+    transform: translateY(-3px);
     }
     
     .pagination {
@@ -229,55 +302,45 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-left: auto;
+      margin: 20px 0;
     }
     
-    th {
-      background-color: #f2f2f2;
+   .pagination a {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #337ab7;
+    text-decoration: none;
+    transition: background-color 0.3s;
     }
-    
-    th,
-    td {
-      padding: 10px;
-      border: 1px solid #f2f2f2;
+  
+    .pagination a:hover {
+      background-color: #eee;
     }
-    
-    .border {
-      margin-left: auto;
-      margin-right: auto;
-      border-radius: 10px;
-      padding: 5px;
-      width: 50px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-    
+      
     .red div {
       background-color: #ffcccc;
       color: red;
+      border-radius: 10px; 
+      padding: 8px; 
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .green div {
       background-color: #ccffcc;
       color: green;
+      border-radius: 10px; 
+      padding: 8px; 
     }
     
-    .orange div {
-      background-color: #ffd699;
-      color: orange;
+    .orange div { 
+    background-color: #ffd699;
+    color: orange;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
-    .content {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    .content th,
-    .content td {
-      padding: 10px;
-      vertical-align: top;
-      text-align: center;
-    }
   </style>
 
 
