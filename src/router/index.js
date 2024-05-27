@@ -22,7 +22,8 @@ import ExtensionPage from '@/views/ExtensionPage.vue'
 import Login from '@/views/Login.vue'
 import addItemsScreen from '../views/addItemsScreen.vue'
 import checkPage from '@/views/checkPage.vue'
-import ReportIssue from '../views/ReportIssue.vue'
+import changeItemInfo from '@/views/changeItemInfo.vue'
+import historyPage from '@/views/historyPage.vue'
 
 
 
@@ -139,12 +140,18 @@ const routes = [
     name: 'checkPage',
     component: checkPage
   },
-  
   {
-    path: '/ReportIssue',
-    name: 'ReportIssue',
-    component: ReportIssue
+    path: '/changeItemInfo',
+    name: 'changeItemInfo',
+    component: changeItemInfo
+  },
+  {
+    path: '/historyPage',
+    name: 'historyPage',
+    component: historyPage
   }
+  
+  
 ]
 
 const router = createRouter({
