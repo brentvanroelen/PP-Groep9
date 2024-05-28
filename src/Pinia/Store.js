@@ -260,6 +260,10 @@ export const useUserIdentification = defineStore({
       this.userId = userId
     }
   },
+  getters: {
+  isLoggedIn(state){
+    return !!state.user.id;
+  }},
   persistedState: {
     persist: false,
   },
