@@ -132,15 +132,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* General styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   margin: 0;
   padding: 0;
 }
-
-/* Container */
 .info-container {
   display: flex;
   flex-direction: column;
@@ -153,38 +150,40 @@ body {
 .info {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 20px;
   padding: 15px;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 1200px;
 }
 
 .info:hover {
   transform: translateY(-5px);
 }
 
-/* Details */
 .details, .tekst, .actions {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
-/* Action buttons */
 .actions {
   align-items: flex-end;
 }
 
 .action-btn1,
 .action-btn2 {
+  font-size: 14px;
+  margin-bottom: 5px;
+  width:100px;
+  padding: 10px 0;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 20px;
   border: none;
   color: white;
   cursor: pointer;
@@ -192,12 +191,19 @@ body {
 }
 
 .action-btn1 {
-  background-color: #4CAF50;
-  margin-bottom: 5px;
+  background-color: #4caf50;
+}
+
+.action-btn1:hover{
+  background-color: #45a049;
 }
 
 .action-btn2 {
-  background-color: #FF5733;
+  background-color: #f44336;
+}
+
+.action-btn2:hover{
+  background-color:#d32f2f ;
 }
 
 .action-btn1:hover,
@@ -205,16 +211,15 @@ body {
   transform: scale(1.1);
 }
 
-/* Text styles */
 .details p {
   margin: 5px 0;
-  font-size: 14px;
+  font-size: 16px;
   text-align: start;
 }
 
 .tekst {
-  font-size: 12px;
-  color: #5d5d5d;
+  font-size: 16px;
+  color: #000;
 }
 </style>
 
