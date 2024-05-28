@@ -76,7 +76,6 @@ const getProductByReservationId = async (userId, reservationId) => {
     const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
     const reservationDoc = await getDoc(reservationDocRef);
     const reservationData = reservationDoc.data();
-    const forProject = reservationData.ForProject || false;
 
 
     return reservationData?.Item1?.ItemName || 'Product not found';
