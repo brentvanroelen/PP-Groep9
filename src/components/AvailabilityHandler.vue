@@ -38,8 +38,10 @@ const handleAvailability = async() => {
             });
         }
         if(!isKit){
+            console.log('nay')
             await itemAvailability();
         }else{
+            console.log('yay')
             await kitAvailability();
         }
     }else if(page == "HomeAdmin"){
@@ -79,9 +81,11 @@ const dateifierRes = (startdateres,startmonthres,enddateres,endmonthres) => {
     return [startres, endres];
 }
 const getAvailableItems = async(name,serial,kitId) => {
-    if(availableInstances.getCollection(name) == undefined){
-        availableInstances.createCollection(name);
+    if(availableInstances.getCollection(name + "kit" + `${kitId}`) == undefined){
+        availableInstances.createCollection(name + "kit" + `${kitId}`);
     }
+    console.log(availableInstances)
+    console.log(name + "kit" + `${kitId}`)
     const creference = collection(db, `Items/${name.charAt(0).toUpperCase() 
         + name.slice(1)}/${name.charAt(0).toUpperCase() 
         + name.slice(1)} items`);
@@ -90,7 +94,7 @@ const getAvailableItems = async(name,serial,kitId) => {
     reservedSnapshot.forEach((doc) => {
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
             if(kitId != 0){
-                availableInstances.addKitInstance(doc.data().Name,doc.data(),kitId);
+                availableInstances.addKitInstance(`${doc.data().Name}kit${kitId}`, doc.data());
             }else{
                 availableInstances.addInstance(doc.data().Name,doc.data());
             }
@@ -151,19 +155,30 @@ for (let item of store.results) {
     }
 }
 const kitAvailability = async() => {
+    let available = true
     for (let kit of store.results) {
         for(let i = 1; i <= kit.Items.length; i++){
-            if(availableInstances.items[kit.Items[i]] !== undefined){
-                availableInstances.items[kit.Items[i]] = [];
+            if(availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`] !== undefined){
+                availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`] = [];
             }
             if(Object.keys(dates.general).length != 0){
+                console.log(kit.Items[i-1])
+                console.log(kit[`Item${i}`].SerialSeries)
+                console.log(kit.Id)
                 await getAvailableItems(kit.Items[i-1],kit[`Item${i}`].SerialSeries,kit.Id);
-
-                /* CALL RESERVATION HANDLER*/
+                console.log(availableInstances)
+                if(availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`].length == 0){
+                    for(let i = 1; i <= kit.Items.length; i++){
+                        availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`]= [];
+                    }
+                    available = false;
+                }
+                console.log(availableInstances)
             }else{
                 console.log("Please select a date range")
             }
         }
+        alert("Kit is not available for these dates");
     }
 }
 

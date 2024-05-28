@@ -115,8 +115,12 @@ export const useChoiceOfItems = defineStore({
       console.log(collection, item)
       this.items[collection].push(item)
     },
-    addKitInstance(collection, item,id){
-      this.items[collection].push({item: item, kitid: id})
+    addKitInstance(collection, item){
+      console.log(collection)
+      console.log(this.items)
+      console.log(this.items[collection])
+      this.items[collection].push(item)
+      console.log(this.items[collection])
     },
     getInstance(collection,itemIndex){
       return this.items[collection][itemIndex]

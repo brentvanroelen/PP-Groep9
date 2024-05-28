@@ -29,7 +29,7 @@
   <div class="search-results" v-if="showResults">
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
-        <img :src="result.Image" alt="item">
+        <img v-if="getImage(result)" :src="result.loadedImage" alt="item">
         <p v-if="result.id != 10000 ">{{ result.Name }}</p>
         <p v-else> Make a new kit with name: {{ result.Name }}</p>
         <p></p>
@@ -44,6 +44,7 @@
 import { onMounted, ref,watch } from 'vue';
 import { useKitToBeMade,useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
 import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
+import { imageGetter } from '@/js/functions.js';
 
 const useSearchedItems = useSearchedItemsFunction();
 const kitToBeMade = useKitToBeMade();
@@ -70,7 +71,7 @@ watch(querystring, async(newVal, oldVal) => {
   if(props.page == 'AddKit'){
     if (newVal.length >= 3) {
       await searchKit();
-      store.results.push({id: 10000, Name: querystring.value, Image: '/src/assets/plus.jpg'});
+      store.results.push({id: 10000, Name: querystring.value, loadedImage: '/src/assets/plus.jpg'});
       showResults.value = store.results.length > 0;
     }else{
       showResults.value = false;
@@ -210,6 +211,19 @@ const querySnapshot2 = async () => {
   });
   console.log(results.value);
 };
+
+const getImage = async(result) => {
+  console.log(result)
+  if(result != undefined && result.id != 10000){
+    await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
+      result.loadedImage = res;
+    })
+    console.log(result)
+    return true
+  }else{
+    return false;
+  }
+}
 
 
 onMounted(() => {
