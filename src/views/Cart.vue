@@ -7,7 +7,7 @@
     <main>
         <div v-for="(item, index) in items" :key="index">
     <div class="item-box">
-        <img :src="item.Image" alt="" id="itemImg">
+        <img v-if="getImage(item)" :src="item.loadedImage" alt="" id="itemImg">
         <div id="itemInfo-box">
         <h2>{{ item.Name }}</h2>
         <p><b>Description: </b> {{ item.Description }}</p>
@@ -50,7 +50,7 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">{{ itemCount }}</span>
             </div>
-            <ReservationHandler :check-user-cart="true" :button-text="'Plaats Reservatie'"></ReservationHandler>
+            <ReservationHandler :check-user-cart="true" :button-text="'Place Reservation'"></ReservationHandler>
         </section>
     </main>
 
@@ -64,6 +64,7 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import { doc, setDoc, getDoc } from 'firebase/firestore';
     import { db } from '@/Firebase/Index.js';
+    import { imageGetter } from '@/js/functions';
 
     
 
@@ -146,6 +147,26 @@
     onMounted(() => {
     fetchData();
   });
+
+  const getImage = async(result) => {
+  console.log(result)
+  if(result.id == undefined){
+    await imageGetter(`ItemImages/${result.Image}`).then((res) => {
+      result.loadedImage = res;
+    });
+    console.log(result)
+    return true;
+  } else if(result != undefined && result.id != 10000){
+    await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
+      result.loadedImage = res;
+    });
+    console.log(result)
+    return true;
+  } else {
+    return false;
+  }
+}
+
 </script>
 
 <style scoped>

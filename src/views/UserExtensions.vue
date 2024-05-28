@@ -181,7 +181,7 @@ body {
   margin-bottom: 5px;
   width:100px;
   padding: 10px 0;
-  width: 40px;
+  width: 120px;
   height: 40px;
   border-radius: 20px;
   border: none;
