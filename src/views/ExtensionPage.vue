@@ -5,7 +5,7 @@
         </div>
         <div class="image"></div>
         <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
-            <p v-else>Image not available</p>
+        <p v-else>Image not available</p>
     </div>
     <div class="info">
         <div class="date">
@@ -15,11 +15,12 @@
                     v-model="selectedDates"
                     inline
                     auto-apply
-                    :range="{ fixedStart: true }"
                     :min-date="fullDate"
                     :clearable="false"
+                    :range="true"
                 />
             </div>
+            <p>Selected Duration: {{ extensionDuration }} days</p>
         </div>
         <div class="reason">
             <p class="why">Why do you want the extension?</p>
@@ -39,28 +40,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { ref, onMounted, computed, watch } from 'vue';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-const reservationId = 'qYaBImSutAsIXCUySE1Z';
+const route = useRoute();
+const reservationId = route.query.reservationId;
 const reason = ref('');
 const userId = ref('');
-const selectedDates = ref([new Date(), new Date()]);
-const fullDate = new Date();
+const selectedDates = ref([]);
+const fullDate = ref(new Date());
 const ItemName = ref('');
 const ItemImage = ref('');
-
-const extensionDuration = computed(() => {
-    if (selectedDates.value.length === 2) {
-        const [startDate, endDate] = selectedDates.value;
-        const duration = (endDate - startDate) / (1000 * 60 * 60 * 24);
-        return Math.ceil(duration); 
-    }
-    return 0;
-});
 
 const fetchReservationDetails = async () => {
     try {
@@ -70,6 +64,9 @@ const fetchReservationDetails = async () => {
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
             userId.value = reservationData.User;
+            const endDate = new Date(new Date().getFullYear(), reservationData.EndMonth - 1, reservationData.EndDate);
+            fullDate.value = endDate;
+            selectedDates.value = [endDate]; // Set initial selected date to the end date
             await fetchProductDetails();
         } else {
             console.log('Reservation does not exist');
@@ -104,7 +101,27 @@ const fetchProductDetails = async () => {
     }
 };
 
+const extensionDuration = computed(() => {
+    if (selectedDates.value.length === 2) {
+        const [startDate, endDate] = selectedDates.value;
+        const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        return Math.ceil(duration); 
+    }
+    return 0;
+});
+
+watch(selectedDates, (newDates) => {
+    console.log('Selected Dates:', newDates);
+    if (newDates.length === 2) {
+        console.log('Start Date:', newDates[0]);
+        console.log('End Date:', newDates[1]);
+    }
+});
+
 const requestExtension = async () => {
+    console.log('Selected Dates:', selectedDates.value);
+    console.log('Extension Duration:', extensionDuration.value);
+
     if (!userId.value) {
         console.error('User ID is not set');
         return;
@@ -141,6 +158,10 @@ const requestExtension = async () => {
 
             console.log('End date updated successfully');
             alert('End date updated successfully');
+
+            // Update the fullDate to the new end date
+            fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
+            selectedDates.value = [fullDate.value]; // Reset selected dates to the new end date
         } else {
             console.log('Reservation does not exist');
         }
@@ -151,7 +172,6 @@ const requestExtension = async () => {
 
 onMounted(fetchReservationDetails);
 </script>
-
 
 <style scoped>
 .product {
@@ -230,3 +250,11 @@ input {
     background-color: #c1c1c1;
 }
 </style>
+
+
+
+
+
+
+
+

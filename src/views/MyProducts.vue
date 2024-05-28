@@ -43,7 +43,7 @@
         </div>
         <div class="kolom1">
             <button>
-                <router-link class="link" to="/ExtensionPage">Request extension</router-link>
+                <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id }}">Request extension</router-link>
             </button>  
         </div>
          <button>
