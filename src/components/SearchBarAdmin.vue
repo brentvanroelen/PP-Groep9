@@ -1,37 +1,38 @@
 <template>
   <div class="search-bar">
-    <input type="text" :class="props.page" v-model="querystring" @keyup.enter="search" :placeholder="placeholder">
-    <button @click="search" v-if="props.page != 'AddKit'">Search</button>
+    <input
+      type="text"
+      :class="props.page"
+      v-model="querystring"
+      @keyup.enter="handleSearch"
+      :placeholder="placeholder"
+    />
+    <button @click="handleSearch" v-if="props.page != 'AddKit'">Search</button>
   </div>
 
   <div v-if="results.length > 0" class="items-grid">
     <div v-for="(item, index) in results" :key="index" class="item">
       <div class="icons">
         <router-link :to="{ path: '/checkPage', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/552871.png" alt="" class="icon">
+          <img src="/src/assets/552871.png" alt="" class="icon" />
         </router-link>
         <router-link :to="{ path: '/historyPage', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/book.png" alt="" class="icon">
+          <img src="/src/assets/book.png" alt="" class="icon" />
         </router-link>
-
-        <!-- <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
-        </router-link> -->
-        
-        <img src="/src/assets/trash.png" alt="" class="icon trash-icon" @click="deleteItem(index)">
+        <img src="/src/assets/trash.png" alt="" class="icon trash-icon" @click="deleteItem(index)" />
       </div>
       <h2>{{ item.Name }}</h2>
       <h3>{{ item.Serial }}</h3>
-      <img :src="item.Image" alt="Item Image" id="img">
+      <img :src="item.Image" alt="Item Image" id="img" />
       <p>{{ item.Description }}</p>
     </div>
   </div>
   <div class="search-results" v-if="showResults">
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
-        <img v-if="getImage(result)" :src="result.loadedImage" alt="item">
+        <img v-if="getImage(result)" :src="result.loadedImage" alt="item" />
         <p v-if="result.id != 10000 ">{{ result.Name }}</p>
-        <p v-else> Make a new kit with name: {{ result.Name }}</p>
+        <p v-else>Make a new kit with name: {{ result.Name }}</p>
         <p></p>
       </div>
     </div>
@@ -75,6 +76,26 @@ watch(querystring, async (newVal, oldVal) => {
   }
 });
 
+const formatQueryString = (input) => {
+  if (input.includes(' ')) {
+    return input
+      .split(' ')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+  } else {
+    return input.charAt(0).toUpperCase() + input.slice(1);
+  }
+};
+
+const capitalizeEachWord = (str) => {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+};
+
+const handleSearch = () => {
+  querystring.value = formatQueryString(querystring.value);
+  search();
+};
+
 const search = async () => {
   if (props.page === 'HomeAdmin') {
     searchAdmin();
@@ -92,10 +113,7 @@ const search = async () => {
 };
 
 const querySnapshotByName = async () => {
-  const nameQuery = query(
-    collection(db, 'Items'),
-    where('Name', '==', querystring.value)
-  );
+  const nameQuery = query(collection(db, 'Items'), where('Name', '==', querystring.value));
   const snapshot = await getDocs(nameQuery);
   snapshot.forEach((doc) => {
     results.value.push({ id: doc.id, ...doc.data() });
@@ -103,19 +121,17 @@ const querySnapshotByName = async () => {
   console.log(results.value);
 };
 
-
-
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
   console.log('Item to delete:', itemToDelete);
   try {
-    const collectionName = generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1);
+    const collectionName = capitalizeEachWord(generalItem.Name);
     const docRef = doc(db, `Items/${collectionName}/${collectionName} items`, itemToDelete.id);
     await deleteDoc(docRef);
     results.value.splice(index, 1);
     console.log('Item deleted successfully');
   } catch (error) {
-    console.error('Error removing document: ', error);
+    console.error('Error removing document:', error);
   }
 };
 
@@ -176,10 +192,7 @@ const setPage = (result) => {
 };
 
 const querySnapshot1 = async () => {
-  const itemQuery1 = query(
-    collection(db, 'Items'),
-    where('SerialSeries', '==', querystring.value.split('-')[0])
-  );
+  const itemQuery1 = query(collection(db, 'Items'), where('SerialSeries', '==', querystring.value.split('-')[0]));
   const doc = await getDocs(itemQuery1);
   doc.forEach((doc) => {
     generalItem = doc.data();
@@ -189,13 +202,11 @@ const querySnapshot1 = async () => {
 
 const querySnapshot2 = async () => {
   if (!generalItem) return; // Ensure generalItem is defined
-  console.log(generalItem);
+  const formattedName = capitalizeEachWord(generalItem.Name);
   const itemQuery2 = query(
     collection(
       db,
-      `Items/${
-        generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)
-      }/${generalItem.Name.charAt(0).toUpperCase() + generalItem.Name.slice(1)} items`
+      `Items/${formattedName}/${formattedName} items`
     ),
     where('Serial', '==', querystring.value)
   );
@@ -223,6 +234,7 @@ onMounted(() => {
   placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
 });
 </script>
+
 
 <style scoped>
 .AddKit {
