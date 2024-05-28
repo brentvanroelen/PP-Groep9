@@ -80,7 +80,6 @@
   
   const report = useReportedItems();
 
- 
   
   let cancelledReservations = ref([]);
   let reservations = ref([]);
