@@ -2,7 +2,7 @@
     <div class="Container">
         <div class="kitSetup" v-if="kitToBeMade.kit != ''">
             <label for="name">Kitname</label>
-            <input type="text" v-model="kitName">
+            <input type="text" v-if="kitToBeMade != ''" v-model="kitName">
             <label for="description">Kit description:</label>
             <textarea name="description" id="description" rows="10" cols="50" v-model="kitDescription">
             </textarea>
@@ -14,38 +14,45 @@
             <div class="items-highlighted">
                 <div v-for="(item, index) in selectedItems" :key="index" class="item">
                 <div class="itemPanel"><h2>{{ item.Name }}</h2>
-                <img :src="item.Image" alt="Selected Item Image">
+                <img :src="item.loadedImage" alt="Selected Item Image">
                 <p>{{ item.Description }}</p>
                 <button @click="removeItem(index)">Remove</button></div>
                 </div>
             </div>
-            <button class="buttonsClass largerButton" @click="log">
+            <button class="buttonsClass largerButton" @click="addKit">
                 <p v-if="kitToBeMade.kit.id == 10000">Add new Kit</p>
                 <p v-else>Add to existing Kit</p>
             </button>
+            <button @click="log">test</button>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed,watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { collection, query, getDocs,db, where } from '../Firebase/Index.js';
+import { collection, query, getDocs,db, where, setDoc,doc } from '../Firebase/Index.js';
 import { useKitItems,useKitToBeMade } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions.js';
 import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
 import NewKitHandler from '@/components/NewKitHandler.vue';
+import { generateSubstrings } from '@/js/functions.js';
 
 const kitItems = useKitItems();
 const kitToBeMade = useKitToBeMade();
 const router = useRouter();
 const selectedItems = ref(kitItems.selectedItems);
-let kitName = ref(kitToBeMade.kit.Name);
 let kitDescription = ref('');
-  
+let kitName = computed(() =>{
+ return kitToBeMade.getKitName()
+})
+
+
+
   
 
 const log = () => {
   console.log(selectedItems.value);
+  console.log(kitToBeMade.kit.Name);
 };
 const removeItem = (index) => {
   selectedItems.value.splice(index, 1);
@@ -57,44 +64,68 @@ if (route.query.items) {
   selectedItems.value = route.query.items;
 }
 const addKit = async () => {
+  let kitId = 1
+  if(kitName.value == '' || kitDescription.value == '' || selectedItems.value.length == 0){
+    alert('Please fill in all fields');
+    return;
+  }
   const kitsCollection = collection(db, 'Kits');
+  const allkits = await getDocs(collection(db, 'Kits'));
+  for(let kit of allkits.docs){
+    if(kit.data().Id >= kitId){
+      kitId = kit.data().Id + 1;
+    }
+  }
   if(kitToBeMade.kit.id != 10000){
     const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
     const querySnapshot = await getDocs(query);
     if(querySnapshot.size > 0){
-      
+        
     }
   }else{
     const kit = {
       Name: kitName.value,
       Description: kitDescription.value,
-      Items: selectedItems.value,
+      Items: [],
+      SubStrings: [],
+      KitImage: 'test',
+      Id: kitId
     };
-    console.log()
-  }
-  const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
-  const querySnapshot = await getDocs(query);
-  if(querySnapshot.size > 0){
-    
-  }
-  const kitDescription = document.getElementById('descriptionInput').value;
-  const number = document.getElementById('numberInput').value;
-  const items = selectedItems.value;
-  const kit = {
-    Name: kitName,
-    Description: kitDescription,
-    Number: number,
-    Items: items,
-  };
-  await kitsCollection.add(kit);
-  router.push('/kits');
-};
-onMounted(() => {
-  for (let item of selectedItems.value){
-    imageGetter(`ItemImages/${item.Image}`).then((res) => {
-      item.Image = res;
+    console.log(selectedItems.value)
+    for(let item of selectedItems.value){
+        generateSubstrings(item.Name).forEach((substring) => {
+            kit.SubStrings.push(substring);
+        })
+    }
+    generateSubstrings(kitName.value).forEach((substring) => {
+        kit.SubStrings.push(substring);
+    })
+    selectedItems.value.forEach((item, index) => {
+        kit.Items.push(item.Name.toLowerCase())
+        let changeableItem = Object.assign({}, item);
+        delete changeableItem.loadedImage;
+        delete changeableItem.SubStrings;
+        changeableItem = {
+            ...changeableItem,
+            Quantity: 1
+        }
+        kit[`Item${index + 1}`] = changeableItem;
+    });
+    console.log(kit)
+    setDoc(doc(collection(db, 'Kits')),{
+      ...kit
     })
   }
+  
+};
+onMounted(() => {
+  kitToBeMade.kit = '';
+  for (let item of selectedItems.value){
+    imageGetter(`ItemImages/${item.Image}`).then((res) => {
+      item.loadedImage = res;
+    })
+  }
+  console.log(selectedItems.value)
 });
 
 

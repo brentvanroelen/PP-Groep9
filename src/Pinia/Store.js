@@ -118,6 +118,9 @@ export const useChoiceOfItems = defineStore({
       console.log(collection, item)
       this.items[collection].push(item)
     },
+    addKitInstance(collection, item,id){
+      this.items[collection].push({item: item, kitid: id})
+    },
     getInstance(collection,itemIndex){
       return this.items[collection][itemIndex]
     },
@@ -269,6 +272,28 @@ export const useCategories = defineStore({
     }
   }
 });
+export const useReportedItems = defineStore({
+  id: 'reportedItems',
+  state: () => ({
+    itemImage: '',
+    itemName: '',
+    itemSerial: '',
+  
+
+  }),
+  actions: {
+    addName(itemName){
+      this.itemName = itemName
+    },
+    addImage(itemImage){
+      this.itemImage = itemImage
+    },
+    addSerial(itemSerial){
+      this.itemSerial= itemSerial
+    },
+    
+  }
+});
 export const useKitItems = defineStore({
   id: 'kitItems',
   state: () => ({
@@ -333,6 +358,9 @@ export const useKitToBeMade = defineStore({
   actions: {
     addKit(kit){
       this.kit = kit
+    },
+    getKitName(){
+      return this.kit.Name
     }
   }
 });

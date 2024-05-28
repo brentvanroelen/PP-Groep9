@@ -2,13 +2,13 @@
   <div class="report-page">
     <div class="item-info">
       <div class="item-details">
-        <h1>{{ itemName }}</h1>
-        <p>Catergorie: {{ category }}</p>
-        <p>Brand: {{ brand }}</p>
+
+        <h1>{{ report.itemName}}</h1>
+        <p>Serial Number: {{ report.itemSerial }}</p>
       </div>
-     <!--  <div class="item-image">
-         <img :src="item.Image" alt="Item Image">
-      </div> -->
+     <div class="item-image">
+         <img :src="report.itemImage" alt="Item Image">
+    </div>
     </div>
 
     <div class="issue-description">
@@ -29,10 +29,16 @@
 </template>
 
 <script setup>
+import { useReportedItems } from '@/Pinia/Store';
+
+const report = useReportedItems();
 </script>
 
 <style scoped>
 
+h1{
+  font-size: 24px
+}
 .report-page {
   max-width: 600px;
   margin: 0 auto;

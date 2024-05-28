@@ -1,5 +1,5 @@
 <template>
-    <div class="item" v-if="item" :class="{available: item.Available === true}">
+    <div class="item" v-if="item && !item.isKit" :class="{available: item.Available === true}">
       <div id="itemMain">
         <h3>{{item.Name}}</h3>
         <br>
@@ -12,6 +12,23 @@
         <p v-if="item.Available"><b>Beschikbaarheid: </b>Available 
         </p>
         <p v-else><b>Beschikbaarheid:</b> Item niet beschikbaar</p>
+      </div>
+      <div v-if="loan == true" id="quantity">
+        <Quantity :item="item" />  
+     </div>
+    </div>
+    <div class="item" v-if="item && item.isKit" :class="{available: item.Available === true}">
+      <div id="itemMain">
+        <h3>{{item.Name}}</h3>
+        <br>
+        <img :src="image" alt="" id="img">
+      </div>
+      <div id="itemInfo">
+        <p><b>Item description: </b>{{item.Description}}</p>
+        <p><b>Kit contains: </b></p>
+        <ul>
+          <li v-for="kitItem in item.Items">{{kitItem}}</li>
+        </ul>
       </div>
       <div v-if="loan == true" id="quantity">
         <Quantity :item="item" />  
@@ -32,9 +49,16 @@ const {item,loan,arraynumber} = defineProps({
 
 
 onMounted(() => {
-  imageGetter(`ItemImages/${item.Image}`).then((res) => {
-  image.value = res;
-})
+  console.log(item.isKit)
+  if(item.isKit){
+    imageGetter(`KitImages/${item.KitImage}`).then((res) => {
+      image.value = res;
+    })
+  }else{
+    imageGetter(`ItemImages/${item.Image}`).then((res) => {
+    image.value = res;
+    })
+  }
 })
 
 console.log(item.Name)
