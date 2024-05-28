@@ -19,9 +19,9 @@ import { useCart } from './Pinia/Store'
 
 const cart = useCart()
 const adminButton = ref(false)
-onMounted(() => {
-  cart.emptyCart()
-})
+// onMounted(() => {
+//   cart.emptyCart()
+// })
 
 
 
