@@ -7,12 +7,11 @@ import { signOut,onAuthStateChanged } from 'firebase/auth';
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    results: JSON.parse(localStorage.getItem('results')) || [],
+    results: [],
   }),
   actions: {
     updateResults(results) {
       this.results = results;
-      localStorage.setItem('results', JSON.stringify(results));
     }
   }
 });
@@ -48,7 +47,7 @@ export const useDates = defineStore({
 export const useCart = defineStore({
   id: 'Cart',
   state: () => ({
-    items: JSON.parse(localStorage.getItem('cartItems')) || [],
+    items: [],
     itemNames: [],
     startDate: '',
     endDate: '', 
@@ -57,7 +56,6 @@ export const useCart = defineStore({
     addItem(item){
       this.items.push(item);
       this.itemNames.push(item.Name)
-      localStorage.setItem('cartItems', JSON.stringify(this.items));
     },
     emptyCart(){
       this.items = [];
@@ -65,7 +63,6 @@ export const useCart = defineStore({
     },
     removeItem(index){
       this.items.splice(index, 1);
-      localStorage.setItem('cartItems', JSON.stringify(this.items));
     },
     addStartDate(startDate, startMonth){
       this.startDate = startDate
@@ -184,7 +181,8 @@ export const useUserIdentification = defineStore({
       firstName: '',
       lastName: '',
       warningCount: 0
-    }
+    },
+    loading: true,
   }),
   actions: {
     initialize(){
@@ -196,6 +194,7 @@ export const useUserIdentification = defineStore({
           const docreference = doc(db, 'Users', user.uid)
           getDoc(docreference).then((doc) => {
             if(doc.exists()){
+              this.auth = auth
               this.user.id = user.uid
               this.user.email = user.email
               this.user.type = doc.data().type
@@ -216,6 +215,7 @@ export const useUserIdentification = defineStore({
           this.user = {}
           this.router.replace('/login')
         }
+        this.loading = false;
       })
     },
     register(credentials){
@@ -259,7 +259,10 @@ export const useUserIdentification = defineStore({
     updateUserId(userId){
       this.userId = userId
     }
-  }
+  },
+  persistedState: {
+    persist: false,
+  },
 });
 export const useCategories = defineStore({
   id: 'Categories',

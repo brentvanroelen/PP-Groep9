@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { getStorage, ref,uploadBytes,getDownloadURL } from "firebase/storage";
 
 
@@ -30,6 +30,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db =  getFirestore(app)
 const auth = getAuth(app);
+
+auth.setPersistence(browserSessionPersistence)
+
 const storage = getStorage()
 
 export {
