@@ -8,17 +8,17 @@
     <div v-for="(item, index) in results" :key="index" class="item">
       <div class="icons">
         <router-link :to="{ path: '/checkPage', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/552871.png" alt="" class="icon" >
+          <img src="/src/assets/552871.png" alt="" class="icon">
         </router-link>
         <router-link :to="{ path: '/historyPage', query: { item: JSON.stringify(item) } }" class="link">
-          <img src="/src/assets/book.png" alt="" class="icon" >
+          <img src="/src/assets/book.png" alt="" class="icon">
         </router-link>
 
         <!-- <router-link :to="{ path: '/changeItemInfo', query: { item: JSON.stringify(item) } }" class="link">
           <img src="/src/assets/edit-icon-2048x2048-6svwfwto.png" alt="" class="icon">
         </router-link> -->
         
-        <img src="/src/assets/trash.png" alt="" class="icon" @click="deleteItem(index)">
+        <img src="/src/assets/trash.png" alt="" class="icon trash-icon" @click="deleteItem(index)">
       </div>
       <h2>{{ item.Name }}</h2>
       <h3>{{ item.Serial }}</h3>
@@ -36,14 +36,12 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script setup>
-import { onMounted, ref,watch } from 'vue';
-import { useKitToBeMade,useStore, useEarlyReturnsReservations,  useSearchedItems as useSearchedItemsFunction} from '@/Pinia/Store.js';
-import { db,getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
+import { onMounted, ref, watch } from 'vue';
+import { useKitToBeMade, useStore, useEarlyReturnsReservations, useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
+import { db, getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 import { imageGetter } from '@/js/functions.js';
 
 const useSearchedItems = useSearchedItemsFunction();
@@ -54,43 +52,39 @@ const results = ref([]);
 const reservationsAdmin = useEarlyReturnsReservations();
 let generalItem;
 const showResults = ref(false);
-const placeholder = ref('Search')
-
+const placeholder = ref('Search');
 
 const props = defineProps({
   page: String,
-  class: String
+  class: String,
 });
 
 const log = () => {
   console.log(querystring.value);
 };
 
-
-watch(querystring, async(newVal, oldVal) => {
-  if(props.page == 'AddKit'){
+watch(querystring, async (newVal, oldVal) => {
+  if (props.page == 'AddKit') {
     if (newVal.length >= 3) {
       await searchKit();
-      store.results.push({id: 10000, Name: querystring.value, loadedImage: '/src/assets/plus.jpg'});
+      store.results.push({ id: 10000, Name: querystring.value, loadedImage: '/src/assets/plus.jpg' });
       showResults.value = store.results.length > 0;
-    }else{
+    } else {
       showResults.value = false;
     }
   }
-})
-
-
-
+});
 
 const search = async () => {
-    if(props.page === 'HomeAdmin') {
-      searchAdmin();
-    }else {
-      console.log(querystring.value);
-      store.updateResults([]);
-      await querySnapshot1().then(() => {
-        querySnapshot2();
-      });
+  if (props.page === 'HomeAdmin') {
+    searchAdmin();
+  } else {
+    console.log(querystring.value);
+    store.updateResults([]);
+    await querySnapshot1().then(() => {
+      querySnapshot2();
+      querySnapshotByName();
+    });
 
     store.updateResults(results.value);
     console.log(results.value);
@@ -110,6 +104,7 @@ const querySnapshotByName = async () => {
 };
 
 
+
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
   console.log('Item to delete:', itemToDelete);
@@ -123,7 +118,6 @@ const deleteItem = async (index) => {
     console.error('Error removing document: ', error);
   }
 };
-
 
 const searchAdmin = async () => {
   reservationsAdmin.Reservations = [];
@@ -145,7 +139,7 @@ const searchAdmin = async () => {
       StartMonth: doc.data().StartMonth,
       StartDate: doc.data().StartDate,
       showItems: false,
-      Items: []
+      Items: [],
     };
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
       reservation.Items.push(doc.data()[`Item${i}`]);
@@ -155,6 +149,7 @@ const searchAdmin = async () => {
   });
   console.log(reservationsAdmin.Reservations);
 };
+
 const searchKit = async () => {
   let kits = [];
   store.updateResults([]);
@@ -163,7 +158,7 @@ const searchKit = async () => {
     where('SubStrings', 'array-contains', querystring.value.toLowerCase())
   );
   const docs = await getDocs(itemQuery);
-  if(docs.empty){
+  if (docs.empty) {
     console.log('No matching documents.');
     return;
   }
@@ -178,9 +173,7 @@ const setPage = (result) => {
   kitToBeMade.addKit(result);
   console.log(kitToBeMade.kit);
   querystring.value = '';
-}
-
-
+};
 
 const querySnapshot1 = async () => {
   const itemQuery1 = query(
@@ -196,6 +189,7 @@ const querySnapshot1 = async () => {
 
 const querySnapshot2 = async () => {
   if (!generalItem) return; // Ensure generalItem is defined
+  console.log(generalItem);
   const itemQuery2 = query(
     collection(
       db,
@@ -212,19 +206,18 @@ const querySnapshot2 = async () => {
   console.log(results.value);
 };
 
-const getImage = async(result) => {
-  console.log(result)
-  if(result != undefined && result.id != 10000){
+const getImage = async (result) => {
+  console.log(result);
+  if (result != undefined && result.id != 10000) {
     await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
       result.loadedImage = res;
-    })
-    console.log(result)
-    return true
-  }else{
+    });
+    console.log(result);
+    return true;
+  } else {
     return false;
   }
-}
-
+};
 
 onMounted(() => {
   placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
@@ -232,7 +225,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.AddKit{
+.AddKit {
   width: 60%;
 }
 .icon-img {
@@ -273,10 +266,14 @@ onMounted(() => {
 
 .search-bar button {
   padding: 8px 12px;
-  background-color: #007bff;
+  background-color: #dc3545;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
+}
+button:hover {
+  background-color: #c82333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #img {
@@ -328,6 +325,18 @@ onMounted(() => {
   margin: 0;
 }
 
+.icons .link img,
+.icons .trash-icon {
+  width: 20px;
+  height: 20px;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .icons ul img,
 .icons .link img {
   width: 20px;
@@ -339,6 +348,4 @@ onMounted(() => {
   margin: 0 !important;
   padding: 0 !important;
 }
-
-
 </style>

@@ -11,6 +11,7 @@
               <img src="../assets/calendar.png" alt="">
             </template>
           </VueDatePicker>
+          <hr>
           <Searchbar :page="page"></Searchbar>
         </div>   
         <div class="itemInfoBox" v-if="cart.items.length != 0">
@@ -199,6 +200,5 @@ button {
   margin-top: 20px;
 }
 div.search-container.HomeAdmin {
-  background-color: red;
-}
+ background-color: red; }
 </style>

@@ -185,7 +185,7 @@ onMounted(() => {
 </script>
   
 
-<style>
+<style scoped>
 .calendar{
   width: 60px;
   height: 60px
@@ -196,7 +196,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #d50000
+    /*background-color: #d50000*/
   }
   .search-container {
   position: relative; /* This makes the .search-results position relative to this container */
@@ -227,12 +227,16 @@ onMounted(() => {
   }
   .search-bar button {
      padding: 8px 12px; 
-    background-color: #d50000;
+    background-color: #dc3545;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     
   }
+  button:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
   .search-results {
   display: flex;
   flex-direction: column;

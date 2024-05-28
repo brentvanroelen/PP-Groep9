@@ -19,7 +19,7 @@
         <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
         <button @click="discardReservation(student)" class="deleteButton">Discard</button>
         <br>        
-        <button @click="toggleOrders(student)">&#9776;</button>
+        <button @click="toggleOrders(student)" id="toggleMenu">&#9776;</button>
         <!-- lijst met reservaties van de studenten-->
         <ul v-if="student.showOrders" class="ordersList">
           <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
@@ -515,6 +515,10 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
     align-items: center;
     margin-bottom: 20px;
   
+  }
+  #toggleMenu{
+      margin: 15px;
+    
   }
      
   @media (max-width: 600px) {
