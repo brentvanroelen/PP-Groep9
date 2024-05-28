@@ -125,11 +125,6 @@ const requestExtension = async () => {
     console.log('Selected Dates:', selectedDates.value);
     console.log('Extension Duration:', extensionDuration.value);
 
-    if (!userId.value) {
-        console.error('User ID is not set');
-        return;
-    }
-
     try {
         const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
