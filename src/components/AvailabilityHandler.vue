@@ -81,25 +81,39 @@ const dateifierRes = (startdateres,startmonthres,enddateres,endmonthres) => {
     return [startres, endres];
 }
 const getAvailableItems = async(name,serial,kitId) => {
-    if(availableInstances.getCollection(name + "kit" + `${kitId}`) == undefined){
-        availableInstances.createCollection(name + "kit" + `${kitId}`);
+    let databaseSearch;
+    if(name.includes(" ")){
+        let correctNameArray = []
+        let namearray = name.split(" ")
+        for (let partOfName of namearray){
+            correctNameArray.push(partOfName.charAt(0).toUpperCase() + partOfName.slice(1))
+        }
+        databaseSearch = correctNameArray.join(" ")
+        console.log(databaseSearch)
+    }else{
+        databaseSearch = name.charAt(0).toUpperCase() + name.slice(1)
     }
-    console.log(availableInstances)
-    console.log(name + "kit" + `${kitId}`)
-    const creference = collection(db, `Items/${name.charAt(0).toUpperCase() 
-        + name.slice(1)}/${name.charAt(0).toUpperCase() 
-        + name.slice(1)} items`);
+    if(availableInstances.getCollection(name + "kit" + `${kitId}`) == undefined && isKit==true){
+        availableInstances.createCollection(name + "kit" + `${kitId}`);
+    }else if (availableInstances.getCollection(name) == undefined && isKit==false ){
+        availableInstances.createCollection(name);
+    }
+    console.log(name)
+    console.log(databaseSearch)
+    const creference = collection(db, `Items/${databaseSearch}/${databaseSearch} items`);
     await getNonConflictingReservedItems(name,serial)
     const reservedSnapshot = await getDocs(creference);
+    console.log(reservedSnapshot.size)
     reservedSnapshot.forEach((doc) => {
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
             if(kitId != 0){
+                console.log(doc.data().Name)
                 availableInstances.addKitInstance(`${doc.data().Name}kit${kitId}`, doc.data());
+                console.log('kitrunning')
             }else{
+                console.log('why')
                 availableInstances.addInstance(doc.data().Name,doc.data());
             }
-        }else{
-            availableInstances.getInstance(doc.data().Name);
         }
     });
 }
@@ -138,8 +152,6 @@ const getNonConflictingReservedItems = async(name,serialseries) => {
 }
 const itemAvailability = async() => {
 for (let item of store.results) {
-        console.log(item)
-        console.log(availableInstances.items)
         console.log(availableInstances.items[item.Name])
         if(availableInstances.items[item.Name] !== undefined){
             availableInstances.items[item.Name] = [];
@@ -165,20 +177,22 @@ const kitAvailability = async() => {
                 console.log(kit.Items[i-1])
                 console.log(kit[`Item${i}`].SerialSeries)
                 console.log(kit.Id)
+                console.log(kit.Items.length)
                 await getAvailableItems(kit.Items[i-1],kit[`Item${i}`].SerialSeries,kit.Id);
-                console.log(availableInstances)
                 if(availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`].length == 0){
-                    for(let i = 1; i <= kit.Items.length; i++){
-                        availableInstances.items[kit.Items[i-1] + "kit" + `${kit.Id}`]= [];
-                    }
-                    available = false;
+                    available = false
                 }
-                console.log(availableInstances)
             }else{
                 console.log("Please select a date range")
             }
         }
-        alert("Kit is not available for these dates");
+        if(!available){
+            alert("Kit is not available for these dates");
+        }else{
+            console.log(availableInstances)
+            /* CALL RESERVATION HANDLER*/
+            console.log("Kit is available for these dates");
+        }
     }
 }
 
