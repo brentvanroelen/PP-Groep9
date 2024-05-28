@@ -6,8 +6,11 @@
     <div id="itemBox">
       <Items :item="Item"></Items>
       <div id="extraInfo">
-      <Quantity :item="Item"></Quantity>
-
+      <Quantity v-if="!Item.isKit" :item="Item"></Quantity>
+      <section v-if="dates.general.length != 0">
+        <p v-if="Item.isKit && available"> Kit is Available</p>
+        <p v-if="Item.isKit && !available"> Kit is Unavailable</p>
+      </section>
   <div id="checkbox">
     <label for="checkbox1"><b>For project:</b></label>
     <input type="checkbox" id="checkbox1" v-model="checked">
@@ -22,47 +25,55 @@
       <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
   </div>
 
-  </template>
+</template>
   
   
-  <script setup>
-  import Footer from "../components/Footer.vue"
-  import ReservationHandler from "@/components/ReservationHandler.vue";
-  import { computed } from "../main.js";
-  import { useRouter } from 'vue-router';
-  import Items from "@/components/Items.vue";
-  import Calendar from "@/components/Calendar.vue";
-  import Quantity from "@/components/Quantity.vue";
-  import {ref, reactive} from 'vue';
-  import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
+<script setup>
+import Footer from "../components/Footer.vue"
+import ReservationHandler from "@/components/ReservationHandler.vue";
+import { computed } from "../main.js";
+import { useRouter } from 'vue-router';
+import Items from "@/components/Items.vue";
+import Calendar from "@/components/Calendar.vue";
+import Quantity from "@/components/Quantity.vue";
+import {ref, reactive} from 'vue';
+import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
 
-  const props = defineProps({
-    Name: String,
-  });
-  const cart = useCart();
-  const quantity = useQuantity();
-  const router = useRouter();
-  const store = useStore();
-  const dates = useDates();
-  const checked = ref(false);
-  const params = router.currentRoute.value.params;
-  const results = computed(() => store.results);
-  const Item = results.value.find(item => item.Name === params.Name);
-  const page = "UserHome";
+const props = defineProps({
+  Name: String,
+});
+const cart = useCart();
+const quantity = useQuantity();
+const router = useRouter();
+const store = useStore();
+const dates = useDates();
+const checked = ref(false);
+const params = router.currentRoute.value.params;
+const results = computed(() => store.results);
+const Item = results.value.find(item => item.Name === params.Name);
+const page = "UserHome";
+const available = quantity.available[Item.Name];
 
-  const addItemToCart = () => {
-      if(dates.general == []){
-        console.log("Please select a date range and a quantity")
-      }else{
-        if(quantity.getQuantity(Item.Name) == 0){
-          quantity.setQuantity(Item.Name, 1)
-        }
-        dates.updateDate(Item.Name, dates.general)
-        console.log(Item);
-        cart.addItem(Item);
-        console.log(cart.items);        
-      }
+const addItemToCart = () => {
+  if(dates.general == []){
+    console.log("Please select a date range and a quantity")
+  }else if(Item.isKit){
+    if(available){
+      dates.updateDate(Item.Name, dates.general)
+      cart.addItem(Item);
+    }else{
+      console.log("Kit is not available")
+    }
+  }else{
+    if(quantity.getQuantity(Item.Name) == 0){
+      quantity.setQuantity(Item.Name, 1)
+    }
+    dates.updateDate(Item.Name, dates.general)
+    console.log(Item);
+    cart.addItem(Item);
+    console.log(cart.items);        
   }
+}
 
   </script>
 

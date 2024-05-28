@@ -56,3 +56,18 @@ export const generateSubstrings = (str) => {
     }
     return substrings;
 };
+export const databaseFormatter = (name) =>{
+    let databaseSearch;
+    if(name.includes(" ")){
+        let correctNameArray = []
+        let namearray = name.split(" ")
+        for (let partOfName of namearray){
+            correctNameArray.push(partOfName.charAt(0).toUpperCase() + partOfName.slice(1))
+        }
+        databaseSearch = correctNameArray.join(" ")
+    }else{
+        databaseSearch = name.charAt(0).toUpperCase() + name.slice(1)
+    }
+    return databaseSearch
+
+}
