@@ -25,8 +25,7 @@ import checkPage from '@/views/checkPage.vue'
 import changeItemInfo from '@/views/changeItemInfo.vue'
 import historyPage from '@/views/historyPage.vue'
 import ReportIssue from '@/views/ReportIssue.vue'
-
-
+import { useUserIdentification } from '@/Pinia/Store'
 
 
 const routes = [
@@ -163,6 +162,18 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
+router.beforeEach((to, from, next) => {
+  const store = useUserIdentification();
+  console.log(store)
+  const isLoggedIn = store.isLoggedIn;
+  console.log(isLoggedIn)
+
+  if (!isLoggedIn && to.name !== 'Login') {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
+});
 export default router

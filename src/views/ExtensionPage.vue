@@ -20,8 +20,10 @@
                     :range="true"
                 />
             </div>
-            <p>Selected Duration: {{ extensionDuration }} days</p>
+            
         </div>
+        <p>Selected Duration: {{ extensionDuration }} days</p>
+
         <div class="reason">
             <p class="why">Why do you want the extension?</p>
             <div class="text">
@@ -58,7 +60,8 @@ const ItemImage = ref('');
 
 const fetchReservationDetails = async () => {
     try {
-        const reservationDocRef = doc(db, `Reservations/${reservationId}`);
+        console.log(reservationId)
+        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         
         if (reservationDoc.exists()) {
@@ -66,7 +69,7 @@ const fetchReservationDetails = async () => {
             userId.value = reservationData.User;
             const endDate = new Date(new Date().getFullYear(), reservationData.EndMonth - 1, reservationData.EndDate);
             fullDate.value = endDate;
-            selectedDates.value = [endDate]; // Set initial selected date to the end date
+            selectedDates.value = [endDate];
             await fetchProductDetails();
         } else {
             console.log('Reservation does not exist');
@@ -173,6 +176,8 @@ const requestExtension = async () => {
 onMounted(fetchReservationDetails);
 </script>
 
+
+
 <style scoped>
 .product {
     display: flex;
@@ -250,11 +255,3 @@ input {
     background-color: #c1c1c1;
 }
 </style>
-
-
-
-
-
-
-
-

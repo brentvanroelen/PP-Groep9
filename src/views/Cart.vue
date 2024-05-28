@@ -50,7 +50,7 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">{{ itemCount }}</span>
             </div>
-            <ReservationHandler :check-user-cart="true" :button-text="'Plaats Reservatie'"></ReservationHandler>
+            <ReservationHandler :check-user-cart="true" :button-text="'Place Reservation'"></ReservationHandler>
         </section>
     </main>
 
