@@ -1,7 +1,7 @@
 <template v-if="Item">
     <div id="box">
     <div  id="calendarBox">
-      <Calendar :item="Item.Name" :page="page"></Calendar>
+      <Calendar :isKit="Item.isKit" :item="Item.Name" :page="page"></Calendar>
     </div>
     <div id="itemBox">
       <Items :item="Item"></Items>

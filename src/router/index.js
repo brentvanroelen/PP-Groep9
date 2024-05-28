@@ -24,6 +24,7 @@ import addItemsScreen from '../views/addItemsScreen.vue'
 import checkPage from '@/views/checkPage.vue'
 import changeItemInfo from '@/views/changeItemInfo.vue'
 import historyPage from '@/views/historyPage.vue'
+import ReportIssue from '@/views/ReportIssue.vue'
 
 
 
@@ -149,7 +150,12 @@ const routes = [
     path: '/historyPage',
     name: 'historyPage',
     component: historyPage
-  }
+  },
+  {
+    path: '/ReportIssue',
+    name: 'ReportIssue',
+    component: ReportIssue
+  },
   
   
 ]

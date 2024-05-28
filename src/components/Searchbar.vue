@@ -22,6 +22,10 @@
           </template>
         </VueDatePicker>
       </span>
+      <div class="kitoptions">
+        <label for="kits">See kits:</label>
+        <input type="checkbox" v-model="seeKits">
+      </div>
       <button class="searchbutton"@click="confirmedSearch">Search</button>
     </div>
   </div>
@@ -59,6 +63,7 @@ const selectedCategory = ref('');
 const dropdownOptions = useCategories().categories;
 const userType = useUserIdentification();
 const cart = useCart();
+const seeKits = ref(false);
 let showPopup = ref();
 let placeholder = ref("Search");
 const showResults = ref(false);
@@ -112,14 +117,25 @@ const search = async() => {
   const trigger = useTrigger()
   let results = [];
   store.updateResults([]);
-  const itemquery = query(collection(db, "Items"), 
-  where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
-  );
-  const querySnapshot = await getDocs(itemquery);
-    querySnapshot.forEach((snap) =>{
-      console.log(snap.data())
+  if(seeKits.value){
+    const kitquery = query(collection(db, "Kits"), 
+    where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
+    );
+    const kitquerySnapshot = await getDocs(kitquery);
+    kitquerySnapshot.forEach((snap) => {
+      snap.data().isKit = true;
       results.push(snap.data())
-  })
+    })
+  }else{
+    const itemquery = query(collection(db, "Items"), 
+    where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
+    );
+    const querySnapshot = await getDocs(itemquery);
+      querySnapshot.forEach((snap) =>{
+        console.log(snap.data())
+        results.push(snap.data())
+    })
+  }
   console.log(results)
   store.updateResults(results)
   if(store.results.length == 0){
@@ -251,6 +267,12 @@ img{
   border-radius: 5px;
   cursor: pointer;
   width: 15%;
+}
+.kitoptions{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 
