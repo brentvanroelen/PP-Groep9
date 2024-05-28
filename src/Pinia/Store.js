@@ -181,7 +181,8 @@ export const useUserIdentification = defineStore({
       firstName: '',
       lastName: '',
       warningCount: 0
-    }
+    },
+    auth: {},
   }),
   actions: {
     initialize(){
@@ -193,6 +194,7 @@ export const useUserIdentification = defineStore({
           const docreference = doc(db, 'Users', user.uid)
           getDoc(docreference).then((doc) => {
             if(doc.exists()){
+              this.auth = auth
               this.user.id = user.uid
               this.user.email = user.email
               this.user.type = doc.data().type
