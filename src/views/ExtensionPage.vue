@@ -3,24 +3,25 @@
         <div class="title">
             <h1>{{ ItemName }}</h1>
         </div>
-        <div class="image"></div>
-        <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
-        <p v-else>Image not available</p>
+        <div class="image">
+            <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
+            <p v-else>Image not available</p>
+        </div>
     </div>
     <div class="info">
         <div class="date">
             <p class="how">How long is the extension you want to request?</p>
             <div class="calendar">
                 <VueDatePicker
-                    v-model="selectedDates"
+                    v-model="selectedEndDate"
+                    :min-date="fullDate"
+                    :disabled-dates="[fullDate]"
                     inline
                     auto-apply
-                    :min-date="fullDate"
                     :clearable="false"
-                    :range="true"
                 />
             </div>
-            <p>Selected Duration: {{ extensionDuration }} days</p>
+            <p>Selected Extension End Date: {{ selectedEndDate }}</p>
         </div>
         <div class="reason">
             <p class="why">Why do you want the extension?</p>
@@ -41,32 +42,43 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
+// Gebruik useRoute om de route parameters te krijgen
 const route = useRoute();
+
+// Haal de reservationId uit de URL parameters
 const reservationId = route.query.reservationId;
+
+// Declareer de nodige refs
 const reason = ref('');
 const userId = ref('');
-const selectedDates = ref([]);
+const selectedEndDate = ref(null);
 const fullDate = ref(new Date());
 const ItemName = ref('');
 const ItemImage = ref('');
 
+// Functie om reservatie details op te halen
 const fetchReservationDetails = async () => {
     try {
-        const reservationDocRef = doc(db, `Reservations/${reservationId}`);
+        if (!reservationId) {
+            console.error('No reservationId provided in URL parameters');
+            return;
+        }
+
+        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
-        
+
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
             userId.value = reservationData.User;
             const endDate = new Date(new Date().getFullYear(), reservationData.EndMonth - 1, reservationData.EndDate);
             fullDate.value = endDate;
-            selectedDates.value = [endDate]; // Set initial selected date to the end date
+            selectedEndDate.value = endDate; // Set initial end date to the end date from the database
             await fetchProductDetails();
         } else {
             console.log('Reservation does not exist');
@@ -76,11 +88,12 @@ const fetchReservationDetails = async () => {
     }
 };
 
+// Functie om product details op te halen
 const fetchProductDetails = async () => {
     try {
         const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
-        
+
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
             const item1 = reservationData?.Item1;
@@ -101,26 +114,9 @@ const fetchProductDetails = async () => {
     }
 };
 
-const extensionDuration = computed(() => {
-    if (selectedDates.value.length === 2) {
-        const [startDate, endDate] = selectedDates.value;
-        const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-        return Math.ceil(duration); 
-    }
-    return 0;
-});
-
-watch(selectedDates, (newDates) => {
-    console.log('Selected Dates:', newDates);
-    if (newDates.length === 2) {
-        console.log('Start Date:', newDates[0]);
-        console.log('End Date:', newDates[1]);
-    }
-});
-
+// Functie om de extensie aan te vragen
 const requestExtension = async () => {
-    console.log('Selected Dates:', selectedDates.value);
-    console.log('Extension Duration:', extensionDuration.value);
+    console.log('Selected End Date:', selectedEndDate.value);
 
     if (!userId.value) {
         console.error('User ID is not set');
@@ -130,11 +126,11 @@ const requestExtension = async () => {
     try {
         const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
-        
+
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
             console.log('Reservation Data:', reservationData);
-            
+
             let { EndDate, EndMonth } = reservationData;
             let newEndDate = EndDate + extensionDuration.value;
             let newEndMonth = EndMonth;
@@ -161,7 +157,7 @@ const requestExtension = async () => {
 
             // Update the fullDate to the new end date
             fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
-            selectedDates.value = [fullDate.value]; // Reset selected dates to the new end date
+            selectedEndDate.value = fullDate.value; // Reset selected dates to the new end date
         } else {
             console.log('Reservation does not exist');
         }
@@ -170,6 +166,7 @@ const requestExtension = async () => {
     }
 };
 
+// Fetch reservation details when the component is mounted
 onMounted(fetchReservationDetails);
 </script>
 
@@ -250,11 +247,3 @@ input {
     background-color: #c1c1c1;
 }
 </style>
-
-
-
-
-
-
-
-

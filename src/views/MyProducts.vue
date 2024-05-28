@@ -11,7 +11,7 @@
             </button> -->
             <button @click="toggleReservationDetails(index)">See Reservations</button>
             <button>
-              <router-link class="link" to="/ExtensionPage">Request extension</router-link>
+                <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id }}">Request extension</router-link>
             </button>
           </div>
           <div v-if="isReservationVisible(index)" class="reservation-details">
@@ -22,7 +22,7 @@
                 <img :src="item.ItemImage" alt="picture">
                 <div class="actions">
                   <button>
-                    <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id }}">Request extension</router-link>
+                    <router-link class="link" to="/ExtensionPage">Request singular extension</router-link>
                   </button>
                   <button @click="getReportedItems">
                     <router-link class="link" to="/ReportIssue">Report Issue</router-link>
