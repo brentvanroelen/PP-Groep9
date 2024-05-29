@@ -3,16 +3,17 @@
     <h1>Item History</h1>
         
     <div class="history-container" v-if="hasIssues">
-      <h2>Issues</h2>
-      <ul>
-        <li v-for="key in sortedIssueKeys" :key="key" class="issue-item">
-          <h3>Issue {{ key }}</h3>
-          <p><strong>Description:</strong> {{ issueHistory[key].description }}</p>
-          <p><strong>Type:</strong> {{ issueHistory[key].type }}</p>
-          <img v-if="issueHistory[key].image" :src="issueHistory[key].image" alt="Issue image" class="issue-image">
-        </li>
-      </ul>
-    </div>
+  <h2>Issues</h2>
+  <ul>
+    <li v-for="key in sortedIssueKeys" :key="key" class="issue-item">
+      <h3>{{ key }}</h3>
+      <p><strong>Description:</strong> {{ issueHistory[key].description }}</p>
+      <p><strong>Type:</strong> {{ issueHistory[key].type }}</p>
+      <img v-if="issueHistory[key].image" :src="issueHistory[key].image" alt="Issue image" class="issue-image">
+    </li>
+  </ul>
+</div>
+
     <div class="history-container" v-if="hasReservations">
       <h2>Reservations</h2>
       <ul>
@@ -80,28 +81,52 @@ onMounted(async () => {
   }
 });
 
-const formatItemName = (name) => {
-  const words = name.split(' ');
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+const formatItemName = (itemName) => {
+  // Capitalize the first letter of the itemName
+  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+  
+  // Check if itemName includes a space
+  const spaceIndex = itemName.indexOf(' ');
+  if (spaceIndex !== -1) {
+    // Split the itemName into words
+    const words = capitalizedItemName.split(' ');
+    // Capitalize each word after the space
+    for (let i = 1; i < words.length; i++) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+    // Join the words back together with a space
+    return words.join(' ');
+  } else {
+    // If no space, simply return the capitalizedItemName
+    return capitalizedItemName;
   }
-  return words.join(' ');
 };
 
 
 const formatItemBundleName = (itemName) => {
   // Capitalize the first letter of the itemName
-  const words = itemName.split(' ').map(word => {
-    return formatItemName(word);
-  });
+  const capitalizedItemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
   
-  // Join the words back together with a space
-  return words.join(' ') + ' items'; // Add ' items' in lowercase
+  // Check if itemName includes a space
+  const spaceIndex = itemName.indexOf(' ');
+  if (spaceIndex !== -1) {
+    // Split the itemName into words
+    const words = capitalizedItemName.split(' ');
+    // Capitalize each word after the space
+    for (let i = 1; i < words.length; i++) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+    // Join the words back together with a space
+    return words.join(' ') + ' items'; // Add ' items' in lowercase
+  } else {
+    // If no space, simply append ' items' in lowercase
+    return capitalizedItemName + ' items';
+  }
 };
 
 const fetchInstanceItemData = async (Serial) => {
   try {
-    const itemName = item.value.Name ? formatItemName(item.value.Name) : '';
+    const itemName = formatItemName(item.value.Name); // itemName invoeren
     const itemBundleName = formatItemBundleName(itemName);
     console.log(itemBundleName);
     const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
@@ -124,7 +149,7 @@ const fetchInstanceItemData = async (Serial) => {
 
 const fetchItem = async (Serial) => {
   try {
-    const itemName = item.value.Name ? formatItemName(item.value.Name) : '';
+    const itemName = formatItemName(item.value.Name); // itemName invoeren
     const itemBundleName = formatItemBundleName(itemName);
     console.log(itemBundleName);
     console.log(Serial);
@@ -154,7 +179,6 @@ const fetchItem = async (Serial) => {
 };
 
 
-
 const fetchReservations = async (Serial) => {
   try {
     const q = query(collection(db, 'Utility/Reservations/All Reservations'));
@@ -182,8 +206,13 @@ const fetchReservations = async (Serial) => {
 
 
 const sortedIssueKeys = computed(() => {
-  return Object.keys(issueHistory.value).sort((a, b) => a - b);
+  return Object.keys(issueHistory.value).sort((a, b) => {
+    const numA = parseInt(a.match(/\d+/)[0]);
+    const numB = parseInt(b.match(/\d+/)[0]);
+    return numA - numB;
+  });
 });
+
 </script>
 
 

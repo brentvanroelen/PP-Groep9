@@ -66,7 +66,12 @@ console.log(item.Name)
 </script>
  
 <style scoped>
+.available{
+    margin-left: 5px;
+    margin-right: 0px;;
+}
 .item{
+  max-width: 600px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

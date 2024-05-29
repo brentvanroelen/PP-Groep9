@@ -5,14 +5,14 @@
         <slot>
           {{ message }}
         </slot>
-        <button @click="closePopup" class="popupButton">Close</button>
+        <!-- <button @click="closePopup" class="popupButton">Close</button> -->
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useItemsToGet } from '../Pinia/Store.js';
 
 const props = defineProps({
@@ -25,10 +25,17 @@ const props = defineProps({
 const isVisible = ref(true);
 
 
-const closePopup = () => {
-  isVisible.value = false;
-  
-}
+const closePopupAfterDelay = () => {
+  setTimeout(() => {
+    isVisible.value = false;
+  }, 1500); // Adjust the delay as needed (2000 milliseconds = 2 seconds)
+};
+
+// Call the method when the component is mounted
+onMounted(() => {
+  closePopupAfterDelay();
+});
+
 </script>
 
 <style scoped>

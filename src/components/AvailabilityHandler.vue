@@ -7,6 +7,7 @@ import { collection, getDocs, query, db, where} from '../Firebase/Index.js';
 import { watch,ref, computed } from 'vue';
 import { databaseFormatter } from '@/js/functions.js';
 
+
 const store = useStore();
 const dates = useDates();
 const quantity = useQuantity();
@@ -32,7 +33,7 @@ watch(triggergetter, async() => {
 const handleAvailability = async() => {
     dates.resetDates()
     console.log(page)
-    if(page == "UserHome"){
+    if(page == "UserHome" || page == "checkPage"){
         if(store.results.length == 0){
             const snapshot =  await getDocs(collection(db, "Items"))
             snapshot.forEach((doc) => {
@@ -40,8 +41,14 @@ const handleAvailability = async() => {
             });
         }
         if(!isKit){
-            availableInstances
-            await itemAvailability();
+            if(page == "checkPage"){
+                await itemAvailability(false);
+            }else{ 
+                await itemAvailability(true);
+
+            }
+            
+           
         }else{
             await kitAvailability();
         }
@@ -82,6 +89,9 @@ const dateifierRes = (startdateres,startmonthres,enddateres,endmonthres) => {
     return [startres, endres];
 }
 const getAvailableItems = async(name,serial,kitId) => {
+    console.log(serial)
+    console.log(name)
+    console.log(kitId)
     let databaseSearch = databaseFormatter(name)
     if(availableInstances.getCollection(name + "kit" + `${kitId}`) == undefined && isKit==true){
         availableInstances.createCollection(name + "kit" + `${kitId}`);
@@ -92,6 +102,7 @@ const getAvailableItems = async(name,serial,kitId) => {
     console.log(databaseSearch)
     const creference = collection(db, `Items/${databaseSearch}/${databaseSearch} items`);
     await getNonConflictingReservedItems(name,serial)
+    console.log('WHOEHOE')
     const reservedSnapshot = await getDocs(creference);
     reservedSnapshot.forEach((doc) => {
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
@@ -138,13 +149,21 @@ const getNonConflictingReservedItems = async(name,serialseries) => {
         Nonconflictingreserveditems = Nonconflictingreserveditems.filter(item => !blacklist.includes(item));
     });
 }
-const itemAvailability = async() => {
+const itemAvailability = async(SerialSeriesDefined) => {
 for (let item of store.results) {
 
         if(Object.keys(dates.general).length != 0){
             console.log(item)
-            await getAvailableItems(item.Name,item.SerialSeries,0);
-            console.log(availableInstances)
+            if(SerialSeriesDefined){
+                await getAvailableItems(item.Name,item.SerialSeries,0);
+                console.log(availableInstances);
+            }else{
+                let serialseries = item.Serial.split("-")[0];
+                await getAvailableItems(item.Name,serialseries,0);
+                console.log(availableInstances);
+            }   
+        
+            
             /* CALL RESERVATION HANDLER*/
         }else{
             console.log("Please select a date range")

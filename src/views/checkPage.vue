@@ -26,14 +26,22 @@
     <router-link class="link" to="/ManageItems"><button class="btn">Back</button></router-link>
   </div>
   <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+  <AvailabilityHandler :isKit="false" :page="page"></AvailabilityHandler>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { db, doc, getDoc, updateDoc } from "../Firebase/Index.js";
+import { db, doc, getDoc, updateDoc, where , collection , getDocs , query } from "../Firebase/Index.js";
 import Popup from '@/components/Popup.vue';
+import AvailabilityHandler from '@/components/AvailabilityHandler.vue';
+import { useStore , useDates , useTrigger , useChoiceOfItems } from '@/Pinia/Store.js';
 
+const page = "checkPage";   
+const availableInstances = useChoiceOfItems();
+const trigger = useTrigger();
+const dates = useDates();
+const store = useStore();
 const popupVisible = ref(false);
 const popupMessage = ref('');
 
@@ -69,11 +77,18 @@ const submitFindings = async () => {
     description: description.value,
     image: image.value,
     type: selectedIssue.value,
-    // user: 'current_user_id'  // Voeg logica toe om de huidige gebruikers-id op te halen
+    // user: 'current_user_id'  
   };
 
-  await reportIssueToDatabase(issueData, item.value.Serial);
-};
+  reportIssueToDatabase(issueData, item.value.Serial)
+    .then(() => {
+      
+      
+      checkAvailability(item.value.Serial);
+    })
+    .catch(error => {
+      console.error('Error reporting issue:', error);
+    });}
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
@@ -137,6 +152,83 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     console.error('Error reporting issue:', error);
   }
 };
+
+
+const checkAvailability = async (Serial) => {
+
+  try {
+    const futureReservationArray = [];
+    const reservationsRef = collection(db, 'Utility', 'Reservations', 'All Reservations');
+    console.log(Serial)
+    const q = query(reservationsRef, where('allItemSerials' ,'array-contains', Serial));
+
+    
+    // Log de query voor debugging
+    console.log('Query:', q);
+    
+    const querySnapshot = await getDocs(q);
+
+    // Log de querySnapshot voor debugging
+    console.log('Query Snapshot:', querySnapshot);
+
+    const currentDate = new Date();
+    const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    console.log(`Today's date: ${today}`);
+
+    let hasFutureReservation = false;
+
+    querySnapshot.forEach(doc => {
+      const reservationData = doc.data();
+      console.log('Reservation Data:', reservationData);
+      const reservationDate = new Date();
+      reservationDate.setDate(reservationData.StartDate);
+      reservationDate.setMonth(reservationData.StartMonth);
+      console.log(`Reservation date: ${reservationDate}`);
+      console.log(`Today's date: ${today}`);
+
+      
+      if (reservationDate > today){
+        futureReservationArray.push(doc.data());
+        console.log(futureReservationArray)
+        hasFutureReservation = true;
+      }
+      
+      
+  });
+
+    if (hasFutureReservation) {
+      console.log('Dit item heeft een toekomstige reservering.');
+      await issueResolver(futureReservationArray, item.value.Serial);
+    } else {
+      console.log('Dit item heeft geen toekomstige reservering.');
+    }
+  } catch (error) {
+    console.error('Error checking availability:', error);
+  }
+};
+
+const issueResolver = async (futureReservationArray, Serial) => {
+   
+
+    availableInstances.resetAllItems();
+    availableInstances.createCollection(item.value.Name);
+    store.updateResults([]);
+    store.updateResults([item.value]);
+    for(const reservation of futureReservationArray){
+        dates.updateGeneralDates([reservation.StartDate, reservation.StartMonth, reservation.EndDate, reservation.EndMonth]);
+        for(let i = 1 ; i <= reservation.allItemSerials.length ; i++){
+          if( reservation[ `Item${i}`].Serial == Serial ){
+            console.log(item.value)
+            trigger.fireTrigger();
+
+        
+          }
+        }
+    }
+
+}
+
+
 </script>
 
 

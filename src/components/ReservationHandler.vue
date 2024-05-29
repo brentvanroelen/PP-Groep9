@@ -1,7 +1,7 @@
 <template>
-    
+    <div id="buttons">
     <button @click="handleReservation()">{{ buttonText }}</button>
-   <div><Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" /> </div>
+   <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" /> </div>
     
 </template>
 <script setup>
@@ -329,3 +329,22 @@ const filterUnnecessaryDates = () => {
     );
 }
 </script>
+<style scoped>
+ button{
+    background-color: #FF0000;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 1em;
+    color: white;
+    border-radius: 1em;
+    width: 300px;
+    height: 50px;
+  }
+  #buttons{
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
+  </style>

@@ -29,7 +29,7 @@
 </template>
   
   
-  <script setup>
+<script setup>
   import Footer from "../components/Footer.vue"
   import ReservationHandler from "@/components/ReservationHandler.vue";
   import { computed } from "../main.js";
@@ -88,7 +88,7 @@ const addItemToCart = () => {
   }
 }
 
-  </script>
+</script>
 
   <style scoped>
     #box {
@@ -98,7 +98,7 @@ const addItemToCart = () => {
     flex-wrap: wrap;
   }
   #itemBox{
-    width: 600px;
+    width: 675px;
     margin: 2em;
     background-color: #D9D9D9;
     padding: 1em;
