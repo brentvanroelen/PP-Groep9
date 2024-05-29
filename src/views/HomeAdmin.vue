@@ -43,10 +43,10 @@
 
 
 <script setup>
-import { useStore,useUserIdentification } from "@/Pinia/Store.js";
+import { useStore,useUserIdentification, useSelectedUser } from "@/Pinia/Store.js";
 import Reservation from "@/components/Reservation.vue";
 import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
-import { onSnapshot, doc, db,query,where,collection} from '../Firebase/Index.js';
+import { onSnapshot, doc, db,query,where,collection, getDoc, getDocs} from '../Firebase/Index.js';
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 import{ useRouter } from 'vue-router';
 import HomePlannedLoans from "@/components/HomePlannedLoans.vue";
@@ -68,6 +68,39 @@ const disableDecrement = () => {
     return false
   }
 }
+
+const autoWarnings = ref();
+const endDate = ref();
+const endMonth = ref();
+const returnUser = ref();
+const warned = ref();
+
+const fetchSettings = async () => {
+  const settings = doc(db, 'Settings', 'Options');
+  const settingDocSnap = await getDoc(settings);
+  if (settingDocSnap.exists()) {
+    const data = settingDocSnap.data();
+    autoWarnings.value = data.autoWarnings;
+    console.log(autoWarnings.value)
+  }}
+
+const fetchReservations = async () => {
+   const reservation = collection(db, 'Reservations', );
+   const reservationSnapshots = await getDocs(reservation);
+   reservationSnapshots.forEach(doc => {
+     const data = doc.data();
+     console.log(data);
+     endDate.value = doc.data().EndDate;
+     console.log(endDate);
+     endMonth.value = doc.data().EndMonth;
+     console.log(endMonth);
+     returnUser.value = doc.data().User;
+     console.log(returnUser);
+     warned.value = doc.data().Warned;
+   });
+ } 
+
+
 
 const user = useUserIdentification()
 const router = useRouter()
@@ -136,10 +169,14 @@ watchEffect(() => {
   });
 });
 
-onUnmounted(() => {
-    unssub = true;
+onMounted(() => {
+  fetchSettings();
+  fetchReservations();
 });
 
+onUnmounted(() => {
+  unssub = true;
+});
 
 </script>
 

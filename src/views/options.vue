@@ -5,7 +5,6 @@
         <div class="pickUp">
             <div class="availableDays">
             <h2>Edit available pickup time</h2>
-            <h4>Start time: </h4><input type="time" name="" id="" v-model="startPickupTime"> <h4>End time: </h4><input type="time" name="" id="" v-model="endPickupTime">
             <div id="days">
             <h4>Available days: </h4>
                 <div class="dayContainer">
@@ -75,27 +74,13 @@
             
             
         <div class="warningSys">
+            <h2>Edit blacklist system</h2>
             <div class="warningSystem">
-                <h2>Edit warning system</h2>
-                    <h4>Overdue time till warning?</h4>
-                        <select name="" id="minutesOvertime" v-model="overdueTimeTillWarning">
-                            <option value="5">5 minutes</option>
-                            <option value="10">10 minutes</option>
-                            <option value="15">15 minutes</option>
-                            <option value="20">20 minutes</option>
-                            <option value="25">25 minutes</option>
-                            <option value="30">30 minutes</option>
-                            <option value="35">35 minutes</option>
-                            <option value="40">40 minutes</option>
-                            <option value="45">45 minutes</option>
-                            <option value="50">50 minutes</option>
-                            <option value="55">55 minutes</option>
-                            <option value="60">60 minutes</option>
-                        </select>
-            
-                </div>
-
-
+                <label for="switch" class="days">Automatic warnings:</label><label class="switch">
+                    <input type="checkbox" v-model="autoWarnings">
+                    <span class="slider round"></span>
+                </label>
+            </div>
                 <div class="blacklistWarnings">
                 <h4>Required warnings to blacklist: </h4>
                 <select name="" id="blacklistSelect" v-model="requiredWarningsToBlacklist">
@@ -105,26 +90,8 @@
                     <option value="4">4 warnings</option>
                     <option value="5">5 warnings</option></select>
                 </div>
-                <div class="dayContainer">
-                <h4>Project requests: </h4>
-                
-                    <label for="switch" class="days">Allow</label><label class="switch">
-                        <input type="checkbox" v-model="allowRequests">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
             </div>
             <div class="returns">
-                <div class="editReturns">
-                    <h2>Edit returns</h2>
-                    <h4>Sudden returns: </h4>
-                        <div class="dayContainer">
-                            <label for="switch" class="days">Allow</label><label class="switch">
-                                <input type="checkbox" v-model="allowSuddenReturns">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    <h4> Return start time: </h4><input type="time" name="" id="" v-model="returnStartTime"> <h4>Return end time: </h4><input type="time" name="" id="" v-model="returnEndTime">
                     <div class="editLoaning">
                         <h2>Edit loaning</h2>
                             <h4>User loan limit</h4>
@@ -153,7 +120,6 @@
                                 <option value="9">9 kits</option>
                                 <option value="10">10 kits</option></select>
                     </div>
-                </div>
             </div>
     </section>
     <button @click="update()">Update Options</button>
@@ -178,8 +144,6 @@ const fetchData = async () => {
 
     if (docSnap.exists()) {
         const data = docSnap.data();
-        startPickupTime.value = data.startPickupTime;
-        endPickupTime.value = data.endPickupTime;
         monday.value = data.monday;
         tuesday.value = data.tuesday;
         wednesday.value = data.wednesday;
@@ -187,16 +151,12 @@ const fetchData = async () => {
         friday.value = data.friday;
         student.value = data.student;
         teacher.value = data.teacher;
-        overdueTimeTillWarning.value = data.overdueTimeTillWarning;
         requiredWarningsToBlacklist.value = data.requiredWarningsToBlacklist;
-        allowRequests.value = data.allowRequests;
-        allowSuddenReturns.value = data.allowSuddenReturns;
-        returnStartTime.value = data.returnStartTime;
-        returnEndTime.value = data.returnEndTime;
         userLoanLimit.value = data.userLoanLimit;
         userKitLimit.value = data.userKitLimit;
         studentReservation.value = data.studentReservation;
         teacherReservation.value = data.teacherReservation;
+        autoWarnings.value = data.autoWarnings;
     }else{
         console.log("There is no data");
     }
@@ -205,8 +165,6 @@ onMounted(fetchData);
 
 const studentReservation = ref();
 const teacherReservation = ref();
-const startPickupTime = ref();
-const endPickupTime = ref();
 const monday = ref();
 const tuesday = ref();
 const wednesday = ref();
@@ -214,14 +172,10 @@ const thursday = ref();
 const friday = ref();
 const student = ref();
 const teacher = ref();
-const overdueTimeTillWarning = ref();
 const requiredWarningsToBlacklist = ref();
-const allowRequests = ref();
-const allowSuddenReturns = ref();
-const returnStartTime = ref();
-const returnEndTime = ref();
 const userLoanLimit = ref();
 const userKitLimit = ref();
+const autoWarnings = ref();
 const popupVisible = ref(false);
 const popupMessage = ref('');
 
@@ -236,8 +190,6 @@ popupVisible.value = true;
 const update = () => {
     const options = useOptions();
     const optionsdata = {
-        startPickupTime: startPickupTime.value,
-        endPickupTime: endPickupTime.value,
         monday: monday.value,
         tuesday: tuesday.value,
         wednesday: wednesday.value,
@@ -247,14 +199,10 @@ const update = () => {
         teacher: parseInt(teacher.value),
         studentReservation: parseInt(studentReservation.value),
         teacherReservation: parseInt(teacherReservation.value),
-        overdueTimeTillWarning: parseInt(overdueTimeTillWarning.value),
         requiredWarningsToBlacklist: parseInt(requiredWarningsToBlacklist.value),
-        allowRequests: allowRequests.value,
-        allowSuddenReturns: allowSuddenReturns.value,
-        returnStartTime: returnStartTime.value,
-        returnEndTime: returnEndTime.value,
         userLoanLimit: parseInt(userLoanLimit.value),
-        userKitLimit: parseInt(userKitLimit.value)
+        userKitLimit: parseInt(userKitLimit.value),
+        autoWarnings: autoWarnings.value
     };
     //update pinia
     options.updateOptions(optionsdata);
@@ -303,7 +251,9 @@ h1 {
 .options h2 {
     margin-bottom: 20px;
 }
-
+.warningSystem{
+    margin: 1em;
+}
 
 .options label {
     margin-right: 10px;
