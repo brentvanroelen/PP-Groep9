@@ -73,9 +73,10 @@ import { computed, onMounted, ref } from "vue";
 import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
 import { reservationReturnedOrCanceled } from "../js/functions.js";
 import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
-import Popup from "@/components/Popup.vue";
 
 const report = useReportedItems();
+
+
 
 let cancelledReservations = ref([]);
 let reservations = ref([]);
@@ -85,16 +86,6 @@ const user = useUserIdentification();
 let startDate = ref(new Date());
 const visibleReservations = ref({});
 
-const popupVisible = ref(false);
-const popupMessage = ref('');
-
-
-
-
-  const showPopup = (message) => {
-  popupMessage.value = message;
-  popupVisible.value = true;
-};
 
 const displayReservations = computed(() => {
   let test = cancellableReservationsCalc();
@@ -174,7 +165,7 @@ const cancellableReservationsCalc = () => {
           startDate.value.setDate(reservation.StartDate);
           startDate.value.setMonth(reservation.StartMonth);
           let adjustedStartDate = new Date(startDate.value);
-          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2)
+          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
           adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
           adjustedStartDate.setHours(0,0,0,0);
           console.log(adjustedStartDate)
@@ -188,7 +179,6 @@ const cancellableReservationsCalc = () => {
 
       return [cancellableReservations, remainingReservations];
   }
-  
 };
 
 const toggleReservationDetails = (index) => {
