@@ -248,4 +248,8 @@ button {
 input {
     background-color: #c1c1c1;
 }
+
+img{
+    max-width: 100px;
+}
 </style>
