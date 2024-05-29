@@ -95,36 +95,48 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 500px;
 }
 
 .login {
-    display: flex;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     padding: 20px;
     box-sizing: border-box;
+    color: #ffffff;
+    border-radius: 15px;
+    box-shadow:0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.login:hover {
+    transform:  translate(-50%, -50%) translateY(-5px);
 }
 
 .options {
     display: flex;
-    margin-left: auto;
+    justify-content: center;
     width: 100%;
     max-width: 600px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
+    padding: 10px 0;
     margin-bottom: 30px;
 }
 
 .RegisterPageUl {
     list-style-type: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
     padding: 0;
@@ -135,19 +147,16 @@ li, .logOutBtn {
     padding: 10px 20px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, color 0.3s;
     border-radius: 5px;
     flex: 1;
-    margin: 0 5px;
-}
-
-li:hover, .logOutBtn:hover {
-    transform: scale(1.05);
+    margin: 0 10px;
 }
 
 li.isActive {
     background-color: #007bff;
     color: white;
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -156,10 +165,11 @@ li.isActive:hover {
 }
 
 .logOutBtn {
-    background-color: #ff0000;
+    background-color: #ff0000; 
     border: none;
+    border-radius: 20px;
+    margin: 0 10px;
     color: white;
-    transition: background-color 0.3s;
 }
 
 .logOutBtn:hover {
@@ -169,7 +179,10 @@ li.isActive:hover {
 .loginContainer {
     display: flex;
     justify-content: center;
+    align-content: center;
     width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .loginContent {
@@ -179,7 +192,8 @@ li.isActive:hover {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Centering content horizontally */
+    text-align: center; 
+    box-sizing: border-box;
 }
 
 .Content {
@@ -188,23 +202,26 @@ li.isActive:hover {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    text-align: center;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 24px;
     color: #333;
+    margin-bottom: 20px;
 }
 
 .loginPageBtn {
-    background-color: #ff0000;
+    background-color: #28a745;
     border: none;
     padding: 10px;
     cursor: pointer;
     color: white;
-    border-radius: 50px;
+    border-radius: 25px;
     width: 100%;
-    font-size: 1em;
+    font-size: 16px;
     transition: background-color 0.3s, box-shadow 0.3s;
     position: relative;
     overflow: hidden;
@@ -212,27 +229,8 @@ h1 {
 }
 
 .loginPageBtn:hover {
-    background-color: #cc0000;
+    background-color: #218838;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.loginPageBtn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300%;
-    height: 300%;
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translate(-50%, -50%) rotate(45deg);
-    transition: width 0.3s, height 0.3s;
-    border-radius: 50%;
-    z-index: -1;
-}
-
-.loginPageBtn:hover::before {
-    width: 0;
-    height: 0;
 }
 
 fieldset {
@@ -245,10 +243,10 @@ fieldset {
 }
 
 label {
-    font-size: 1em;
+    font-size: 16px;
     margin-bottom: 5px;
     color: #555;
-    text-align: left;
+    text-align: center;
     width: 100%;
 }
 
@@ -256,7 +254,7 @@ input {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    font-size: 1em;
+    font-size: 16px;
     width: 100%;
     box-sizing: border-box;
     transition: border-color 0.3s;
@@ -276,6 +274,8 @@ form.Content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 </style>
 
