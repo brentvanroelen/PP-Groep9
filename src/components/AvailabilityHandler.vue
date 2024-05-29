@@ -153,6 +153,7 @@ for (let item of store.results) {
 }
 const kitAvailability = async() => {
     for (let kit of store.results) {
+        quantity.setavailable(kit.Name,'We raaaaaaaaviniiiing')
         for(let i = 1; i <= kit.Items.length; i++){
             console.log(kit.Items[i-1])
             console.log(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`])
@@ -161,7 +162,9 @@ const kitAvailability = async() => {
             }
             if(Object.keys(dates.general).length != 0){
                 await getAvailableItems(kit.Items[i-1],kit[`Item${i}`].SerialSeries,kit.Id);
-                if(availableInstances.items[kit.Items[i-1]] == []){
+                console.log(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`] )
+                if(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`].length == 0){
+                    console.log("Kit is not available")
                     quantity.setavailable(kit.Name,false)
                 }
                 /* CALL RESERVATION HANDLER*/

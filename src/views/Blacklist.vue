@@ -37,9 +37,9 @@
               <td>{{ user.name }}</td>
               <td>{{ user.contact }}</td>
               <td>
-                <button @click="increaseWarning(index)">+</button>
+                <button @click="increaseWarning(index)" class="button">+</button>
                 <span class="warning-count">{{ user.warningCount }}</span>
-                <button @click="decreaseWarning(index)">-</button>
+                <button @click="decreaseWarning(index)" class="button">-</button>
               </td>
             <td :class="getBlacklistedClass(user.warningCount)">
               <div class="border">{{ user.blacklisted }}</div>
@@ -66,7 +66,7 @@
 
   <script setup>
   import { onMounted, ref } from 'vue';
-  import { doc, getDocs, collection } from 'firebase/firestore'; 
+  import { doc, getDocs, collection, getDoc } from 'firebase/firestore'; 
   import { db, updateDoc } from '@/Firebase/Index.js';
 
   async function updateWarningCountInDatabase(userId, newWarningCount) {
@@ -82,6 +82,8 @@
 }
   const users = ref([]);
   const filteredUsers = ref(users.value);
+  const requiredWarningsToBlacklist = ref();
+  const autoWarnings = ref();
 
   const fetchData = async () => {
     try {
@@ -104,19 +106,26 @@
       console.error('Error fetching users:', error);
     }
   }
+  const fetchSettings = async () => {
+    const docRef = doc(db, "Settings", "Options");
+    const docSnap = await getDoc(docRef);
 
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        requiredWarningsToBlacklist.value = data.requiredWarningsToBlacklist;;
+        autoWarnings.value = data.autoWarnings;
+    }else{
+        console.log("There is no data");
+    }
+  }
   onMounted(fetchData);
+  onMounted(fetchSettings);
 
   function updateBlacklistedStatus(index) {
       const warnings = users.value[index].warningCount;
       if(warnings == 0){
         users.value[index].blacklisted = 'no';
-      }
-      else if (warnings === 1) {
-        users.value[index].blacklisted = 'no';
-      } else if (warnings === 2) {
-        users.value[index].blacklisted = 'no';
-      } else if (warnings >= 3) {
+      } else if (warnings >= requiredWarningsToBlacklist.value) {
         users.value[index].blacklisted = 'yes';
       } else {
         users.value[index].blacklisted = 'no';
@@ -137,7 +146,8 @@
     }
     
     function increaseWarning(index) {
-      if (users.value[index].warningCount < 3) {
+      console.log(requiredWarningsToBlacklist.value)
+      if (users.value[index].warningCount < requiredWarningsToBlacklist.value) {
         users.value[index].warningCount++;
         updateBlacklistedStatus(index);
         const userId = users.value[index].userId; 
@@ -158,11 +168,11 @@
    
     
     function getBlacklistedClass(warningCount) {
-      if (warningCount === 1) {
+      if (warningCount === 1 ) {
         return 'green';
-      } else if (warningCount === 2) {
+      } else if (warningCount < requiredWarningsToBlacklist.value && warningCount > 1) {
         return 'orange';
-      } else if (warningCount >= 3) {
+      } else if (warningCount >= requiredWarningsToBlacklist.value) {
         return 'red';
       } else {
         return '';
@@ -239,6 +249,16 @@
       cursor: pointer;
       transition: background-color 0.3s;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    }
+    .button{
+      margin: 0.5em;
+      padding: 0em 0.8em;
+      background-color: #dfdfdf;
+      border: none;
+      border-radius: 10px;
+    }
+    .button:hover{
+      background-color: #9a9a9a;
     }
 
     .actions button:hover {

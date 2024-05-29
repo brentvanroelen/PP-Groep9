@@ -20,6 +20,7 @@ const itemSelector = useItemSelector();
 const user = useUserIdentification();
 const selectedUser = useSelectedUser();
 const itemsToGet = useItemsToGet();
+const Warned = ref();
 
 let  items = []
 let itemMaps = [];
@@ -36,6 +37,7 @@ const handleReservation = async() => {
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
+        let singleItem = store.results[0];
         if(page != "HomeAdmin"){
             selectedUser.selectUser({
             firstName: user.user.firstName,
@@ -43,16 +45,36 @@ const handleReservation = async() => {
             uid: user.user.id
             })
         }
-        dates.updateDate(store.results[0].Name, dates.general)
-        itemSelector.setCollectionName(`${store.results[0].Name}`);
+        dates.updateDate(singleItem.Name, dates.general)
+        itemSelector.setCollectionName(`${singleItem.Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
-            if(quantity.getQuantity(itemSelector.itemName) == 0){
-                quantity.setQuantity(itemSelector.itemName, 1)
-            }
-            for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
-                const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
-                .then(changeAmountAvailable(chosenitem.value.Name));
-                promises.push(promise);
+            if(singleItem.isKit){
+                console.log(singleItem)
+                if(!quantity.available[singleItem.Name]){
+                    console.log("Kit is not available")
+                    return
+                }
+                for(let i = 0; i < singleItem.Items.length; i++){
+                    itemSelector.setCollectionName(`${singleItem.Items[i]}kit${singleItem.Id}`);
+                    console.log(itemSelector.itemName)
+                    if(quantity.getQuantity(singleItem.Items[i]) == 0){
+                        quantity.setQuantity(singleItem.Items[i], 1)
+                    }
+                    for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
+                        const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
+                        .then(() => changeAmountAvailable(singleItem.Items[i]));
+                        promises.push(promise);
+                    }
+                }
+            }else{
+                if(quantity.getQuantity(itemSelector.itemName) == 0){
+                    quantity.setQuantity(itemSelector.itemName, 1)
+                }
+                for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
+                    const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
+                    .then(changeAmountAvailable(chosenitem.value.Name));
+                    promises.push(promise);
+                }
             }
             console.log(items)
             console.log(promises)
@@ -60,7 +82,7 @@ const handleReservation = async() => {
             .then(() => {
                 makeItemMap(items);
             })
-            .then(() => MakeReservation(dates.dates[itemSelector.itemName]))
+            .then(() => MakeReservation(dates.dates[singleItem.Name]))
         }
     }else if(checkUserCart){
         if(cart.items.length == 0){
@@ -212,24 +234,17 @@ const MakeReservation = async(date) => {
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
+        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     await setDoc(docRefGeneralReservation,{
         id: docRefUserReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
-        allItemNames: items.map(item => item.Name),
         StartDate: date[0],
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: selectedUser.user.uid,
-        UserFirstName: selectedUser.user.firstName,
-        UserLastName: selectedUser.user.lastName,
-        ForProject: false,
-        Extended: false,
-        CurrentlyWithUser: false,
-        ReservationPrepared: false,
         ...Object.assign({}, ...itemMaps)
     });
     
@@ -249,6 +264,7 @@ const MakeReservation = async(date) => {
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
+        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     
