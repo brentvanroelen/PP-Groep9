@@ -73,7 +73,7 @@ const autoWarnings = ref();
 const endDate = ref();
 const endMonth = ref();
 const returnUser = ref();
-const warned = ref();
+
 
 const fetchSettings = async () => {
   const settings = doc(db, 'Settings', 'Options');
@@ -96,7 +96,6 @@ const fetchReservations = async () => {
      console.log(endMonth);
      returnUser.value = doc.data().User;
      console.log(returnUser);
-     warned.value = doc.data().Warned;
    });
  } 
 
