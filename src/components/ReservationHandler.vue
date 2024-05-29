@@ -241,19 +241,10 @@ const MakeReservation = async(date) => {
         id: docRefUserReservation.id, 
         ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
         allItemSerials: items.map(item => item.Serial),
-        allItemNames: items.map(item => item.Name),
         StartDate: date[0],
         EndDate: date[2],
         StartMonth: date[1],
         EndMonth: date[3],
-        User: selectedUser.user.uid,
-        UserFirstName: selectedUser.user.firstName,
-        UserLastName: selectedUser.user.lastName,
-        ForProject: false,
-        Extended: false,
-        CurrentlyWithUser: false,
-        ReservationPrepared: false,
-        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     
