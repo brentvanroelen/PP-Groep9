@@ -9,6 +9,7 @@
       <Quantity v-if="!Item.isKit" :item="Item"></Quantity>
       <section v-if="dates.general.length != 0">
         <p v-if="Item.isKit && available"> Kit is Available</p>
+        <p v-if="available == undefined"></p>
         <p v-if="Item.isKit && !available"> Kit is Unavailable</p>
       </section>
   <div id="checkbox">
@@ -22,7 +23,7 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
+      <ReservationHandler :check-user-cart="false" :button-text="'Reserve item'"></ReservationHandler>
   </div>
 
 </template>
@@ -52,7 +53,7 @@ const params = router.currentRoute.value.params;
 const results = computed(() => store.results);
 const Item = results.value.find(item => item.Name === params.Name);
 const page = "UserHome";
-const available = quantity.available[Item.Name];
+const available = ref(quantity.available[Item.Name]);
 
 const addItemToCart = () => {
   if(dates.general == []){
