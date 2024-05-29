@@ -49,6 +49,7 @@
       </button>
     </form>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
@@ -57,10 +58,20 @@
 import { ref } from 'vue';
 import { getDocs } from 'firebase/firestore';
 import { db, doc, updateDoc, setDoc, collection, increment, getDoc,  } from "../Firebase/Index.js";
+import Popup from '@/components/Popup.vue';
+
+
+
+const popupVisible = ref(false);
+const popupMessage = ref('');
 
 
 
 
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 let instance = ref(false);
 
 const docdata = ref({
@@ -153,9 +164,11 @@ const addNewItem = async () => {
     Image: docdata.value.Image,
     DateAdded: currentDate 
   });
+  showPopup('Item added successfully!');
 };
 
 const addNewInstance = async () => {
+
   const instanceName = instancedata.value.Name.charAt(0).toUpperCase() + instancedata.value.Name.slice(1);
   const itemRef = doc(db, 'Items', instanceName);
   const itemDoc = await getDoc(itemRef);
@@ -180,12 +193,15 @@ const addNewInstance = async () => {
       Image: await getImage(instanceName),
       DateAdded: currentDate 
     });
+  
+    showPopup('Instance added successfully!');
     await changeAmountAvailable(instanceName);
     return serial;
   } else {
     console.log(`Item with name ${instanceName} does not exist.`);
     return;
   }
+ 
 };
 
 

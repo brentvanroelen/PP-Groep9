@@ -21,8 +21,8 @@
       <button @click="addItemToCart()">Add to cart</button>
       <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
   </div>
-
-  </template>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+</template>
   
   
   <script setup>
@@ -35,6 +35,7 @@
   import Quantity from "@/components/Quantity.vue";
   import {ref, reactive} from 'vue';
   import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
+  import Popup from "@/components/Popup.vue";
 
   const props = defineProps({
     Name: String,
@@ -49,6 +50,16 @@
   const results = computed(() => store.results);
   const Item = results.value.find(item => item.Name === params.Name);
   const page = "UserHome";
+  const popupVisible = ref(false);
+  const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
   const addItemToCart = () => {
       if(dates.general == []){
@@ -60,7 +71,8 @@
         dates.updateDate(Item.Name, dates.general)
         console.log(Item);
         cart.addItem(Item);
-        console.log(cart.items);        
+        console.log(cart.items);
+        showPopup('This item is added to your cart!');        
       }
   }
 

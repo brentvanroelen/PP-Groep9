@@ -16,7 +16,7 @@
               </details>
           </div>
           <div class="kolom1">
-          <button @click="reservationReturnedOrCanceled(cancellableReservation) ;cancelRes(cancellableReservation) ">
+          <button @click="reservationReturnedOrCanceled(cancellableReservation) ;cancelRes(cancellableReservation) ;showPopup('Reservation has been cancelled'); ">
               Cancel Reservation
           </button>  
           </div>
@@ -52,7 +52,8 @@
       <div class="kolom4">
           <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }} </p>   
           <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
-      </div>    
+      </div>  
+      <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />  
   </div>
 
 </template>
@@ -61,6 +62,7 @@ import { computed, onMounted, ref } from "vue";
 import { db,collection,query,where,getDocs,doc } from "../Firebase/Index.js";
 import {reservationReturnedOrCanceled} from "../js/functions.js"
 import { useUserIdentification } from "@/Pinia/Store.js";
+import Popup from "@/components/Popup.vue";
 
 let cancelledReservations = ref([]);
 let reservations = ref([]);
@@ -68,6 +70,16 @@ let cancellableReservations = ref([]);
 const year = ref(new Date().getFullYear());
 let startDate = ref(new Date());
 const user = useUserIdentification();
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const displayReservations = computed(() => {
   let test = cancellableReservationsCalc();
@@ -103,6 +115,7 @@ const getItems = (reservation) => {
 };
 const cancelRes = (reservation) => {
   cancelledReservations.value.push(reservation);
+    
   
 };
 
@@ -138,7 +151,7 @@ const cancellableReservationsCalc = () => {
           startDate.value.setDate(reservation.StartDate);
           startDate.value.setMonth(reservation.StartMonth);
           let adjustedStartDate = new Date(startDate.value);
-          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
+          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2)
           adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
           adjustedStartDate.setHours(0,0,0,0);
           console.log(adjustedStartDate)
@@ -152,6 +165,7 @@ const cancellableReservationsCalc = () => {
 
       return [cancellableReservations, remainingReservations];
   }
+  
 };
 
 ;
