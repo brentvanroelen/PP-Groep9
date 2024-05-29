@@ -20,7 +20,6 @@ const itemSelector = useItemSelector();
 const user = useUserIdentification();
 const selectedUser = useSelectedUser();
 const itemsToGet = useItemsToGet();
-const Warned = ref();
 
 let  items = []
 let itemMaps = [];
@@ -234,7 +233,6 @@ const MakeReservation = async(date) => {
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
-        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     await setDoc(docRefGeneralReservation,{
@@ -253,7 +251,6 @@ const MakeReservation = async(date) => {
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
-        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     
@@ -273,7 +270,6 @@ const MakeReservation = async(date) => {
         Extended: false,
         CurrentlyWithUser: false,
         ReservationPrepared: false,
-        Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
     
