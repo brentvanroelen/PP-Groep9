@@ -166,9 +166,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const store = useUserIdentification();
-  console.log(store)
+  //console.log(store)
   const isLoggedIn = store.isLoggedIn;
-  console.log(isLoggedIn)
+  //console.log(isLoggedIn)
 
   if (!isLoggedIn && to.name !== 'Login') {
     next({ name: 'Login' });

@@ -6,7 +6,7 @@ import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, u
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
-
+import { databaseFormatter } from '@/js/functions.js';
 
 
 const data = ref([]);
@@ -86,17 +86,31 @@ const handleReservation = async() => {
                     promises = [];
                     itemMaps = [];
                     for (let item of reservation){
-                        if(quantity.getQuantity(item.Name) == 0){
-                            quantity.setQuantity(item.Name, 1)
-                        }
-                        console.log(item)
-                        console.log(reservation)
-                        itemSelector.setCollectionName(`${item.Name}`);
-                        console.log(quantity.getQuantity(itemSelector.itemName))
-                        for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
-                            const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
-                            .then(() => changeAmountAvailable(item.Name));
-                            promises.push(promise);
+                        if(item.isKit){
+                            for(let i = 0; i < item.Items.length; i++){
+                                itemSelector.setCollectionName(`${item.Items[i]}kit${item.Id}`);
+                                if(quantity.getQuantity(item.Items[i]) == 0){
+                                    quantity.setQuantity(item.Items[i], 1)
+                                }
+                                for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
+                                    const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
+                                    .then(() => changeAmountAvailable(item.Items[i]));
+                                    promises.push(promise);
+                                }
+                            }
+                        }else{
+                            if(quantity.getQuantity(item.Name) == 0){
+                                quantity.setQuantity(item.Name, 1)
+                            }
+                            console.log(item)
+                            console.log(reservation)
+                            itemSelector.setCollectionName(`${item.Name}`);
+                            console.log(quantity.getQuantity(itemSelector.itemName))
+                            for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
+                                const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
+                                .then(() => changeAmountAvailable(item.Name));
+                                promises.push(promise);
+                            }
                         }
                     }
                     console.log(items)
@@ -128,24 +142,34 @@ const getItem = async() => {
     console.log(chosenitem.value)
 }
 const markInstancesAsUnavailable = async(name) => {
-    const docRef = doc(db, `Items/${name.charAt(0).toUpperCase() 
-                    + name.slice(1)}/${name.charAt(0).toUpperCase() 
-                    + name.slice(1)} items/${chosenitem.value.Serial}`);
+    let databaseName = databaseFormatter(name);
+    const docRef = doc(db, `Items/${databaseName}/${databaseName} items/${chosenitem.value.Serial}`);
     await updateDoc(docRef, {
         Reserved: true
     });
 }
 const changeAmountAvailable = async(name) => {
-    const docRef = doc(db, `Items/${name.charAt(0).toUpperCase() 
-                    + name.slice(1)}`);
+    let databaseName = databaseFormatter(name);
+    const docRef = doc(db, `Items/${databaseName}`);
     await updateDoc(docRef, {
         AvailableAmount: increment(-1)
     });
 }
 const makeItemMap = (items) =>{
-    console.log(items)
-    itemMaps = items.map((item, index) => ({
-        [`Item${index + 1}`]: {
+    for (let item of cart.items){
+        if(item.isKit){
+            for(let i = 0; i < items.length; i++){
+                let itemIndex = item.Items.indexOf(items[i].Name);
+                if(item.Items.includes(items[i].Name)){
+                    items[i].kitId = item.Id;
+                    item.Items.splice(itemIndex, 1);
+                }
+            }
+        }
+    }
+    itemMaps = items.map((item, index) => {
+        let mappedItem = {
+            [`Item${index + 1}`]: {
             id: index + 1,
             ItemName: item.Name,
             ItemImage: item.Image,
@@ -159,9 +183,14 @@ const makeItemMap = (items) =>{
             ItemPrepared: false
 
         }
-    }));
-
-
+    };
+    if(item.kitId){
+        mappedItem[`Item${index + 1}`].belongsToKit = true;
+        mappedItem[`Item${index + 1}`].KitId = item.kitId;
+        
+    }
+    return mappedItem;
+    });
 }
 const MakeReservation = async(date) => {
     const docRefUserReservation = doc(collection(db, `Users/${selectedUser.user.uid}/Reservations`));
@@ -268,7 +297,7 @@ const orderCart = () => {
     cart.items = orderedCart;
     return orderedCart;
 }
-const filterUnnecessaryDates = () => {
+const filterUnnecessaryDates = () => {    
     dates.dates = Object.fromEntries(
         Object.entries(dates.dates).filter(([key, value]) => cart.itemNames.includes(key))
     );

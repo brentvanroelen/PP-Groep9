@@ -29,8 +29,15 @@ export const useDates = defineStore({
     updateDate(item, datearray) {
       this.dates[item] = datearray;
     },
-    resetDates(){
+    resetDates(all){
       this.dates = {}
+      if(all){
+        this.allDatesSetToGeneral = false
+        this.general = []
+      }
+    },
+    resetGeneralDates(){
+      this.general = []
     },
     updateGeneralDates(datearray){
       this.general = datearray
@@ -49,8 +56,6 @@ export const useCart = defineStore({
   state: () => ({
     items: [],
     itemNames: [],
-    startDate: '',
-    endDate: '', 
   }),
   actions: {
     addItem(item){
@@ -59,17 +64,12 @@ export const useCart = defineStore({
     },
     emptyCart(){
       this.items = [];
+      this.itemNames = [];
       localStorage.removeItem('cartItems');
     },
     removeItem(index){
       this.items.splice(index, 1);
     },
-    addStartDate(startDate, startMonth){
-      this.startDate = startDate
-    },
-    addEndDate(endDate, endMonth){
-      this.endDate = endDate
-    }
   },
 
 });
@@ -79,7 +79,7 @@ export const useQuantity = defineStore({
     quantity: {
 
     },
-    available: 0
+    available: {}
   }),
   actions: {
     setQuantity(item,quantity){
@@ -91,11 +91,12 @@ export const useQuantity = defineStore({
       }
       return this.quantity[item]
     },
-    setavailable(available){
-      this.available = available
+    setavailable(kit, available){
+      this.available[kit] = available
     },
     resetQuantity(){
       this.quantity = {}
+      this.available = {}
     }
   }
 
@@ -113,6 +114,7 @@ export const useChoiceOfItems = defineStore({
     },
     addInstance(collection,item){
       console.log(collection, item)
+      console.log(this.items)
       this.items[collection].push(item)
     },
     addKitInstance(collection, item){
@@ -289,8 +291,6 @@ export const useReportedItems = defineStore({
     itemImage: '',
     itemName: '',
     itemSerial: '',
-  
-
   }),
   actions: {
     addName(itemName){

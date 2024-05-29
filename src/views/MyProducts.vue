@@ -1,170 +1,199 @@
 <template>
-  <div>
-    <button @click="log">Test</button>
-    <template v-for="(reservation, index) in displayReservations" :key="index">
-      <div class="product1" v-if="!cancelledReservations.includes(reservation)">
-        <div class="kolom1">
-          <p>Serial: {{ reservation.id }}</p>
-          <div class="actions">
-            <button @click="toggleReservationDetails(reservation)">See Reservations</button>
-            <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id, userId: user.user.id }}">Request extension</router-link>
+  <button @click="log"> test</button>
+  <template v-for="(cancellableReservation, Index) in displayReservations[0]" :key= Index>
+      <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
+          <div class="kolom1">
+              <p>Serial: {{ cancellableReservation.id }}</p>
+              <details>
+                  <summary>See Items</summary>
+                  <ul>
+                  <li v-for="(item, index) in getItems(cancellableReservation)" :key="index">
+                      Name: {{ item.ItemName}}
+                      Serialnumber: {{ item.Serial}}
+                      <img :src="item.ItemImage" alt="picture">
+                  </li>
+                  </ul>
+              </details>
           </div>
-          <div v-if="isReservationVisible(reservation)" class="reservation-details">
-            <ul>
-              <li v-for="(item, index) in getItems(reservation)" :key="index" class="reservation-item">
-                Name: {{ item.ItemName }}
-                Serial number: {{ item.Serial }}
-                <img :src="item.ItemImage" alt="picture">
-                <div class="actions">
-                  <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id }}">Request single extension</router-link>
-                  <router-link class="link" to="/ReportIssue">Report Issue</router-link>
-                </div>
-              </li>
-            </ul>
+          <div class="kolom1">
+          <button @click="reservationReturnedOrCanceled(cancellableReservation) ;cancelRes(cancellableReservation) ">
+              Cancel Reservation
+          </button>  
           </div>
-        </div>
-        <div class="kolom4">
-          <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }}</p>
-          <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
-        </div>
+          <div class="kolom4">
+              <p>{{ cancellableReservation.StartDate }}/{{ cancellableReservation.StartMonth }}/{{ year }} </p>   
+              <p>{{ cancellableReservation.EndDate }}/{{ cancellableReservation.EndMonth }}/{{ year }}</p>
+          </div>    
       </div>
-    </template>
+  </template>
+  <div v-for="(reservation, Index) in displayReservations[1]" :key="Index" class="product1">
+      <div class="kolom1">
+          <p>Serial: {{ reservation.id }}</p>
+          <details>
+              <summary>See Items</summary>
+              <ul>
+                <li v-for="(item, index) in getItems(reservation)" :key="index">
+                  Name: {{ item.ItemName}}
+                  Serialnumber: {{ item.Serial}}
+                  <img :src="item.ItemImage" alt="picture">
+                  <button><router-link class="link" to="/ExtensionPage">Request singular extension</router-link></button>
+                </li>
+              </ul>
+          </details>
+      </div>
+      <div class="kolom1">
+          <button>
+              <router-link class="link" to="/ExtensionPage">Request extension</router-link>
+          </button>  
+      </div>
+       <button>
+          <router-link class="link" to="/ReportIssue"> Report Issue </router-link>
+      </button>
+      <div class="kolom4">
+          <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }} </p>   
+          <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
+      </div>    
   </div>
-</template>
 
+</template>
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { db, collection, getDocs } from "../Firebase/Index.js";
+import { db,collection,query,where,getDocs,doc } from "../Firebase/Index.js";
+import {reservationReturnedOrCanceled} from "../js/functions.js"
 import { useUserIdentification } from "@/Pinia/Store.js";
 
+let cancelledReservations = ref([]);
+let reservations = ref([]);
+let cancellableReservations = ref([]);
+const year = ref(new Date().getFullYear());
+let startDate = ref(new Date());
 const user = useUserIdentification();
 
-const cancelledReservations = ref([]);
-const reservations = ref([]);
-const visibleReservations = ref({});
-
-const year = ref(new Date().getFullYear());
-
 const displayReservations = computed(() => {
-  let [cancellableReservations, remainingReservations] = cancellableReservationsCalc();
-  return cancellableReservations.concat(remainingReservations);
+  let test = cancellableReservationsCalc();
+  let array = [test[0], test[1]];
+  return array;
 });
-
-const getItems = (reservation) => {
-  const items = [];
-  if (reservation) {
-    for (let i = 1; i <= 10; i++) {
-      if (reservation[`Item${i}`]) {
-        items.push(reservation[`Item${i}`]);
-      } else {
-        break;
+const arrayifier = computed(() => {
+  let array = [];
+  for (let reservation of reservations.value){
+      console.log(reservations.value)
+      for (let i = 1; i <= 10; i++){
+          if (reservation[`Item${i}`] != undefined){
+              array.push(reservation[`Item${i}`]);
+          }else{
+              break;
+          }
       }
-    }
   }
-  return items;
+  return array;
+});
+const getItems = (reservation) => {
+  let array = [];
+  if(reservation != undefined){
+      for (let i = 1; i <= 10; i++){
+          if (reservation[`Item${i}`] != undefined){
+              array.push(reservation[`Item${i}`]);
+          }else{
+              break;
+          }
+      }
+      return array;
+  }else {console.log("loading...")};
+};
+const cancelRes = (reservation) => {
+  cancelledReservations.value.push(reservation);
+  
 };
 
 const getReservations = async () => {
-  if (user.user.id) {
-    const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);
-    const querySnapshot = await getDocs(collectionRef);
-    if (querySnapshot.empty) {
-      console.log('No Reservations found!');
-      return;
-    } else {
-      querySnapshot.forEach((doc) => {
-        reservations.value.push(doc.data());
-      });
-    }
+  if(user.user.id){
+      const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);
+      const querySnapshot = await getDocs(collectionRef);
+      if (querySnapshot.empty) {
+          console.log('No Reservations found!');
+          return;
+      }else{
+          querySnapshot.forEach((doc) => {
+          reservations.value.push(doc.data());
+          });
+      }
+      
   }
-};
+}
+
+
+
+
 
 const cancellableReservationsCalc = () => {
-  let cancellableReservations = [];
-  let remainingReservations = [];
+  if (reservations.value == undefined){
+      console.log("loading...")
+  } else {
+      let cancellableReservations = [];
+      let remainingReservations = [];
 
-  for (let reservation of reservations.value) {
-    // Implement your logic here to determine cancellable reservations
-    // For demonstration, assuming all reservations are cancellable
-    cancellableReservations.push(reservation);
+      for (let reservation of reservations.value){
+          console.log(reservations.value)
+          startDate.value.setDate(reservation.StartDate);
+          startDate.value.setMonth(reservation.StartMonth);
+          let adjustedStartDate = new Date(startDate.value);
+          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
+          adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
+          adjustedStartDate.setHours(0,0,0,0);
+          console.log(adjustedStartDate)
+          
+          if (!reservation.CurrentlyWithUser && new Date().setHours(0,0,0,0) <= adjustedStartDate){
+              cancellableReservations.push(reservation);
+          } else {
+              remainingReservations.push(reservation);
+          }
+      }
+
+      return [cancellableReservations, remainingReservations];
+  }
+};
+
+;
+
+
+onMounted( async() => {
+  await getReservations();
+});
+
+</script>
+
+<style scoped>
+  div{
+      display: flex;
+      margin: 20px;
+      background-color: #c1c1c1;
+      padding: 20px;
   }
 
-  return [cancellableReservations, remainingReservations];
-};
+  p{
+      margin: auto;
+  }
 
-const toggleReservationDetails = (reservation) => {
-  visibleReservations.value[reservation.id] = !visibleReservations.value[reservation.id];
-};
-
-const isReservationVisible = (reservation) => visibleReservations.value[reservation.id] || false;
-
-onMounted(getReservations);
-</script>
-  
-  <style scoped>
-.product1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  border: 1px solid #ddd;
-  padding: 16px;
-  border-radius: 8px;
-}
-
-.kolom1, .kolom4 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 16px;
-}
-
-.actions {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.reservation-details {
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-  padding: 16px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.reservation-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
-}
-
-.reservation-item img {
-  max-width: 50px;
-  max-height: 50px;
-  margin-left: 16px;
-  border-radius: 8px;
-}
-
-.button {
-  padding: 8px;
-  background-color: #ff3333;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #cc0000;
-}
+  .kolom1{
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+  }
+  .kolom4{
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+  }
+  button{
+      margin: auto;
+      border-radius: 50px;
+      padding: 15px 10px 15px 10px;
+      background-color: red;
+      color: white;
+      border: 0cap;
+  }
+  .available{
+      background-color: lightgreen;
+  }
 </style>
