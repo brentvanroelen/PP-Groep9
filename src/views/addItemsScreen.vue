@@ -135,7 +135,7 @@ const addNewItem = async () => {
   });
 
   await setDoc(doc(db, 'Items', capitalizedItemName), {
-    Name: capitalizedItemName,
+    Name: capitalizedItemName.toLowerCase(),
     Category: docdata.value.Category,
     Brand: docdata.value.Brand,
     Description: docdata.value.Description,
@@ -156,7 +156,7 @@ const addNewItem = async () => {
   // Voegt het eerste serienummer toe
   const firstSerialRef = doc(itemItemsCollectionRef, `${serialSeries}-01`);
   await setDoc(firstSerialRef, {
-    Name: capitalizedItemName,
+    Name: capitalizedItemName.toLowerCase(),
     Serial: `${serialSeries}-01`,
     HasIssues: false, 
     Issues: {}, 
@@ -185,7 +185,7 @@ const addNewInstance = async () => {
 
     const itemSerialsRef = doc(db, `Items/${instanceName}/${instanceName} items/${serial}`);
     await setDoc(itemSerialsRef, {
-      Name: instanceName,
+      Name: instanceName.toLowerCase(),
       Serial: serial,
       HasIssues: instancedata.value.HasIssues,
       Issues: instancedata.value.Issues,

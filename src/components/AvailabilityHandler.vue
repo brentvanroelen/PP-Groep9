@@ -151,7 +151,9 @@ const getNonConflictingReservedItems = async(name,serialseries) => {
 }
 const itemAvailability = async(SerialSeriesDefined) => {
 for (let item of store.results) {
-
+        if( availableInstances.items[`${item.Name}`] !== undefined){
+            availableInstances.items[`${item.Name}`] = [];
+        }
         if(Object.keys(dates.general).length != 0){
             console.log(item)
             if(SerialSeriesDefined){

@@ -1,85 +1,91 @@
 <template>
-  <button @click="log"> test</button>
-  <template v-for="(cancellableReservation, Index) in displayReservations[0]" :key= Index>
-      <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
-          <div class="kolom1">
-              <p>Serial: {{ cancellableReservation.id }}</p>
-              <details>
-                  <summary>See Items</summary>
-                  <ul>
-                  <li v-for="(item, index) in getItems(cancellableReservation)" :key="index">
-                      Name: {{ item.ItemName}}
-                      Serialnumber: {{ item.Serial}}
-                      <img :src="item.ItemImage" alt="picture">
-                  </li>
-                  </ul>
-              </details>
-          </div>
-          <div class="kolom1">
-          <button @click="reservationReturnedOrCanceled(cancellableReservation) ;cancelRes(cancellableReservation) ;showPopup('Reservation has been cancelled'); ">
-              Cancel Reservation
-          </button>  
-          </div>
-          <div class="kolom4">
-              <p>{{ cancellableReservation.StartDate }}/{{ cancellableReservation.StartMonth }}/{{ year }} </p>   
-              <p>{{ cancellableReservation.EndDate }}/{{ cancellableReservation.EndMonth }}/{{ year }}</p>
-          </div>    
-      </div>
-  </template>
-  <div v-for="(reservation, Index) in displayReservations[1]" :key="Index" class="product1">
+  <button @click="log">Test</button>
+  <template v-for="(cancellableReservation, index) in displayReservations[0]" :key="index+10000">
+    <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
       <div class="kolom1">
-          <p>Serial: {{ reservation.id }}</p>
-          <details>
-              <summary>See Items</summary>
-              <ul>
-                <li v-for="(item, index) in getItems(reservation)" :key="index">
-                  Name: {{ item.ItemName}}
-                  Serialnumber: {{ item.Serial}}
-                  <img :src="item.ItemImage" alt="picture">
-                  <button><router-link class="link" to="/ExtensionPage">Request singular extension</router-link></button>
-                </li>
-              </ul>
-          </details>
+        <p>Serial: {{ cancellableReservation.id }}</p>
+        <div class="actions">
+          <!-- Dit moet nog aangepast worden, dit gaat misschien weg -->
+          <!-- <button @click="reservationReturnedOrCanceled(cancellableReservation); cancelRes(cancellableReservation)">
+            Cancel Reservation
+          </button> -->
+          <button @click="toggleReservationDetails(index+10000)">See Items</button>
+        </div>
+        <div v-if="isReservationVisible(index+10000)" class="reservation-details">
+          <ul>
+            <li v-for="(item, index) in getItems(cancellableReservation)" :key="index" class="reservation-item">
+              <img :src="item.ItemImage" alt="picture">
+              Name: {{ item.ItemName }}
+              <br>
+              Serial number: {{ item.Serial }}
+              <div class="actions">
+                <button>
+                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id }}">Request extension</router-link>
+                </button>
+                <button @click="getReportedItems">
+                  <router-link class="link" to="/ReportIssue">Report Issue</router-link>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="kolom1">
-          <button>
-              <router-link class="link" to="/ExtensionPage">Request extension</router-link>
-          </button>  
-      </div>
-       <button>
-          <router-link class="link" to="/ReportIssue"> Report Issue </router-link>
-      </button>
       <div class="kolom4">
-          <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }} </p>   
-          <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
-      </div>  
-      <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />  
+        <p>{{ cancellableReservation.StartDate }}/{{ cancellableReservation.StartMonth }}/{{ year }}</p>
+        <p>{{ cancellableReservation.EndDate }}/{{ cancellableReservation.EndMonth }}/{{ year }}</p>
+      </div>
+    </div>
+  </template>
+  <div v-for="(reservation, index) in displayReservations[1]" :key="index" class="product1">
+    <div class="kolom1">
+      <p>Serial: {{ reservation.id }}</p>
+      <div class="actions">
+        <button @click="toggleReservationDetails(index)">See Items</button>
+      </div>
+      <div v-if="isReservationVisible(index)" class="reservation-details">
+        <ul>
+          <li v-for="(item, index) in getItems(reservation)" :key="index" class="reservation-item">
+            <img :src="item.ItemImage" alt="picture">
+            Name: {{ item.ItemName }}
+            <br>
+            Serial number: {{ item.Serial }}
+            <div class="actions">
+              <button>
+                <router-link class="link" to="/ExtensionPage">Request singular extension</router-link>
+              </button>
+              <button @click="getReportedItems(item)">
+                <router-link class="link" to="/ReportIssue">Report Issue</router-link>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="kolom4">
+      <p>{{ reservation.StartDate }}/{{ reservation.StartMonth }}/{{ year }}</p>
+      <p>{{ reservation.EndDate }}/{{ reservation.EndMonth }}/{{ year }}</p>
+    </div>
   </div>
-
 </template>
+
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { db,collection,query,where,getDocs,doc } from "../Firebase/Index.js";
-import {reservationReturnedOrCanceled} from "../js/functions.js"
-import { useUserIdentification } from "@/Pinia/Store.js";
-import Popup from "@/components/Popup.vue";
+import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
+import { reservationReturnedOrCanceled } from "../js/functions.js";
+import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
+
+const report = useReportedItems();
+
+
 
 let cancelledReservations = ref([]);
 let reservations = ref([]);
 let cancellableReservations = ref([]);
 const year = ref(new Date().getFullYear());
-let startDate = ref(new Date());
 const user = useUserIdentification();
-const popupVisible = ref(false);
-const popupMessage = ref('');
+let startDate = ref(new Date());
+const visibleReservations = ref({});
 
-
-
-
-  const showPopup = (message) => {
-  popupMessage.value = message;
-  popupVisible.value = true;
-};
 
 const displayReservations = computed(() => {
   let test = cancellableReservationsCalc();
@@ -100,23 +106,35 @@ const arrayifier = computed(() => {
   }
   return array;
 });
+
+
+
+
 const getItems = (reservation) => {
-  let array = [];
-  if(reservation != undefined){
-      for (let i = 1; i <= 10; i++){
-          if (reservation[`Item${i}`] != undefined){
-              array.push(reservation[`Item${i}`]);
-          }else{
-              break;
-          }
+  const items = [];
+  if (reservation) {
+    for (let i = 1; i <= 10; i++) {
+      if (reservation[`Item${i}`]) {
+        items.push(reservation[`Item${i}`]);
+      } else {
+        break;
       }
-      return array;
-  }else {console.log("loading...")};
+    }
+  }
+  return items;
 };
+
 const cancelRes = (reservation) => {
   cancelledReservations.value.push(reservation);
-    
-  
+};
+
+const getReportedItems =(item) => {
+  report.addImage(item.ItemImage);
+  console.log(report.itemImage);
+  report.addName(item.ItemName);
+  console.log(report.itemName);
+  report.addSerial(item.Serial);
+  console.log(report.itemSerial);
 };
 
 const getReservations = async () => {
@@ -135,10 +153,6 @@ const getReservations = async () => {
   }
 }
 
-
-
-
-
 const cancellableReservationsCalc = () => {
   if (reservations.value == undefined){
       console.log("loading...")
@@ -151,7 +165,7 @@ const cancellableReservationsCalc = () => {
           startDate.value.setDate(reservation.StartDate);
           startDate.value.setMonth(reservation.StartMonth);
           let adjustedStartDate = new Date(startDate.value);
-          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2)
+          adjustedStartDate.setDate(adjustedStartDate.getDate() - 2);
           adjustedStartDate.setMonth(adjustedStartDate.getMonth() - 1);
           adjustedStartDate.setHours(0,0,0,0);
           console.log(adjustedStartDate)
@@ -165,49 +179,153 @@ const cancellableReservationsCalc = () => {
 
       return [cancellableReservations, remainingReservations];
   }
-  
 };
 
-;
+const toggleReservationDetails = (index) => {
+  visibleReservations.value[index] = !visibleReservations.value[index];
+};
 
+const isReservationVisible = (index) => visibleReservations.value[index] || false;
 
-onMounted( async() => {
-  await getReservations();
-});
-
+onMounted(getReservations);
 </script>
 
 <style scoped>
-  div{
-      display: flex;
-      margin: 20px;
-      background-color: #c1c1c1;
-      padding: 20px;
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; 
+  }
+  
+  button:hover {
+    background-color: #c82333;
+  }
+  
+  .product1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px auto;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 90%;
+    max-width: 1500px;
+  }
+  
+  .product1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .product1 .kolom1 p {
+    text-align: left;
+    margin-bottom: 5px;
   }
 
-  p{
-      margin: auto;
+  .product1 .kolom1 .actions button {
+    margin-left: 10px;
   }
 
-  .kolom1{
-      margin: auto;
-      display: flex;
-      flex-direction: column;
+  .kolom1 {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kolom4 {
+  flex: 1;
+  text-align: right;
+  position: absolute;
+  top: 20px; 
+  right: 20px; 
+  display: flex;
+  flex-direction: column;
+}
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 10px;
   }
-  .kolom4{
-      margin: auto;
-      display: flex;
-      flex-direction: column;
+  
+  .actions button {
+    background-color: #dc3545;
+    color: white;
+    text-decoration: noneS;
   }
-  button{
-      margin: auto;
-      border-radius: 50px;
-      padding: 15px 10px 15px 10px;
-      background-color: red;
-      color: white;
-      border: 0cap;
+  
+  .actions button:hover {
+    background-color: #c82333;
   }
-  .available{
-      background-color: lightgreen;
+  
+  .link {
+    color: white;
+    text-decoration: none; 
   }
-</style>
+
+  .serial-and-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+  }
+  
+
+  .reservation-details {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    width: auto;
+  }
+  
+  .reservation-item {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+  
+  .reservation-item img {
+    max-width: 50px;
+    max-height: 50px;
+    margin-left: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  p {
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  .kolom4 p {
+    margin-top: 5px;
+  }
+  </style>
