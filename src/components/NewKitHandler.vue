@@ -7,8 +7,8 @@
             <textarea name="description" id="description" rows="10" cols="50" v-model="kitDescription">
             </textarea>
         </div>
-        <div class="existingItemsInKit" v-if="kitToBeMade.kit.id != 10000">
-        
+        <div class="existingItemsInKit" v-if="kitId != 10000 && kitId != undefined">
+          <ExistingKitItems />
         </div>
         <div class="selectedItems">
             <div class="items-highlighted">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <button class="buttonsClass largerButton" @click="addKit">
-                <p v-if="kitToBeMade.kit.id == 10000">Add new Kit</p>
+                <p v-if="kitToBeMade.kit.Id == 10000">Add new Kit</p>
                 <p v-else>Add to existing Kit</p>
             </button>
             <button @click="log">test</button>
@@ -36,12 +36,17 @@ import { imageGetter } from '@/js/functions.js';
 import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
 import NewKitHandler from '@/components/NewKitHandler.vue';
 import { generateSubstrings } from '@/js/functions.js';
+import ExistingKitItems from '@/components/ExistingKitItems.vue';
 
 const kitItems = useKitItems();
 const kitToBeMade = useKitToBeMade();
 const router = useRouter();
 const selectedItems = ref(kitItems.selectedItems);
 let kitDescription = ref('');
+let kitId = computed(() => {
+  console.log(kitToBeMade.kit.Id)
+  return kitToBeMade.kit.Id;
+})
 let kitName = computed(() =>{
  return kitToBeMade.getKitName()
 })
@@ -76,9 +81,10 @@ const addKit = async () => {
       kitId = kit.data().Id + 1;
     }
   }
-  if(kitToBeMade.kit.id != 10000){
+  if(kitToBeMade.kit.Id != 10000){
     const query = query(collection(db, 'Kits'),where('Name', '==', kitName));
     const querySnapshot = await getDocs(query);
+    console.log('we got here')
     if(querySnapshot.size > 0){
         
     }
@@ -89,7 +95,8 @@ const addKit = async () => {
       Items: [],
       SubStrings: [],
       KitImage: 'test',
-      Id: kitId
+      Id: kitId,
+      isKit: true
     };
     console.log(selectedItems.value)
     for(let item of selectedItems.value){
