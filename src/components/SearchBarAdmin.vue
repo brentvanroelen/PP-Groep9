@@ -37,6 +37,7 @@
       </div>
     </div>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
@@ -44,6 +45,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useKitToBeMade, useStore, useEarlyReturnsReservations, useSearchedItems as useSearchedItemsFunction } from '@/Pinia/Store.js';
 import { db, getDocs, query, where, collection, deleteDoc, doc } from '../Firebase/Index.js';
 import { imageGetter } from '@/js/functions.js';
+import Popup from '@/components/Popup.vue';
 
 const useSearchedItems = useSearchedItemsFunction();
 const kitToBeMade = useKitToBeMade();
@@ -54,6 +56,17 @@ const reservationsAdmin = useEarlyReturnsReservations();
 let generalItem;
 const showResults = ref(false);
 const placeholder = ref('Search');
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
+
 
 const props = defineProps({
   page: String,
@@ -133,6 +146,7 @@ const deleteItem = async (index) => {
   } catch (error) {
     console.error('Error removing document:', error);
   }
+  showPopup('This item is deleted!'); 
 };
 
 const searchAdmin = async () => {

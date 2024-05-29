@@ -25,12 +25,22 @@
     </div>
     <router-link class="link" to="/ManageItems"><button class="btn">Back</button></router-link>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { db, doc, getDoc, updateDoc } from "../Firebase/Index.js";
+import Popup from '@/components/Popup.vue';
+
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const route = useRoute();
 const item = ref(null);
@@ -74,6 +84,10 @@ const onFileChange = (event) => {
   reader.readAsDataURL(file);
 };
 
+const capitalizeWords = (str) => {
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
 const reportIssueToDatabase = async (issueData, Serial) => {
   try {
     if (!item.value) {
@@ -81,8 +95,10 @@ const reportIssueToDatabase = async (issueData, Serial) => {
       return;
     }
 
-    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
+    const itemName = item.value.Name ? capitalizeWords(item.value.Name) : '';
+    //console.log('Item name:', itemName);
     const itemBundleName = `${itemName} items`;
+    //console.log('Item bundle name:', itemBundleName);
     const itemDocRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
     
     // Haal het huidige itemdocument op
@@ -116,6 +132,7 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     await updateDoc(itemDocRef, updateData);
 
     console.log('Issue reported successfully and item availability updated.');
+    showPopup('Issue reported successfully!');
   } catch (error) {
     console.error('Error reporting issue:', error);
   }

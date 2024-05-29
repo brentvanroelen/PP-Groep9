@@ -12,7 +12,6 @@
       </div>
       </div>
       <button @click="goProductScreen">See catalog</button>
-      <Kits />
       <Categories></Categories>
       <br>
       <br>

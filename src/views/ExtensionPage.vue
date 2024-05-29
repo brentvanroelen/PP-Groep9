@@ -39,6 +39,7 @@
     <div>
         <h2></h2>
     </div>
+    <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
@@ -48,6 +49,7 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import Popup from "@/components/Popup.vue";
 
 const route = useRoute();
 const reason = ref('');
@@ -57,6 +59,16 @@ const ItemName = ref('');
 const ItemImage = ref('');
 const reservationId = route.query.reservationId;
 const userId = route.query.userId
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const fetchReservationDetails = async () => {
     try {
@@ -165,6 +177,7 @@ const requestExtension = async () => {
     } catch (error) {
         console.error('Error processing extension request:', error);
     }
+    showPopup('Your extension request has been submitted successfully!'); 
 };
 
 onMounted(fetchReservationDetails);
