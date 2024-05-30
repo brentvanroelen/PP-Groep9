@@ -71,7 +71,7 @@ console.log(item.Name)
     margin-right: 0px;;
 }
 .item{
-  max-width: 600px;
+  max-width: 600px; 
     display: flex;
     flex-direction: row;
     justify-content: space-between;

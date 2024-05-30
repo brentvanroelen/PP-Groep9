@@ -331,15 +331,18 @@ const filterUnnecessaryDates = () => {
 </script>
 <style scoped>
  button{
-    background-color: #FF0000;
+    background-color: #dc3545;
     border: none;
     padding: 10px;
     cursor: pointer;
     margin: 1em;
     color: white;
-    border-radius: 1em;
+    border-radius: 20px;
     width: 300px;
     height: 50px;
+  }
+  button:hover{
+    background-color: #c82333;
   }
   #buttons{
     width: 500px;

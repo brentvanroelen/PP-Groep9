@@ -78,6 +78,14 @@ Hulp bij CSS: https://chatgpt.com/share/9eeb5e06-d0f6-474a-8f00-b02cbed413f8
 Opsplitsen van add item en add instance: https://chatgpt.com/share/24a6983a-5cf7-49bb-ad6b-d09674d07613
 CSS hulp:https://chatgpt.com/share/722014ea-5c0e-4acd-ad0a-9081a4be285c
 Trouble shoot bugs: https://chatgpt.com/share/371253e3-f6ef-4358-b760-565d00560f73
+Het automatich sluiten van de popup: https://chatgpt.com/share/4285c5ad-7582-49e1-b295-58d842b06e96
+Woorden met spatie detecteren en na elke spatie een hoofdletter zetten: https://chatgpt.com/share/e6c06dcf-5aa7-4907-8d6b-714143aefc28
+Extra info over de pop up:https://chatgpt.com/share/11d80d64-f711-4391-9285-ffd1ad913315
+Problemen met icoontjes: https://chatgpt.com/share/59c7f479-d3f2-4b74-b1ed-23bb6143d104
+Sorteren op datum:https://chatgpt.com/share/cbbf6210-994e-474f-95ad-9bdc6f0edfc0
+Hulp bij CSS: https://chatgpt.com/share/0649a67f-2d41-4cc8-86b0-70dd0cd9c18b
+
+
 
 
 

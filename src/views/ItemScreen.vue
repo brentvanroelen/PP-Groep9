@@ -108,16 +108,18 @@ const addItemToCart = () => {
     width: 500px;
     margin: 2em;
   }
-  button{
-    background-color: #FF0000;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin: 1em;
+  button {
+    background-color: #dc3545;
+    margin-top: 20px;
     color: white;
-    border-radius: 1em;
-    width: 300px;
-    height: 50px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #c82333;
   }
   #quantity{
     display: flex;
