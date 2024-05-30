@@ -46,6 +46,7 @@ export const imageGetter = async (image) =>{
     }
 }
 export const generateSubstrings = (str) => {
+    str = str.toLowerCase();
     const substrings = [];
     for (let i = 0; i < str.length; i++) {
         for (let j = i + 1; j <= str.length; j++) {
