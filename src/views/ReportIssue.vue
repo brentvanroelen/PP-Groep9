@@ -36,53 +36,82 @@ const report = useReportedItems();
 
 <style scoped>
 
-h1{
-  font-size: 24px
+body{
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
 }
 .report-page {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
+.report-page:hover{
+  transform: translateY(-5px);
+}
 
 .item-info {
   display: flex;
   justify-content: space-between;
   align-items: center; 
+  margin-bottom: 30px;
 }
 
 .item-details {
-  flex: 1;
+  flex: 2;
   margin-right: 20px;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .item-details h1 {
   margin: 0;
-  font-size: 24px; 
+  font-size: 26px; 
+  color: #333;
 }
 
 .item-details p {
   margin: 5px 0;
+  color: #333;
 }
 
+.item-image{
+  flex:1;
+  text-align: right;
+}
 .item-image img {
-  max-width: 100px; 
+  max-width: 100%; 
   height: auto;
-  border-radius: 5px; 
+  border-radius: 10px; 
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.issue-description{
+  margin-bottom: 20px;
+}
+
+.issue-description label {
+  font-weight: bold;
+  color: #333;
+}
 
 .issue-description textarea {
-  width: calc(100% - 20px); 
+  width: 100%; 
   margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   transition: border-color 0.3s ease;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
 .issue-description textarea:hover,
@@ -90,11 +119,19 @@ h1{
   border-color: #900; 
 }
 
+.upload-section{
+  text-align: center;
+  margin-bottom: 20px;
+}
+.upload-section p {
+  margin-bottom: 10px;
+  color: #333;
+}
 
 .upload-section input[type="file"] {
   margin-top: 10px;
-  margin-left: 50%;
-  margin-right: 50%;
+  margin-left: 250px;
+  margin-right: auto;
   display: block; 
 }
 
