@@ -22,7 +22,6 @@
             </div>
             
         </div>
-        <p>Selected Duration: {{ extensionDuration }} days</p>
 
         <div class="reason">
             <p class="why">Why do you want the extension?</p>
@@ -36,6 +35,8 @@
             <button @click="requestExtension">Request extension</button>
         </div>
     </div>
+            <p class="duration">Selected Duration: {{ extensionDuration }} days</p>
+
     <div>
         <h2></h2>
     </div>
@@ -264,5 +265,10 @@ input {
 
 img{
     max-width: 100px;
+}
+
+.duration{
+    text-align: left;
+    margin-left: 90px;
 }
 </style>
