@@ -41,6 +41,9 @@
       <p>Serial: {{ reservation.id }}</p>
       <div class="actions">
         <button @click="toggleReservationDetails(index)">See Items</button>
+        <button>
+          <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id, userId: user.user.id}}">Request extension</router-link>
+        </button>
       </div>
       <div v-if="isReservationVisible(index)" class="reservation-details">
         <ul>
@@ -327,5 +330,10 @@ onMounted(getReservations);
   
   .kolom4 p {
     margin-top: 5px;
+  }
+
+  
+  .available{
+      background-color: lightgreen;
   }
   </style>
