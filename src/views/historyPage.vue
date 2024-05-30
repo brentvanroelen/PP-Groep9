@@ -80,40 +80,30 @@ onMounted(async () => {
   }
 });
 
-
-
-
-const fetchItem = async (Serial) => {
-  try {
-    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
-    const itemBundleName = `${itemName} items`;
-    const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const itemData = docSnap.data();
-      console.log('Document data:', itemData);
-
-      if (itemData.Issues) {
-        issueHistory.value = itemData.Issues;
-        hasIssues.value = true;
-      } else {
-        hasIssues.value = false;
-      }
-    } else {
-      console.log('No such document!');
-      hasIssues.value = false;
-    }
-  } catch (error) {
-    console.error('Error fetching item:', error);
-    hasIssues.value = false;
+const formatItemName = (name) => {
+  const words = name.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
   }
+  return words.join(' ');
 };
 
-  const fetchInstanceItemData = async (Serial) => {
+
+const formatItemBundleName = (itemName) => {
+  // Capitalize the first letter of the itemName
+  const words = itemName.split(' ').map(word => {
+    return formatItemName(word);
+  });
+  
+  // Join the words back together with a space
+  return words.join(' ') + ' items'; // Add ' items' in lowercase
+};
+
+const fetchInstanceItemData = async (Serial) => {
   try {
-    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
-    const itemBundleName = `${itemName} items`;
+    const itemName = item.value.Name ? formatItemName(item.value.Name) : '';
+    const itemBundleName = formatItemBundleName(itemName);
+    console.log(itemBundleName);
     const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
     const docSnap = await getDoc(docRef);
 
@@ -132,6 +122,37 @@ const fetchItem = async (Serial) => {
   }
 };
 
+const fetchItem = async (Serial) => {
+  try {
+    const itemName = item.value.Name ? formatItemName(item.value.Name) : '';
+    const itemBundleName = formatItemBundleName(itemName);
+    console.log(itemBundleName);
+    console.log(Serial);
+    console.log(itemName);
+    const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
+    console.log(docRef);
+    
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const itemData = docSnap.data();
+      if (itemData.Issues) {
+        console.log('Issues:', itemData.Issues);
+        issueHistory.value = itemData.Issues;
+        hasIssues.value = true;
+      } else {
+        hasIssues.value = false;
+      }
+    } else {
+      console.log('No such document!');
+      hasIssues.value = false;
+    }
+  } catch (error) {
+    console.error('Error fetching item:', error);
+    hasIssues.value = false;
+  }
+};
+
 
 
 const fetchReservations = async (Serial) => {
@@ -142,15 +163,12 @@ const fetchReservations = async (Serial) => {
     if (!querySnapshot.empty) {
       const reservations = querySnapshot.docs.map(doc => doc.data());
 
-         reservationHistory.value = reservations.filter(reservation => {
-        
+      reservationHistory.value = reservations.filter(reservation => {
         return Object.values(reservation).some(item => item.Serial === Serial);
       });
 
-      
       reservationHistory.value.reverse();
 
-      
       hasReservations.value = reservationHistory.value.length > 0;
     } else {
       console.log('No reservations found for this item.');
@@ -161,6 +179,7 @@ const fetchReservations = async (Serial) => {
     hasReservations.value = false;
   }
 };
+
 
 const sortedIssueKeys = computed(() => {
   return Object.keys(issueHistory.value).sort((a, b) => a - b);

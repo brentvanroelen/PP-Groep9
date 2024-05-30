@@ -25,20 +25,21 @@
       <button @click="addItemToCart()">Add to cart</button>
       <ReservationHandler :check-user-cart="false" :button-text="'Reserve item'"></ReservationHandler>
   </div>
-
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
   
   
-<script setup>
-import Footer from "../components/Footer.vue"
-import ReservationHandler from "@/components/ReservationHandler.vue";
-import { computed } from "../main.js";
-import { useRouter } from 'vue-router';
-import Items from "@/components/Items.vue";
-import Calendar from "@/components/Calendar.vue";
-import Quantity from "@/components/Quantity.vue";
-import {ref, reactive} from 'vue';
-import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
+  <script setup>
+  import Footer from "../components/Footer.vue"
+  import ReservationHandler from "@/components/ReservationHandler.vue";
+  import { computed } from "../main.js";
+  import { useRouter } from 'vue-router';
+  import Items from "@/components/Items.vue";
+  import Calendar from "@/components/Calendar.vue";
+  import Quantity from "@/components/Quantity.vue";
+  import {ref, reactive} from 'vue';
+  import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
+  import Popup from "@/components/Popup.vue";
 
 const props = defineProps({
   Name: String,
@@ -54,6 +55,16 @@ const results = computed(() => store.results);
 const Item = results.value.find(item => item.Name === params.Name);
 const page = "UserHome";
 const available = ref(quantity.available[Item.Name]);
+  const popupVisible = ref(false);
+  const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const addItemToCart = () => {
   if(dates.general == []){
@@ -72,7 +83,8 @@ const addItemToCart = () => {
     dates.updateDate(Item.Name, dates.general)
     console.log(Item);
     cart.addItem(Item);
-    console.log(cart.items);        
+    console.log(cart.items);
+    showPopup('This item is added to your cart!');        
   }
 }
 

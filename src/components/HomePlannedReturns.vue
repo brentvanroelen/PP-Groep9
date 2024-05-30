@@ -53,6 +53,7 @@
       </div>
     </div>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
   
     
@@ -60,13 +61,25 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc, setDoc } from '../Firebase/Index.js';
-import { reservationReturnedOrCanceled } from '@/js/functions.js';    
+import { reservationReturnedOrCanceled } from '@/js/functions.js';
+import Popup from '@/components/Popup.vue';
 
 let unsub = false;
 const students = ref([]) 
 const allReservations = ref([]);
 const lateReservationArray = ref([]);
 let loading = ref(true);
+
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 
 const toggleOrders = (student) => {
@@ -134,6 +147,7 @@ const returned = async (reservation, warning) => {
   if (index !== -1) {
     students.value.splice(index, 1);
   };
+  showPopup("All items returned")
 };
 
 
@@ -198,7 +212,7 @@ const alignWithStudents = () =>{
       orders: items,
     });
   });
-
+    
 }
 
 

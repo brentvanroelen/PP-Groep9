@@ -65,12 +65,14 @@
     import { doc, setDoc, getDoc } from 'firebase/firestore';
     import { db } from '@/Firebase/Index.js';
     import { imageGetter } from '@/js/functions';
+    import Popup from '@/components/Popup.vue';
+
+
 
     
 
     const beginDate = ref();
     const endDate = ref();
-    let showPopup = ref(false);
     const cart = useCart();
     const items = cart.items;
     const itemCount = ref(0);
@@ -83,6 +85,16 @@
     const currentDate = new Date();
     const itemDate = useDates();
     let maxSelect = ref(7);
+/*     const popupVisible = ref(false);
+  const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+}; */
 
 
 
@@ -98,6 +110,8 @@
     teacher.value = data.teacher;
     studentReservation.value = data.studentReservation;
     teacherReservation.value = data.teacherReservation;
+  
+
   }}
     const futureDate = new Date();
     futureDate.setDate(currentDate.getDate() + length);

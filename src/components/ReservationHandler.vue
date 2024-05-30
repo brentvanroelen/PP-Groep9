@@ -1,12 +1,16 @@
 <template>
+    
     <button @click="handleReservation()">{{ buttonText }}</button>
+   <div><Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" /> </div>
+    
 </template>
 <script setup>
 import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
 import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
-import { databaseFormatter } from '@/js/functions.js';
+import { databaseFormatter } from '@/js/functions.js';import Popup from './Popup.vue';
+
 
 
 const data = ref([]);
@@ -21,6 +25,8 @@ const user = useUserIdentification();
 const selectedUser = useSelectedUser();
 const itemsToGet = useItemsToGet();
 const Warned = ref();
+const popupVisible = ref(false);
+const popupMessage = ref('');
 
 let  items = []
 let itemMaps = [];
@@ -30,6 +36,10 @@ const {checkUserCart,buttonText,page} = defineProps({
     buttonText: String,
     page: String
 })
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 
 const handleReservation = async() => {
@@ -267,7 +277,7 @@ const MakeReservation = async(date) => {
         Warned: false,
         ...Object.assign({}, ...itemMaps)
     });
-    
+    showPopup('The loan is succesfull!'); 
     itemSelector.resetCollectionName();
 }
 const groupByDates = (itemsObject) => {

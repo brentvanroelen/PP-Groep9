@@ -9,14 +9,15 @@
           <!-- <button @click="reservationReturnedOrCanceled(cancellableReservation); cancelRes(cancellableReservation)">
             Cancel Reservation
           </button> -->
-          <button @click="toggleReservationDetails(index+10000)">See Reservations</button>
+          <button @click="toggleReservationDetails(index+10000)">See Items</button>
         </div>
         <div v-if="isReservationVisible(index+10000)" class="reservation-details">
           <ul>
             <li v-for="(item, index) in getItems(cancellableReservation)" :key="index" class="reservation-item">
-              Name: {{ item.ItemName }}
-              Serial number: {{ item.Serial }}
               <img :src="item.ItemImage" alt="picture">
+              Name: {{ item.ItemName }}
+              <br>
+              Serial number: {{ item.Serial }}
               <div class="actions">
                 <button>
                   <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
@@ -39,17 +40,15 @@
     <div class="kolom1">
       <p>Serial: {{ reservation.id }}</p>
       <div class="actions">
-        <button @click="toggleReservationDetails(index)">See Reservations</button>
-        <button>
-          <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id, userId: user.user.id}}">Request extension</router-link>
-        </button>
+        <button @click="toggleReservationDetails(index)">See Items</button>
       </div>
       <div v-if="isReservationVisible(index)" class="reservation-details">
         <ul>
           <li v-for="(item, index) in getItems(reservation)" :key="index" class="reservation-item">
-            Name: {{ item.ItemName }}
-            Serial number: {{ item.Serial }}
             <img :src="item.ItemImage" alt="picture">
+            Name: {{ item.ItemName }}
+            <br>
+            Serial number: {{ item.Serial }}
             <div class="actions">
               <button>
                 <router-link class="link" to="/ExtensionPage">Request singular extension</router-link>
@@ -68,17 +67,17 @@
     </div>
   </div>
 </template>
- 
+
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
 import { reservationReturnedOrCanceled } from "../js/functions.js";
 import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
- 
+
 const report = useReportedItems();
- 
- 
- 
+
+
+
 let cancelledReservations = ref([]);
 let reservations = ref([]);
 let cancellableReservations = ref([]);
@@ -86,8 +85,8 @@ const year = ref(new Date().getFullYear());
 const user = useUserIdentification();
 let startDate = ref(new Date());
 const visibleReservations = ref({});
- 
- 
+
+
 const displayReservations = computed(() => {
   let test = cancellableReservationsCalc();
   let array = [test[0], test[1]];
@@ -107,10 +106,10 @@ const arrayifier = computed(() => {
   }
   return array;
 });
- 
- 
- 
- 
+
+
+
+
 const getItems = (reservation) => {
   const items = [];
   if (reservation) {
@@ -124,11 +123,11 @@ const getItems = (reservation) => {
   }
   return items;
 };
- 
+
 const cancelRes = (reservation) => {
   cancelledReservations.value.push(reservation);
 };
- 
+
 const getReportedItems =(item) => {
   report.addImage(item.ItemImage);
   console.log(report.itemImage);
@@ -153,7 +152,7 @@ const getReservations = async () => {
       
   }
 }
- 
+
 const cancellableReservationsCalc = () => {
   if (reservations.value == undefined){
       console.log("loading...")
@@ -181,13 +180,13 @@ const cancellableReservationsCalc = () => {
       return [cancellableReservations, remainingReservations];
   }
 };
- 
+
 const toggleReservationDetails = (index) => {
   visibleReservations.value[index] = !visibleReservations.value[index];
 };
- 
+
 const isReservationVisible = (index) => visibleReservations.value[index] || false;
- 
+
 onMounted(getReservations);
 </script>
  
@@ -208,25 +207,27 @@ onMounted(getReservations);
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    text-decoration: none;
+    text-decoration: none; 
   }
   
   button:hover {
     background-color: #c82333;
   }
   
- 
   .product1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+    margin: 20px auto;
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 10px;
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
+    width: 90%;
+    max-width: 1500px;
   }
   
   .product1:hover {
@@ -234,26 +235,31 @@ onMounted(getReservations);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
- 
+  .product1 .kolom1 p {
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .product1 .kolom1 .actions button {
+    margin-left: 10px;
+  }
+
   .kolom1 {
   flex: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
- 
+
 .kolom4 {
   flex: 1;
   text-align: right;
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 20px; 
+  right: 20px; 
   display: flex;
   flex-direction: column;
 }
- 
-  
- 
   .actions {
     display: flex;
     flex-direction: row;
@@ -263,24 +269,26 @@ onMounted(getReservations);
   
   .actions button {
     background-color: #dc3545;
+    color: white;
+    text-decoration: noneS;
   }
   
   .actions button:hover {
     background-color: #c82333;
   }
   
-  .router-link {
+  .link {
     color: white;
-    text-decoration: none;
+    text-decoration: none; 
   }
- 
+
   .serial-and-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; 
   }
   
- 
+
   .reservation-details {
     display: flex;
     flex-direction: column;
@@ -318,6 +326,6 @@ onMounted(getReservations);
   }
   
   .kolom4 p {
-    margin-bottom: 0;
+    margin-top: 5px;
   }
   </style>

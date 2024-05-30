@@ -22,14 +22,26 @@
       </div>
     </div>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import { getDocs, getDoc, doc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
+import Popup from '@/components/Popup.vue';
 
 const allExtensions = ref([]);
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const fetchUserExtensionsData = async () => {
   try {
@@ -131,6 +143,7 @@ const approveRequest = async (userId, extensionId, index, extensionDuration, res
   } catch (error) {
     console.error('Error approving request:', error);
   }
+  showPopup("This request has been approved!");
 };
 
 const denyRequest = async (userId, extensionId, index) => {
@@ -140,6 +153,7 @@ const denyRequest = async (userId, extensionId, index) => {
   } catch (error) {
     console.error('Error denying request:', error);
   }
+  showPopup("This request has been denied!");
 };
 
 onMounted(() => {
