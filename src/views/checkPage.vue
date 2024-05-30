@@ -111,30 +111,34 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     }
 
     const itemName = item.value.Name ? capitalizeWords(item.value.Name) : '';
-    //console.log('Item name:', itemName);
-    const itemBundleName = `${itemName} items`;
-    //console.log('Item bundle name:', itemBundleName);
-    const itemDocRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
-    
-    // Haal het huidige itemdocument op
+    const itemDocRef = doc(db, `Utility/History/Item History/${Serial}`);
+
+    // Fetch the current item document
     const itemDocSnapshot = await getDoc(itemDocRef);
+
+    // Check if the document exists
+    if (!itemDocSnapshot.exists()) {
+      console.error(`No document found for serial: ${Serial}`);
+      return;
+    }
+
     const itemData = itemDocSnapshot.data();
 
     console.log('Current item data:', itemData);
 
-    // Bepaal het volgende issue nummer
+    // Determine the next issue number
     const currentIssues = itemData.Issues || {};
     const issueKeys = Object.keys(currentIssues);
     const nextIssueNumber = issueKeys.length + 1;
     const issueKey = `issue${nextIssueNumber}`;
 
-    // Voeg het nieuwe issue toe aan de Issues map
+    // Add the new issue to the Issues map
     const updatedIssues = {
       ...currentIssues,
       [issueKey]: issueData
     };
 
-    // Update het document met de nieuwe Issues map en zet beschikbaarheid op false indien nodig
+    // Update the document with the new Issues map and set availability to false if necessary
     const updateData = {
       Issues: updatedIssues,
       HasIssues: true

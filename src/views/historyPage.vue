@@ -154,7 +154,7 @@ const fetchItem = async (Serial) => {
     console.log(itemBundleName);
     console.log(Serial);
     console.log(itemName);
-    const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
+    const docRef = doc(db, `Utility/History/Item History/${Serial}`);
     console.log(docRef);
     
     const docSnap = await getDoc(docRef);
@@ -181,10 +181,26 @@ const fetchItem = async (Serial) => {
 
 const fetchReservations = async (Serial) => {
   try {
-    const q = query(collection(db, 'Utility/Reservations/All Reservations'));
-    const querySnapshot = await getDocs(q);
+    const docRef = doc(db, `Utility/History/Item History/${Serial}`);
+    const docSnapshot = await getDoc(docRef);
 
-    if (!querySnapshot.empty) {
+    if (docSnapshot.exists()) {
+      const itemData = docSnapshot.data();
+      const reservations = itemData.Reservations || [];
+
+      reservationHistory.value = reservations;
+
+      hasReservations.value = reservationHistory.value.length > 0;
+    } else {
+      console.log('No item found with this serial.');
+      hasReservations.value = false;
+    }
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+  }
+};
+
+  /*   if (!querySnapshot.empty) {
       const reservations = querySnapshot.docs.map(doc => doc.data());
 
       reservationHistory.value = reservations.filter(reservation => {
@@ -201,8 +217,8 @@ const fetchReservations = async (Serial) => {
   } catch (error) {
     console.error('Error fetching reservations:', error);
     hasReservations.value = false;
-  }
-};
+  } */
+
 
 
 const sortedIssueKeys = computed(() => {

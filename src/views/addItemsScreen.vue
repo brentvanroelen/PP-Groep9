@@ -57,7 +57,7 @@
 
 import { ref } from 'vue';
 import { getDocs } from 'firebase/firestore';
-import { db, doc, updateDoc, setDoc, collection, increment, getDoc,  } from "../Firebase/Index.js";
+import { db, doc, updateDoc, setDoc, collection, increment, getDoc , addDoc } from "../Firebase/Index.js";
 import Popup from '@/components/Popup.vue';
 
 
@@ -147,7 +147,8 @@ const addNewItem = async () => {
     AvailableAmount: docdata.value.AvailableAmount,
     SerialSeries: serialSeries,
     Image: docdata.value.Image,
-    DateAdded: currentDate 
+    DateAdded: currentDate,
+    isKit: false
   });
 
   const itemDocRef = doc(db, 'Items', capitalizedItemName);
@@ -164,6 +165,23 @@ const addNewItem = async () => {
     Image: docdata.value.Image,
     DateAdded: currentDate 
   });
+   
+  // Write directly to ItemHistory
+
+   const itemHistoryRef = doc(db, 'Utility/History/Item History', `${serialSeries}-01`);
+
+
+      await setDoc(itemHistoryRef, {
+      
+        Name: capitalizedItemName.toLowerCase(),
+        Serial: `${serialSeries}-01`,
+        HasIssues: false, 
+        Issues: {}, 
+        Reservations: [],
+        Image: docdata.value.Image,
+        DateAdded: currentDate
+      
+    });
   showPopup('Item added successfully!');
 };
 
@@ -194,6 +212,20 @@ const addNewInstance = async () => {
       DateAdded: currentDate 
     });
   
+    const itemHistoryRef = doc(db, `Utility/History/Item History/${serial}`);
+
+
+    await setDoc(itemHistoryRef, {
+
+    Name: instanceName.toLowerCase(),
+    Serial: serial,
+    HasIssues: false, 
+    Issues: {}, 
+    Reservations: [],
+    DateAdded: currentDate
+
+});
+
     showPopup('Instance added successfully!');
     await changeAmountAvailable(instanceName);
     return serial;

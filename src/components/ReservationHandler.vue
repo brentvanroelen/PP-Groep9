@@ -7,9 +7,11 @@
 <script setup>
 import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
 import { computed,ref } from 'vue';
-import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment} from "../Firebase/Index.js";
+import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment , getDoc} from "../Firebase/Index.js";
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
 import { databaseFormatter } from '@/js/functions.js';import Popup from './Popup.vue';
+import { arrayUnion } from 'firebase/firestore';
+
 
 
 
@@ -72,7 +74,7 @@ const handleReservation = async() => {
                     }
                     for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
                         const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
-                        .then(() => changeAmountAvailable(singleItem.Items[i]));
+                        .then(() => changeAmountAvailable(singleItem.Items[i])).then(() => writeToHistory(chosenitem.value.Serial));
                         promises.push(promise);
                     }
                 }
@@ -82,7 +84,7 @@ const handleReservation = async() => {
                 }
                 for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                     const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
-                    .then(changeAmountAvailable(chosenitem.value.Name));
+                    .then(changeAmountAvailable(chosenitem.value.Name)).then(() => writeToHistory(chosenitem.value.Serial,dates.dates[singleItem.Name]));
                     promises.push(promise);
                 }
             }
@@ -126,7 +128,7 @@ const handleReservation = async() => {
                                 }
                                 for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
                                     const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
-                                    .then(() => changeAmountAvailable(item.Items[i]));
+                                    .then(() => changeAmountAvailable(item.Items[i])).then(() => writeToHistory(chosenitem.value.Serial));
                                     promises.push(promise);
                                 }
                             }
@@ -140,7 +142,7 @@ const handleReservation = async() => {
                             console.log(quantity.getQuantity(itemSelector.itemName))
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
-                                .then(() => changeAmountAvailable(item.Name));
+                                .then(() => changeAmountAvailable(item.Name)).then(() => writeToHistory(chosenitem.value.Serial));
                                 promises.push(promise);
                             }
                         }
@@ -160,6 +162,38 @@ const handleReservation = async() => {
     }
 
 }
+
+const writeToHistory = async(serial,date) => {
+  const docRef = doc(db, `Utility/History/Item History/${serial}`);
+  
+  // Haal de huidige staat van de Reservations-array op
+  const docSnap = await getDoc(docRef);
+  const currentReservations = docSnap.exists() ? docSnap.data().Reservations || [] : [];
+
+  
+  const newReservation = {
+    StartDate: date[0],
+    EndDate: date[2],
+    StartMonth: date[1],
+    EndMonth: date[3],
+    User: selectedUser.user.uid,
+  };
+
+  // Voeg het nieuwe reserveringsobject toe aan de array
+  const updatedReservations = [...currentReservations, newReservation];
+
+
+  // Sla de bijgewerkte array op
+
+  await setDoc(docRef, { Reservations: updatedReservations } , {merge: true});
+
+
+}
+
+
+
+
+
 const getItem = async() => {
     console.log(availableInstances)
     chosenitem.value = availableInstances.getInstance(itemSelector.itemName,[0]);
