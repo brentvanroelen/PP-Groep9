@@ -1,6 +1,6 @@
 // store.js
 import { defineStore } from 'pinia';
-import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword, collection, setDoc, db,doc, getDoc } from '@/Firebase/Index';
+import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword, collection, setDoc, db,doc, getDoc } from '@/Firebase/Index.js';
 import { signOut,onAuthStateChanged } from 'firebase/auth';
 
 
@@ -375,3 +375,4 @@ export const useKitToBeMade = defineStore({
     }
   }
 });
+

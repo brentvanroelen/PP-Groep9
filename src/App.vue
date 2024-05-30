@@ -17,19 +17,9 @@ import NavigationAdmin from '../src/components/navigationAdmin.vue'
 import { onMounted, ref } from 'vue'
 import { useCart,useDates,useQuantity } from './Pinia/Store'
 
-
 const cart = useCart()
 const adminButton = ref(false)
-
-
-
-
- 
-
-
- 
-
-
+let message = ref('')
 
 
 /* export default {
@@ -41,7 +31,6 @@ const adminButton = ref(false)
   }
   
 } */
-
 
 </script>
 
