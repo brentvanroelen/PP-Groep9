@@ -28,36 +28,59 @@ const updateStore = (item) => {
 </script>
 
 <style scoped>
-.itemslisting{
+.itemslisting {
     display: flex;
     flex-direction: row;
-    max-width: 100%;
     flex-wrap: wrap;
+    gap: 1%; /* Add gap between items */
+    justify-content: space-around; /* Distribute space around items */
+    max-width: 100%;
+   
 }
-p{
-    padding: 0.5em;
-}
-.item{
+
+.item {
     border-radius: 1em;
     margin: 6px;
     padding: 10px;
     background: crimson;
     text-align: center;
-    width: 500px;
+    width: calc(50% - 16px); /* Ensure two items per row with space */
+    box-sizing: border-box; /* Include padding and border in the width */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px; /* Set a fixed height for the items */
+    overflow: hidden; /* Hide overflow content */
 }
-.item img{
+
+.item img {
     width: 150px;
+    align-self: center; /* Center image horizontally */
 }
-.item a{
+
+.item p {
+    flex: 1;
+    margin: 10px 0;
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.item a {
     width: 25px;
     border: #333 solid 2px;
     margin-top: 4px;
     background: #333;
+    align-self: center; /* Center link horizontally */
 }
-.item a:hover{
+
+.item a:hover {
     cursor: pointer;
 }
-.available{
+
+.available {
     background: rgb(82, 129, 12);
 }
+
+
 </style>

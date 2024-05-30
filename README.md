@@ -57,7 +57,7 @@ Serienummers automatiseren: https://chatgpt.com/share/98d72dad-b6b1-4c61-9770-13
 Verschillende pages indezelfde stijl laten opmaken: https://chatgpt.com/share/c25d990c-5214-4d81-93d1-069aa82cc625
 Automatiseren van serienummers: https://chatgpt.com/share/98ed5bd9-75a4-49fc-a220-e94709c32f7e
 Nieuwe objecten aanmaken binnen een bestaande map in firebase: https://chatgpt.com/share/e7d65fad-1b34-4d07-b89c-a5f75244423d
-Hulp bioj het verbeteren van reeds bestaande code: https://chatgpt.com/share/f6e60cc1-d6a5-4df4-86bc-0221f3cf5a04
+Hulp bij het verbeteren van reeds bestaande code: https://chatgpt.com/share/f6e60cc1-d6a5-4df4-86bc-0221f3cf5a04
 Bug uit de code halen: https://chatgpt.com/share/f38c0bbf-bf4a-4f1a-95e4-17d7a226e288
 Video met de basics van Firebase: https://www.youtube.com/watch?v=84mhLKUM04E&ab_channel=MakeAppswithDanny
 Het hele gevonden Object van reservations: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
@@ -69,6 +69,26 @@ Een image als URL opslaan: https://www.w3docs.com/learn-javascript/file-and-file
 Info over Objec.keys: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 Extra info over LocalDateString ( na tip van Jessy):https://stackoverflow.com/questions/27939773/tolocaledatestring-short-format ,
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+Troubleshooten over code: https://chatgpt.com/share/504a19cb-b26f-473f-8c46-71a68fb200a3
+Vragen over dropdown router-Links: https://chatgpt.com/share/82768e62-2592-49a9-8d98-9a61379014e4 , https://chatgpt.com/share/f3b03082-ee68-470d-971b-0a93e52797ea
+Vragen over pop-ups in vue: https://chatgpt.com/share/6f2ace3e-494a-4a16-8c46-3a23f0bff2a0 , https://chatgpt.com/share/ec08d56d-56bb-4148-ad00-bbe3b4fdff0a
+Hulp bij het stylen van optionsPage: https://chatgpt.com/share/f00b2a8b-346e-4e97-b076-3c3fd1609453
+Warning bij het selecteren van een niet toegelaten datum: https://chatgpt.com/share/b05b0200-a573-4f64-bbdc-f5814614620 , https://chatgpt.com/share/18ce3f6a-3b0e-4c48-adfc-b7d84cbfac30 , https://chatgpt.com/share/94b01fc2-5518-4528-84f2-62c597c6c847 , https://chatgpt.com/share/fafb9956-e133-4030-9d4b-6cad8318ce63
+Hulp bij CSS: https://chatgpt.com/share/9eeb5e06-d0f6-474a-8f00-b02cbed413f8
+Opsplitsen van add item en add instance: https://chatgpt.com/share/24a6983a-5cf7-49bb-ad6b-d09674d07613
+CSS hulp:https://chatgpt.com/share/722014ea-5c0e-4acd-ad0a-9081a4be285c
+Trouble shoot bugs: https://chatgpt.com/share/371253e3-f6ef-4358-b760-565d00560f73
+Het automatich sluiten van de popup: https://chatgpt.com/share/4285c5ad-7582-49e1-b295-58d842b06e96
+Woorden met spatie detecteren en na elke spatie een hoofdletter zetten: https://chatgpt.com/share/e6c06dcf-5aa7-4907-8d6b-714143aefc28
+Extra info over de pop up:https://chatgpt.com/share/11d80d64-f711-4391-9285-ffd1ad913315
+Problemen met icoontjes: https://chatgpt.com/share/59c7f479-d3f2-4b74-b1ed-23bb6143d104
+Sorteren op datum:https://chatgpt.com/share/cbbf6210-994e-474f-95ad-9bdc6f0edfc0
+Hulp bij CSS: https://chatgpt.com/share/0649a67f-2d41-4cc8-86b0-70dd0cd9c18b
+
+
+
+
+
 
 
 

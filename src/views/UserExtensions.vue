@@ -1,30 +1,47 @@
 <template>
   <div class="info-container">
-    <div class="info" v-for="(extension, index) in allExtensions" :key="index">
-      <div class="details">
-        <p>Student: {{ extension.studentName }}</p>
-        <p>Extension duration: {{ extension.extensionDuration }} days</p>
-      </div>
-      <div class="details">
-        Product: {{ extension.productName }}
-      </div>
-      <div class="tekst">
-        {{ extension.reason }}
-      </div>
-      <div class="actions">
-        <button class="action-btn1" @click="approveRequest(extension.userId, extension.extensionId, index, extension.extensionDuration, extension.reservationId)">Accept</button>
-        <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">Deny</button>
+    <div v-for="(extension, index) in allExtensions" :key="index">
+      <!-- Voeg de extra div alleen toe als ForProject true is in de reservatie -->
+      <div v-if="extension.forProject">
+        <div class="info">
+          <div class="details">
+            <p>Student: {{ extension.studentName }}</p>
+            <p>Extension duration: {{ extension.extensionDuration }} days</p>
+          </div>
+          <div class="details">
+            Product: {{ extension.productName }}
+          </div>
+          <div class="tekst">
+            {{ extension.reason }}
+          </div>
+          <div class="actions">
+            <button class="action-btn1" @click="approveRequest(extension.userId, extension.extensionId, index, extension.extensionDuration, extension.reservationId)">Accept</button>
+            <button class="action-btn2" @click="denyRequest(extension.userId, extension.extensionId, index)">Deny</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import { getDocs, getDoc, doc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
+import Popup from '@/components/Popup.vue';
 
 const allExtensions = ref([]);
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const fetchUserExtensionsData = async () => {
   try {
@@ -38,6 +55,15 @@ const fetchUserExtensionsData = async () => {
       for (const extensionDoc of userExtensionsQuerySnapshot.docs) {
         const extensionData = extensionDoc.data();
 
+        // Fetch reservatie data
+        const reservationId = extensionData.reservationId;
+        const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
+        const reservationDoc = await getDoc(reservationDocRef);
+        const reservationData = reservationDoc.data();
+
+        // Check if ForProject is true in the reservation
+        const forProject = reservationData.ForProject || false;
+
         allExtensionsData.push({
           extensionId: extensionDoc.id,
           userId: userId,
@@ -45,7 +71,8 @@ const fetchUserExtensionsData = async () => {
           extensionDuration: extensionData.extensionDuration,
           reason: extensionData.reason,
           reservationId: extensionData.reservationId,
-          productName: await getProductByReservationId(userId, extensionData.reservationId)
+          productName: await getProductByReservationId(userId, extensionData.reservationId),
+          forProject: forProject 
         });
       }
     }
@@ -61,6 +88,7 @@ const getProductByReservationId = async (userId, reservationId) => {
     const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
     const reservationDoc = await getDoc(reservationDocRef);
     const reservationData = reservationDoc.data();
+
 
     return reservationData?.Item1?.ItemName || 'Product not found';
   } catch (error) {
@@ -115,6 +143,7 @@ const approveRequest = async (userId, extensionId, index, extensionDuration, res
   } catch (error) {
     console.error('Error approving request:', error);
   }
+  showPopup("This request has been approved!");
 };
 
 const denyRequest = async (userId, extensionId, index) => {
@@ -124,6 +153,7 @@ const denyRequest = async (userId, extensionId, index) => {
   } catch (error) {
     console.error('Error denying request:', error);
   }
+  showPopup("This request has been denied!");
 };
 
 onMounted(() => {

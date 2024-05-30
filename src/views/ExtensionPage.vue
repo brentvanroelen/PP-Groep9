@@ -22,7 +22,6 @@
             </div>
             
         </div>
-        <p>Selected Duration: {{ extensionDuration }} days</p>
 
         <div class="reason">
             <p class="why">Why do you want the extension?</p>
@@ -36,9 +35,12 @@
             <button @click="requestExtension">Request extension</button>
         </div>
     </div>
+            <p class="duration">Selected Duration: {{ extensionDuration }} days</p>
+
     <div>
         <h2></h2>
     </div>
+    <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
 
 <script setup>
@@ -48,25 +50,36 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import Popup from "@/components/Popup.vue";
 
 const route = useRoute();
-const reservationId = route.query.reservationId;
 const reason = ref('');
-const userId = ref('');
 const selectedDates = ref([]);
 const fullDate = ref(new Date());
 const ItemName = ref('');
 const ItemImage = ref('');
+const reservationId = route.query.reservationId;
+const userId = route.query.userId
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const fetchReservationDetails = async () => {
     try {
         console.log(reservationId)
-        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
+        console.log(userId)
+        const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
-            userId.value = reservationData.User;
             const endDate = new Date(new Date().getFullYear(), reservationData.EndMonth - 1, reservationData.EndDate);
             fullDate.value = endDate;
             selectedDates.value = [endDate];
@@ -81,7 +94,7 @@ const fetchReservationDetails = async () => {
 
 const fetchProductDetails = async () => {
     try {
-        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
+        const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         
         if (reservationDoc.exists()) {
@@ -125,13 +138,8 @@ const requestExtension = async () => {
     console.log('Selected Dates:', selectedDates.value);
     console.log('Extension Duration:', extensionDuration.value);
 
-    if (!userId.value) {
-        console.error('User ID is not set');
-        return;
-    }
-
     try {
-        const reservationDocRef = doc(db, `Users/${userId.value}/Reservations/${reservationId}`);
+        const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         
         if (reservationDoc.exists()) {
@@ -162,15 +170,15 @@ const requestExtension = async () => {
             console.log('End date updated successfully');
             alert('End date updated successfully');
 
-            // Update the fullDate to the new end date
             fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
-            selectedDates.value = [fullDate.value]; // Reset selected dates to the new end date
+            selectedDates.value = [fullDate.value]; 
         } else {
             console.log('Reservation does not exist');
         }
     } catch (error) {
         console.error('Error processing extension request:', error);
     }
+    showPopup('Your extension request has been submitted successfully!'); 
 };
 
 onMounted(fetchReservationDetails);
@@ -253,5 +261,14 @@ button {
 
 input {
     background-color: #c1c1c1;
+}
+
+img{
+    max-width: 100px;
+}
+
+.duration{
+    text-align: left;
+    margin-left: 90px;
 }
 </style>

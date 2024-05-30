@@ -26,17 +26,14 @@
       <table class="content">
         <thead>
           <tr>
-            <th>Select</th>
             <th>Name</th>
             <th>Contact</th>
             <th>Warnings</th>
             <th>Blacklisted</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
             <tr v-for="(user, index) in filteredUsers" :key="index">
-              <td><input type="checkbox"></td>
               <td>{{ user.name }}</td>
               <td>{{ user.contact }}</td>
               <td>
@@ -48,7 +45,6 @@
               <div class="border">{{ user.blacklisted }}</div>
             </td>
             
-            <td>...</td>
           </tr>
         </tbody>
       </table>

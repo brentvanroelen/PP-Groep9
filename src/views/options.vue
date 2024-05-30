@@ -123,6 +123,7 @@
             </div>
     </section>
     <button @click="update()">Update Options</button>
+    <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 
     
 
@@ -135,6 +136,7 @@ import { onMounted, ref } from 'vue';
 import { useOptions } from '@/Pinia/Store.js';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
+import Popup from '@/components/Popup.vue';
 
 const fetchData = async () => {
  const docRef = doc(db, "Settings", "Options");
@@ -174,6 +176,16 @@ const requiredWarningsToBlacklist = ref();
 const userLoanLimit = ref();
 const userKitLimit = ref();
 const autoWarnings = ref();
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const update = () => {
     const options = useOptions();
@@ -201,6 +213,7 @@ const update = () => {
 
     //test
     console.log(options.options);
+    showPopup('Options are updated!');
 }
 
 

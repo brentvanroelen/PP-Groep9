@@ -45,8 +45,8 @@
 <script setup>
 import { useStore,useUserIdentification, useSelectedUser } from "@/Pinia/Store.js";
 import Reservation from "@/components/Reservation.vue";
-import { ref, onMounted, onUnmounted,computed,watchEffect } from 'vue';
-import { onSnapshot, doc, db,query,where,collection, getDoc, getDocs} from '../Firebase/Index.js';
+import { ref, onMounted, onUnmounted,computed,watchEffect, warn } from 'vue';
+import { onSnapshot, doc, db,query,where,collection, getDoc, getDocs, updateDoc} from '../Firebase/Index.js';
 import SpontaneousLoans from "@/components/SpontaneousLoans.vue";
 import{ useRouter } from 'vue-router';
 import HomePlannedLoans from "@/components/HomePlannedLoans.vue";
@@ -70,10 +70,8 @@ const disableDecrement = () => {
 }
 
 const autoWarnings = ref();
-const endDate = ref();
-const endMonth = ref();
-const returnUser = ref();
-
+const reservations = ref([]);
+const warningcount = ref();
 
 const fetchSettings = async () => {
   const settings = doc(db, 'Settings', 'Options');
@@ -85,19 +83,23 @@ const fetchSettings = async () => {
   }}
 
 const fetchReservations = async () => {
-   const reservation = collection(db, 'Reservations', );
+   const reservation = collection(db, 'Utility', 'Reservations', 'All Reservations' );
    const reservationSnapshots = await getDocs(reservation);
+   console.log(reservationSnapshots.size)
    reservationSnapshots.forEach(doc => {
-     const data = doc.data();
-     console.log(data);
-     endDate.value = doc.data().EndDate;
-     console.log(endDate);
-     endMonth.value = doc.data().EndMonth;
-     console.log(endMonth);
-     returnUser.value = doc.data().User;
-     console.log(returnUser);
-   });
- } 
+    const data = doc.data();
+      console.log(data);
+      reservations.value.push({
+      endDate: data.EndDate,
+      endMonth: data.EndMonth,
+      returnUser: data.User,
+      warned: data.Warned,
+      id: data.id
+      })
+      console.log(reservations.value)
+    });
+  }
+
 
 
 
@@ -135,6 +137,48 @@ const incrementDate = () => {
   }, 1);
 }
 
+const Warn = async () => {
+  console.log(autoWarnings.value)
+  console.log(warningcount.value)
+  if(autoWarnings.value === true){
+    console.log("Auto warnings are on")
+    reservations.value.forEach(async reservation => {
+      console.log(reservation.returnUser + " is the user")
+      if(todayDate.value.getMonth() + 1 >= reservation.endMonth){
+        console.log("Month is over ")
+        if(reservation.endDate < todayDate.value.getDate()){
+          console.log("Date is over")
+          if(reservation.warned === false){
+            console.log("Warning")
+            reservation.warned = true;
+            const userref = doc(db, 'Users', reservation.returnUser );
+            const userSnap = await getDoc(userref);
+            if (userSnap.exists()) {
+              const userData = userSnap.data();
+              const newWarningCount = userData.warningCount + 1;
+              await updateDoc(userref, {
+                warningCount: newWarningCount,
+              });
+            }
+            const reservationRef = doc(db, 'Utility', 'Reservations', 'All Reservations', reservation.id);
+            await updateDoc(reservationRef, {
+              Warned: reservation.warned,
+            });
+          }else{
+            console.log("Already warned")
+          }
+        }else{
+          console.log(reservation.endDate + " is the end date")
+        }
+      }else{
+        console.log(reservation.endMonth + " is the end month")
+      }
+      console.log("___________________________________")
+    });
+  }else{
+    console.log("Auto warnings are off")
+  }
+}
 
 
 
@@ -168,9 +212,10 @@ watchEffect(() => {
   });
 });
 
-onMounted(() => {
-  fetchSettings();
-  fetchReservations();
+onMounted(async () => {
+  await fetchSettings();
+  await fetchReservations();
+  Warn();
 });
 
 onUnmounted(() => {

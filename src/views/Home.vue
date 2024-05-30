@@ -12,7 +12,6 @@
       </div>
       </div>
       <button @click="goProductScreen">See catalog</button>
-      <Kits />
       <Categories></Categories>
       <br>
       <br>
@@ -151,5 +150,17 @@ const maxWaarschuwingen = ref(3);
   font-size: 16px;
   color: #333;
   }
-
+  button {
+    background-color: #dc3545;
+    margin-top: 20px;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #c82333;
+  }
 </style>

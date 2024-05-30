@@ -25,12 +25,30 @@
     </div>
     <router-link class="link" to="/ManageItems"><button class="btn">Back</button></router-link>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+  <AvailabilityHandler :isKit="false" :page="page"></AvailabilityHandler>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { db, doc, getDoc, updateDoc } from "../Firebase/Index.js";
+import { db, doc, getDoc, updateDoc, where , collection , getDocs , query } from "../Firebase/Index.js";
+import Popup from '@/components/Popup.vue';
+import AvailabilityHandler from '@/components/AvailabilityHandler.vue';
+import { useStore , useDates , useTrigger , useChoiceOfItems } from '@/Pinia/Store.js';
+
+const page = "checkPage";   
+const availableInstances = useChoiceOfItems();
+const trigger = useTrigger();
+const dates = useDates();
+const store = useStore();
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const route = useRoute();
 const item = ref(null);
@@ -59,11 +77,18 @@ const submitFindings = async () => {
     description: description.value,
     image: image.value,
     type: selectedIssue.value,
-    // user: 'current_user_id'  // Voeg logica toe om de huidige gebruikers-id op te halen
+    // user: 'current_user_id'  
   };
 
-  await reportIssueToDatabase(issueData, item.value.Serial);
-};
+  reportIssueToDatabase(issueData, item.value.Serial)
+    .then(() => {
+      
+      
+      checkAvailability(item.value.Serial);
+    })
+    .catch(error => {
+      console.error('Error reporting issue:', error);
+    });}
 
 const onFileChange = (event) => {
   const file = event.target.files[0];
@@ -74,6 +99,10 @@ const onFileChange = (event) => {
   reader.readAsDataURL(file);
 };
 
+const capitalizeWords = (str) => {
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
 const reportIssueToDatabase = async (issueData, Serial) => {
   try {
     if (!item.value) {
@@ -81,29 +110,35 @@ const reportIssueToDatabase = async (issueData, Serial) => {
       return;
     }
 
-    const itemName = item.value.Name ? item.value.Name.charAt(0).toUpperCase() + item.value.Name.slice(1) : '';
-    const itemBundleName = `${itemName} items`;
-    const itemDocRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
-    
-    // Haal het huidige itemdocument op
+    const itemName = item.value.Name ? capitalizeWords(item.value.Name) : '';
+    const itemDocRef = doc(db, `Utility/History/Item History/${Serial}`);
+
+    // Fetch the current item document
     const itemDocSnapshot = await getDoc(itemDocRef);
+
+    // Check if the document exists
+    if (!itemDocSnapshot.exists()) {
+      console.error(`No document found for serial: ${Serial}`);
+      return;
+    }
+
     const itemData = itemDocSnapshot.data();
 
     console.log('Current item data:', itemData);
 
-    // Bepaal het volgende issue nummer
+    // Determine the next issue number
     const currentIssues = itemData.Issues || {};
     const issueKeys = Object.keys(currentIssues);
     const nextIssueNumber = issueKeys.length + 1;
     const issueKey = `issue${nextIssueNumber}`;
 
-    // Voeg het nieuwe issue toe aan de Issues map
+    // Add the new issue to the Issues map
     const updatedIssues = {
       ...currentIssues,
       [issueKey]: issueData
     };
 
-    // Update het document met de nieuwe Issues map en zet beschikbaarheid op false indien nodig
+    // Update the document with the new Issues map and set availability to false if necessary
     const updateData = {
       Issues: updatedIssues,
       HasIssues: true
@@ -116,10 +151,88 @@ const reportIssueToDatabase = async (issueData, Serial) => {
     await updateDoc(itemDocRef, updateData);
 
     console.log('Issue reported successfully and item availability updated.');
+    showPopup('Issue reported successfully!');
   } catch (error) {
     console.error('Error reporting issue:', error);
   }
 };
+
+
+const checkAvailability = async (Serial) => {
+
+  try {
+    const futureReservationArray = [];
+    const reservationsRef = collection(db, 'Utility', 'Reservations', 'All Reservations');
+    console.log(Serial)
+    const q = query(reservationsRef, where('allItemSerials' ,'array-contains', Serial));
+
+    
+    // Log de query voor debugging
+    console.log('Query:', q);
+    
+    const querySnapshot = await getDocs(q);
+
+    // Log de querySnapshot voor debugging
+    console.log('Query Snapshot:', querySnapshot);
+
+    const currentDate = new Date();
+    const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    console.log(`Today's date: ${today}`);
+
+    let hasFutureReservation = false;
+
+    querySnapshot.forEach(doc => {
+      const reservationData = doc.data();
+      console.log('Reservation Data:', reservationData);
+      const reservationDate = new Date();
+      reservationDate.setDate(reservationData.StartDate);
+      reservationDate.setMonth(reservationData.StartMonth);
+      console.log(`Reservation date: ${reservationDate}`);
+      console.log(`Today's date: ${today}`);
+
+      
+      if (reservationDate > today){
+        futureReservationArray.push(doc.data());
+        console.log(futureReservationArray)
+        hasFutureReservation = true;
+      }
+      
+      
+  });
+
+    if (hasFutureReservation) {
+      console.log('Dit item heeft een toekomstige reservering.');
+      await issueResolver(futureReservationArray, item.value.Serial);
+    } else {
+      console.log('Dit item heeft geen toekomstige reservering.');
+    }
+  } catch (error) {
+    console.error('Error checking availability:', error);
+  }
+};
+
+const issueResolver = async (futureReservationArray, Serial) => {
+   
+
+    availableInstances.resetAllItems();
+    availableInstances.createCollection(item.value.Name);
+    store.updateResults([]);
+    store.updateResults([item.value]);
+    for(const reservation of futureReservationArray){
+        dates.updateGeneralDates([reservation.StartDate, reservation.StartMonth, reservation.EndDate, reservation.EndMonth]);
+        for(let i = 1 ; i <= reservation.allItemSerials.length ; i++){
+          if( reservation[ `Item${i}`].Serial == Serial ){
+            console.log(item.value)
+            trigger.fireTrigger();
+
+        
+          }
+        }
+    }
+
+}
+
+
 </script>
 
 

@@ -6,8 +6,12 @@
     <div id="itemBox">
       <Items :item="Item"></Items>
       <div id="extraInfo">
-      <Quantity :item="Item"></Quantity>
-
+      <Quantity v-if="!Item.isKit" :item="Item"></Quantity>
+      <section v-if="dates.general.length != 0">
+        <p v-if="Item.isKit && available"> Kit is Available</p>
+        <p v-if="available == undefined"></p>
+        <p v-if="Item.isKit && !available"> Kit is Unavailable</p>
+      </section>
   <div id="checkbox">
     <label for="checkbox1"><b>For project:</b></label>
     <input type="checkbox" id="checkbox1" v-model="checked">
@@ -19,13 +23,13 @@
   
   <div id="buttons">
       <button @click="addItemToCart()">Add to cart</button>
-      <ReservationHandler :check-user-cart="false" :button-text="'Item reserveren'"></ReservationHandler>
+      <ReservationHandler :check-user-cart="false" :button-text="'Reserve item'"></ReservationHandler>
   </div>
-
-  </template>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+</template>
   
   
-  <script setup>
+<script setup>
   import Footer from "../components/Footer.vue"
   import ReservationHandler from "@/components/ReservationHandler.vue";
   import { computed } from "../main.js";
@@ -35,36 +39,56 @@
   import Quantity from "@/components/Quantity.vue";
   import {ref, reactive} from 'vue';
   import { useStore,useCart,useQuantity,useChoiceOfItems,useDates } from '@/Pinia/Store';
+  import Popup from "@/components/Popup.vue";
 
-  const props = defineProps({
-    Name: String,
-  });
-  const cart = useCart();
-  const quantity = useQuantity();
-  const router = useRouter();
-  const store = useStore();
-  const dates = useDates();
-  const checked = ref(false);
-  const params = router.currentRoute.value.params;
-  const results = computed(() => store.results);
-  const Item = results.value.find(item => item.Name === params.Name);
-  const page = "UserHome";
+const props = defineProps({
+  Name: String,
+});
+const cart = useCart();
+const quantity = useQuantity();
+const router = useRouter();
+const store = useStore();
+const dates = useDates();
+const checked = ref(false);
+const params = router.currentRoute.value.params;
+const results = computed(() => store.results);
+const Item = results.value.find(item => item.Name === params.Name);
+const page = "UserHome";
+const available = ref(quantity.available[Item.Name]);
+  const popupVisible = ref(false);
+  const popupMessage = ref('');
 
-  const addItemToCart = () => {
-      if(dates.general == []){
-        console.log("Please select a date range and a quantity")
-      }else{
-        if(quantity.getQuantity(Item.Name) == 0){
-          quantity.setQuantity(Item.Name, 1)
-        }
-        dates.updateDate(Item.Name, dates.general)
-        console.log(Item);
-        cart.addItem(Item);
-        console.log(cart.items);        
-      }
+
+
+
+  const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
+
+const addItemToCart = () => {
+  if(dates.general == []){
+    console.log("Please select a date range and a quantity")
+  }else if(Item.isKit){
+    if(available){
+      dates.updateDate(Item.Name, dates.general)
+      cart.addItem(Item);
+    }else{
+      console.log("Kit is not available")
+    }
+  }else{
+    if(quantity.getQuantity(Item.Name) == 0){
+      quantity.setQuantity(Item.Name, 1)
+    }
+    dates.updateDate(Item.Name, dates.general)
+    console.log(Item);
+    cart.addItem(Item);
+    console.log(cart.items);
+    showPopup('This item is added to your cart!');        
   }
+}
 
-  </script>
+</script>
 
   <style scoped>
     #box {
@@ -74,7 +98,7 @@
     flex-wrap: wrap;
   }
   #itemBox{
-    width: 600px;
+    width: 675px;
     margin: 2em;
     background-color: #D9D9D9;
     padding: 1em;
@@ -84,16 +108,18 @@
     width: 500px;
     margin: 2em;
   }
-  button{
-    background-color: #FF0000;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin: 1em;
+  button {
+    background-color: #dc3545;
+    margin-top: 20px;
     color: white;
-    border-radius: 1em;
-    width: 300px;
-    height: 50px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #c82333;
   }
   #quantity{
     display: flex;
