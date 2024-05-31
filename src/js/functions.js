@@ -1,10 +1,12 @@
 import { db, collection, doc, updateDoc, increment,deleteDoc, query, where,getDocs } from "@/Firebase/Index"
-import { storage,getDownloadURL,ref } from "@/Firebase/Index"
+import { storage,getDownloadURL,ref,getDoc } from "@/Firebase/Index"
+import axios from 'axios'
 
 export const reservationReturnedOrCanceled = async(reservation,warning) => {
     const Serialseries = reservation.ItemSerials
     const Serialnumbers = reservation.allItemSerials
     const itemnames = reservation.allItemNames
+    const uid = reservation.userid
     console.log(Serialseries)
     let itemdoc = 0
     for (let serialserie of Serialseries) {
@@ -30,6 +32,9 @@ export const reservationReturnedOrCanceled = async(reservation,warning) => {
             warningCount: increment(1)
         })
     }
+    let getuser = await getDoc(doc(db, `Users/${uid}`))
+    let user = getuser.data()
+    await writeEmail("Canceled",user,reservation)
     await deleteDoc(doc(db, `Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`))
@@ -68,5 +73,62 @@ export const databaseFormatter = (name) =>{
         databaseSearch = name.charAt(0).toUpperCase() + name.slice(1)
     }
     return databaseSearch
+
+}
+export const writeEmail = async (subject,user,reservation) => {
+    const dataToSend = determinMessageValues(subject,user,reservation)
+    console.log(dataToSend)
+    axios.post('http://localhost:3000/mail', dataToSend)
+    .then(response => {
+        message.value = response.data.message
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+const determinMessageValues = (type,user,reservation) => {
+    console.log(type)
+    console.log(user)
+    console.log(reservation)
+    let dataToSend = {}
+    switch(type){
+        case "Reminder":
+            dataToSend = {
+                To: `${user.email}`,
+                Subject: 'Reminder for returning item',
+                Message: `Dear ${user.firstName} ${user.lastName},<br> This is a reminder that the item(s) you have borrowed must be returned by tommorow. 
+                Please make sure to remember that the following items are due tommorow: ${reservation.allItemSerials}. Thank you in advance and we look forward to seeing you tommorow. <br>Best Regards,<br>The Medialab Team`
+            }
+            break
+        case "Canceled":
+            dataToSend = {
+                To: `${user.email}`,
+                Subject: 'Reservation canceled',
+                Message: `Dear ${user.firstName} ${user.lastName},<br> Due to an unforseen circumstance the medialab team has had to cancel your reservation on ${reservation.pickUpDate} for ${reservation.allItemSerials}.
+                If this was priorly discussed then you may ignore this email. If this is unforseen then we are truly sorry for this inconveniance. You can inquire about further details by contacting
+                gwendolyn.vander.putten@ehb.be.<br> Best Regards, <br> The Medialab Team .`
+            }
+            break
+        case "Issue Reported":
+            dataToSend = {
+                To: `${user.email}`,
+                Subject: 'Issue with your reservation',
+                Message: `Dear ${user.firstName} ${user.lastName},<br> We are contacting you due to an issue with your reservation on ${reservation.pickUpDate} for ${reservation.allItemSerials}.
+                We have come to the unfortunate conclusion that one or more of these items have a defect. We have checked alternatives but there are none available for the specified date. 
+                This means that we had to cancel your reservation. We sincerely apologize for the inconvenience. If you still need the item, you are always free to place a new reservation for different dates. 
+                If you have any questions or concerns please contact gwendolyn.vander.putten@ehb.be.<br>Best Regards, <br> The Medialab Team .`
+            }
+            break
+        case "default":
+            dataToSend = {
+                to: '',
+                subject: 'Default',
+                text: 'This is a default message.',
+                error: true
+            }
+            break
+        }
+    return dataToSend
 
 }

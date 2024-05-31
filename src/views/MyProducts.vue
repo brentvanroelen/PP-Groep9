@@ -141,21 +141,8 @@ const getReportedItems =(item) => {
   console.log(report.itemSerial);
 };
 
-const dataToSend = {
-  Message: 'Hello World!',
-  Email: 'jessygencel@hotmail.com',
-  Subject: 'Testing'
-};
 
-const log = () => {
-  axios.post('http://localhost:3000/mail', dataToSend)
-  .then(response => {
-    message.value = response.data.message
-  })
-  .catch(error => {
-    console.log(error)
-  })
-};
+
 
 const getReservations = async () => {
   if(user.user.id){

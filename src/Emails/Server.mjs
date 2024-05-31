@@ -21,15 +21,16 @@ const sentFrom = new Sender(process.env.SENDER, "Jessy Gencel");
 
 app.post('/mail', async(req, res) => {
   const receivedData = req.body;
+  console.log(receivedData);
   const recipients = [
-  new Recipient(receivedData.Email, "Jessy Gencel"),
+  new Recipient(receivedData.To, "Jessy Gencel"),
   ];
   const emailParams = new EmailParams()
   .setFrom(sentFrom)
   .setTo(recipients)
   .setReplyTo(sentFrom)
   .setSubject(receivedData.Subject)
-  .setHtml(`<h1>${receivedData.Message}</h1>`)
+  .setHtml(`<p>${receivedData.Message}</p>`)
   .setText(`<p>${receivedData.Message}</p>`);
   try {
     await mailerSend.email.send(emailParams);
