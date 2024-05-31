@@ -348,7 +348,10 @@ export const useEarlyReturnsReservations = defineStore({
     addReservation(reservation){
       this.Reservations.push(reservation)
     }
-  }
+  },
+  persistedState: {
+    persist: false,
+  },
 });
 export const useItemsToGet = defineStore({
   id: 'ItemsToGet',
