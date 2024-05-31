@@ -30,7 +30,7 @@
   <div class="search-results" v-if="showResults">
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
-        <img v-if="getImage(result)" :src="result.loadedImage" alt="item" />
+        <img v-if="getImage(result)" :src="result.loadedImage" alt="item" class="kitImage" />
         <p v-if="result.id != 10000 ">{{ result.Name }}</p>
         <p v-else>Make a new kit with name: {{ result.Name }}</p>
         <p></p>
@@ -300,6 +300,12 @@ onMounted(() => {
 button:hover {
   background-color: #c82333;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.kitImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
 #img {

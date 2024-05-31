@@ -76,6 +76,7 @@ import { computed, onMounted, ref } from "vue";
 import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
 import { reservationReturnedOrCanceled } from "../js/functions.js";
 import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
+import axios from 'axios';
 
 const report = useReportedItems();
 
@@ -139,7 +140,23 @@ const getReportedItems =(item) => {
   report.addSerial(item.Serial);
   console.log(report.itemSerial);
 };
- 
+
+const dataToSend = {
+  Message: 'Hello World!',
+  Email: 'jessygencel@hotmail.com',
+  Subject: 'Testing'
+};
+
+const log = () => {
+  axios.post('http://localhost:3000/mail', dataToSend)
+  .then(response => {
+    message.value = response.data.message
+  })
+  .catch(error => {
+    console.log(error)
+  })
+};
+
 const getReservations = async () => {
   if(user.user.id){
       const collectionRef = collection(db, `Users/${user.user.id}/Reservations`);

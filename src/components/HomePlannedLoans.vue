@@ -16,10 +16,12 @@
           <p v-if="student.reservationPrepared">The reservation is prepared</p>
           <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
         </div>
+        <div id="buttons">
         <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
         <button @click="discardReservation(student)" class="deleteButton">Discard</button>
+        </div>
         <br>        
-        <button @click="toggleOrders(student)" id="toggleMenu">&#9776;</button>
+        <button @click="toggleOrders(student)" id="toggleMenu">&#129171;</button>
         <!-- lijst met reservaties van de studenten-->
         <ul v-if="student.showOrders" class="ordersList">
           <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
@@ -446,7 +448,10 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
       transition: background-color 0.3s;
       margin-bottom: 10px;
   }
-  
+  .studentInfo{
+    margin-bottom: 20px;
+  }
+
   .adjustButton:hover {
       background-color: #f57c00; 
   }
@@ -517,14 +522,13 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
   
   }
   #toggleMenu{
-      margin: 15px;
-    
+      border: none;
+      background-color: white;
+      cursor: pointer;
+      font-size: 36px;
+
   }
-     
-  @media (max-width: 600px) {
-    .ItemsToPrepare {
-      padding: 10px;
-    }
+  #buttons{
   }
   </style>
   
