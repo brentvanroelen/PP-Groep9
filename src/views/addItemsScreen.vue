@@ -144,7 +144,7 @@ const addNewItem = async () => {
     Quantity: docdata.value.Quantity,
     SubStrings: generateSubstrings(itemName),
     Available: docdata.value.Available,
-    AvailableAmount: docdata.value.AvailableAmount,
+    AvailableAmount: docdata.value.AvailableAmount +1,
     SerialSeries: serialSeries,
     Image: docdata.value.Image,
     DateAdded: currentDate,
@@ -206,7 +206,7 @@ const addNewInstance = async () => {
       Name: instanceName.toLowerCase(),
       Serial: serial,
       HasIssues: instancedata.value.HasIssues,
-      Issues: instancedata.value.Issues,
+      //Issues: instancedata.value.Issues,
       Reserved: instancedata.value.Reserved,
       Image: await getImage(instanceName),
       DateAdded: currentDate 

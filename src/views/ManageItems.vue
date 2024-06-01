@@ -11,6 +11,7 @@
             </div>
             <h2>{{ item.Name }}</h2> 
             <img :src="item.loadedImage" alt="Item Image">
+            <p><strong>Serial: {{item.SerialSeries }}</strong> </p>
             <p>{{ item.Description }}</p>
         </div>
     </div>
