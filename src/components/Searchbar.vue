@@ -15,7 +15,7 @@
           :max-date="maxDate"
           :enable-time-picker="false"
           :disabled-week-days="[6,0]"
-          @update:model-value="log"
+          @update:model-value="Reload"
           :range="{ maxRange: maxSelect, minMaxRawRange:true }">
           <template #trigger>
             <img src="../assets/calendar.png" alt="">
@@ -65,6 +65,7 @@ const userType = useUserIdentification();
 const cart = useCart();
 const seeKits = ref(false);
 let showPopup = ref();
+const trigger = useTrigger()
 let placeholder = ref("Search");
 const showResults = ref(false);
 const props = defineProps({
@@ -87,7 +88,7 @@ const fetchData = async () => {
   }
 }
 
-const log = () => {
+const Reload = () => {
   console.log(date.value)
   let startDate = date.value[0];
   let endDate = date.value[1];
@@ -96,6 +97,9 @@ const log = () => {
   let endDay = endDate.getDate();
   let endMonth = endDate.getMonth() + 1;
   datesStore.updateGeneralDates([startDay, startMonth, endDay, endMonth])
+  if(store.results.length > 0 ){
+    trigger.fireTrigger();
+  }
 }
 const maxDate = computed(() => {
   let length = ref();
@@ -114,7 +118,6 @@ const maxDate = computed(() => {
 });
 
 const search = async() => {
-  const trigger = useTrigger()
   let results = [];
   store.updateResults([]);
   if(seeKits.value){

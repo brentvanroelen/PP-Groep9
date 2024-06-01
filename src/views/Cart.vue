@@ -5,7 +5,7 @@
     </header>
     
     <main>
-        <div v-for="(item, index) in items" :key="index">
+        <div v-for="(item, index) in items" :key="index" @reservationplaced ="emptyCart">
     <div class="item-box">
         <img v-if="getImage(item)" :src="item.loadedImage" alt="" id="itemImg">
         <div id="itemInfo-box">
@@ -50,7 +50,7 @@
                 <strong>Selected items:</strong>
                 <span id="item-count">{{ itemCount }}</span>
             </div>
-            <ReservationHandler :check-user-cart="true" :button-text="'Place Reservation'"></ReservationHandler>
+            <ReservationHandler @click="emptyCart" :check-user-cart="true" :button-text="'Place Reservation'"></ReservationHandler>
         </section>
     </main>
 
@@ -74,7 +74,7 @@
     const beginDate = ref();
     const endDate = ref();
     const cart = useCart();
-    const items = cart.items;
+    const items = ref(cart.items);
     const itemCount = ref(0);
     let length = ref();
     const student = ref();
@@ -99,7 +99,12 @@
 
 
 
-  
+  const emptyCart = () => {
+    setTimeout(() => {
+      items.value = []
+      itemCount.value = 0;
+    }, 1000);
+  }
     const fetchData = async () => {
   const docRef = doc(db, "Settings", "Options");
   const docSnap = await getDoc(docRef);

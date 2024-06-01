@@ -2,7 +2,7 @@ import { db, collection, doc, updateDoc, increment,deleteDoc, query, where,getDo
 import { storage,getDownloadURL,ref,getDoc } from "@/Firebase/Index"
 import axios from 'axios'
 
-export const reservationReturnedOrCanceled = async(reservation,warning) => {
+export const reservationReturnedOrCanceled = async(reservation,warning,email) => {
     const Serialseries = reservation.ItemSerials
     const Serialnumbers = reservation.allItemSerials
     const itemnames = reservation.allItemNames
@@ -34,7 +34,9 @@ export const reservationReturnedOrCanceled = async(reservation,warning) => {
     }
     let getuser = await getDoc(doc(db, `Users/${uid}`))
     let user = getuser.data()
-    await writeEmail("Canceled",user,reservation)
+    if(email != false){
+        await writeEmail(email,user,reservation)
+    }
     await deleteDoc(doc(db, `Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`))
     await deleteDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`))

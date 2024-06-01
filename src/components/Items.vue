@@ -1,5 +1,6 @@
 <template>
-    <div class="item" v-if="item && !item.isKit" :class="{available: item.Available === true}">
+  <div class="item" v-if="item && !item.isKit" :class="{available: dates.general.length != 0 && loan==true && availableInstances.items[item.Name]!= undefined && availableInstances.items[item.Name].length !== 0,unavailable: dates.general.length != 0 &&loan==true && availableInstances.items[item.Name]!= undefined && availableInstances.items[item.Name].length == 0}">
+    <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name">
       <div id="itemMain">
         <h3>{{item.Name}}</h3>
         <br>
@@ -13,10 +14,14 @@
         </p>
         <p v-else><b>Beschikbaarheid:</b> Item niet beschikbaar</p>
       </div>
-      <div v-if="loan == true" id="quantity">
-        <Quantity :item="item" />  
+    </router-link>
+      <div v-if="loan == true && dates.general.length != 0" id="quantity">
+        <Quantity :item="item" />
+        <ReservationHandler v-if='availableInstances.items[item.Name] != undefined && availableInstances.items[item.Name].length != 0' :button-text="'Place Reservation'" :item="item" :check-user-cart="false" :page="'UserHome'" />
+        <button id="cartbutton" @click="addItemToCart">Add to cart</button>
      </div>
-    </div>
+  </div>
+  <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name">
     <div class="item" v-if="item && item.isKit" :class="{available: item.Available === true}">
       <div id="itemMain">
         <h3>{{item.Name}}</h3>
@@ -34,18 +39,37 @@
         <Quantity :item="item" />  
      </div>
     </div>
+  </router-link>
+
 </template>
 
 <script setup>
 import {onMounted, ref as vueRef} from 'vue';
 import Quantity from './Quantity.vue';
+import ReservationHandler from './ReservationHandler.vue';
+import { useChoiceOfItems,useDates,useStore,useQuantity,useCart } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions';
+
+const store = useStore();
 const image = vueRef('');
+const dates = useDates();
+const availableInstances = useChoiceOfItems();
 const {item,loan,arraynumber} = defineProps({
     item: Object,
     loan: Boolean,
 })
+const cart = useCart();
+const quantity = useQuantity();
+const Item = item;
+const page = "UserHome";
+const available = vueRef(quantity.available[Item.Name]);
+const popupVisible = vueRef(false);
+const popupMessage = vueRef('');
 
+
+const updateStore = (item) => {
+    store.updateResults([item]);
+}
 
 
 onMounted(() => {
@@ -60,59 +84,119 @@ onMounted(() => {
     })
   }
 })
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
+
+const addItemToCart = () => {
+  if(dates.general == []){
+    console.log("Please select a date range and a quantity")
+  }else if(Item.isKit){
+    if(available){
+      dates.updateDate(Item.Name, dates.general)
+      cart.addItem(Item);
+    }else{
+      console.log("Kit is not available")
+    }
+  }else{
+    if(quantity.getQuantity(Item.Name) == 0){
+      quantity.setQuantity(Item.Name, 1)
+    }
+    dates.updateDate(Item.Name, dates.general)
+    console.log(Item);
+    cart.addItem(Item);
+    console.log(cart.items);
+    showPopup('This item is added to your cart!');        
+  }
 
 console.log(item.Name)
+}
 
 </script>
  
 <style scoped>
-.available{
-    margin-left: 5px;
-    margin-right: 0px;;
+.item {
+    min-width: 400px;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.3s ease;
 }
-.item{
-  max-width: 600px; 
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
+.item:hover {
+    transform: translateY(-5px);
 }
-#itemInfo{
-    display: flex;
-    flex-direction: column;
-    align-items:start;
+
+.routerlink {
+    text-decoration: none;
+    color: inherit;
 }
-p{
-    padding: 0.3em;
+
+#itemMain {
+    text-align: center;
+}
+
+#itemMain h3 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+#img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#itemInfo p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+#itemInfo b {
+    color: #333;
+}
+
+#quantity {
+    margin-top: 20px;
+}
+
+.available {
+    border-color: #28a745;
+}
+
+.available #itemInfo p {
+    color: #28a745;
+}
+.unavailable{
+    border-color: #dc3545;
+}
+.unavailable #itemInfo p{
+    color: #dc3545; 
+}
+#cartbutton{
+  background-color: #dc3545;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  margin: 1em;
+  color: white;
+  border-radius: 20px;
+  width: 300px;
+  height: 50px;
+}
+#cartbutton:hover{
+  background-color: #c82333;
 }
 #img{
-  min-width: 200px;
+  width: 200px;
+  height: 200px;
 }
-#itemMain{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-}
-.itemInfo{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-}
-h3{
-    font-size: 2em;
-   
-}
-.item{
-    width: 100%;
-    height: auto;
-    padding: 2em;
-
-  }
-  #img{
-    width: 200px;
-    height: 200px;
-  }
 </style>

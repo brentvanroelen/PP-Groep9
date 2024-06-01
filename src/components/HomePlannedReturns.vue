@@ -14,7 +14,7 @@
           <p>Return date: {{ student.pickUpDate }}</p>
           <p>Return time: {{ student.pickUpTime }}</p>
         </div>
-        <button @click="returned(student,false)" class="readyButton">Items returned</button>
+        <button @click="returned(student,false,false)" class="readyButton">Items returned</button>
         <br>        
         <button @click="toggleOrders(student)">&#9776;</button>
         <!-- lijst met reservaties van de studenten-->
@@ -38,8 +38,8 @@
           <p>Return date: {{ student.pickUpDate }}</p>
           <p>Return time: {{ student.pickUpTime }}</p>
         </div>
-        <button @click="returned(student,false)" class="readyButton">Returned</button>
-        <button @click="returnedWarning(student,true)" class="deleteButton">Returned + Warning</button>
+        <button @click="returned(student,false,false)" class="readyButton">Returned</button>
+        <button @click="returnedWarning(student,true,false)" class="deleteButton">Returned + Warning</button>
         <br>        
         <button @click="toggleOrders(student)">&#9776;</button>
         <!-- lijst met reservaties van de studenten-->
@@ -141,9 +141,9 @@ watchEffect(() => {
   })
 })
 
-const returned = async (reservation, warning) => {
-  await reservationReturnedOrCanceled(reservation, warning);
-  const index = students.value.findIndex(s => s.id === reservation.id);
+const returned = async (reservation, warning,email) => {
+  await reservationReturnedOrCanceled(reservation, warning,email);
+  const index = lateReservationArray.value.findIndex(s => s.id === reservation.id);
   if (index !== -1) {
     students.value.splice(index, 1);
   };

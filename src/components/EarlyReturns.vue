@@ -70,7 +70,7 @@ const everythingReturned = async(check) => {
   if(check){
     /* Work in progress*/ 
   }else{
-    await reservationReturnedOrCanceled(chosenReservation.value, false)
+    await reservationReturnedOrCanceled(chosenReservation.value, false,false)
   }
 }
 const selectionReturned = async(check) => {
@@ -84,7 +84,7 @@ const selectionReturned = async(check) => {
 
 
 const selectionReturnedHandler = async() => {
-  const cRef = collection(db, "Utility/Rerservations/All Reservations")
+  const cRef = collection(db, "Utility/Reservations/All Reservations")
   const docRefSelectedResAdmin = doc(db, `Utility/Reservations/All Reservations/${chosenReservation.value.id}`)
   const docRefSelectedResUser = doc(db, `Users/${chosenReservation.value.User}/Reservations/${chosenReservation.value.id}`)
   const docRefSelectedResGeneral = doc(db, `Reservations/${chosenReservation.value.id}`)
@@ -94,8 +94,8 @@ const selectionReturnedHandler = async() => {
     const q = query(cRef, where("allItemSerials", "array-contains-any", [item.Serial]))
     const querySnapshot = await getDocs(q)
     if(querySnapshot.size == 1){
-      const doc = doc(db, `Items/${itemName}/${itemName} items/${item.Serial}`)
-      await updateDoc(doc, {
+      const document = doc(db, `Items/${itemName}/${itemName} items/${item.Serial}`)
+      await updateDoc(document, {
         Reserved: false
       })
       await updateDoc(doc(db, `Items/${itemName}`), {
@@ -104,7 +104,9 @@ const selectionReturnedHandler = async() => {
     }
     for(let i = 1; i <= chosenReservation.value.allItemSerials.length; i++){
       if(chosenReservation.value.allItemSerials.length == 1){
-        reservationReturnedOrCanceled(chosenReservation.value, false)
+        await reservationReturnedOrCanceled(chosenReservation.value, false,false)
+        window.location.reload()
+        return
       }else{
         if(chosenReservation.value.allItemSerials[i-1] == item.Serial){
           const serialPrefix = item.Serial.split('-')[0];
@@ -151,6 +153,7 @@ const selectionReturnedHandler = async() => {
     }
   }
   await refactorReservation()
+  window.location.reload()
 }
 
 const refactorReservation =  async() => {

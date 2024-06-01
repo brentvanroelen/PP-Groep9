@@ -55,8 +55,8 @@ const results = computed(() => store.results);
 const Item = results.value.find(item => item.Name === params.Name);
 const page = "UserHome";
 const available = ref(quantity.available[Item.Name]);
-  const popupVisible = ref(false);
-  const popupMessage = ref('');
+const popupVisible = ref(false);
+const popupMessage = ref('');
 
 
 

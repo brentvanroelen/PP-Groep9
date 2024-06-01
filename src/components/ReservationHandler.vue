@@ -11,6 +11,7 @@ import { db, query,where,collection,getDocs,setDoc,doc,updateDoc, increment , ge
 import AvailabilityHandler from "@/components/AvailabilityHandler.vue";
 import { databaseFormatter } from '@/js/functions.js';import Popup from './Popup.vue';
 import { arrayUnion } from 'firebase/firestore';
+import { useRouter } from 'vue-router';
 
 
 
@@ -20,6 +21,7 @@ const chosenitem = ref();
 const store = useStore();
 const dates = useDates();
 const cart = useCart();
+const router = useRouter();
 const quantity = useQuantity();
 const availableInstances = useChoiceOfItems();
 const itemSelector = useItemSelector();
@@ -33,23 +35,33 @@ const popupMessage = ref('');
 let  items = []
 let itemMaps = [];
 let promises = [];
-const {checkUserCart,buttonText,page} = defineProps({
+const {checkUserCart,buttonText,page,item} = defineProps({
     checkUserCart: Boolean,
     buttonText: String,
-    page: String
+    page: String,
+    item: Object
 })
+const emit = defineEmits(['reservationplaced']);
 const showPopup = (message) => {
   popupMessage.value = message;
   popupVisible.value = true;
 };
 
+const updateStore = (item) => {
+    store.updateResults([item]);
+}
 
 const handleReservation = async() => {
     items = [];
     promises = [];
     itemMaps = [];
     if(!checkUserCart){
-        let singleItem = store.results[0];
+        let singleItem;
+        if(store.results.length == 1){
+            singleItem = store.results[0];
+        }else{
+            singleItem = item
+        }
         if(page != "HomeAdmin"){
             selectedUser.selectUser({
             firstName: user.user.firstName,
@@ -74,7 +86,7 @@ const handleReservation = async() => {
                     }
                     for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
                         const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
-                        .then(() => changeAmountAvailable(singleItem.Items[i])).then(() => writeToHistory(chosenitem.value.Serial));
+                        .then(() => changeAmountAvailable(singleItem.Items[i]))
                         promises.push(promise);
                     }
                 }
@@ -128,7 +140,7 @@ const handleReservation = async() => {
                                 }
                                 for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
                                     const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
-                                    .then(() => changeAmountAvailable(item.Items[i])).then(() => writeToHistory(chosenitem.value.Serial));
+                                    .then(() => changeAmountAvailable(item.Items[i]))
                                     promises.push(promise);
                                 }
                             }
@@ -142,7 +154,7 @@ const handleReservation = async() => {
                             console.log(quantity.getQuantity(itemSelector.itemName))
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
-                                .then(() => changeAmountAvailable(item.Name)).then(() => writeToHistory(chosenitem.value.Serial));
+                                .then(() => changeAmountAvailable(item.Name)).then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));
                                 promises.push(promise);
                             }
                         }
@@ -312,7 +324,12 @@ const MakeReservation = async(date) => {
         ...Object.assign({}, ...itemMaps)
     });
     showPopup('The loan is succesfull!'); 
+    emit('reservationplaced');
     itemSelector.resetCollectionName();
+    dates.resetDates(true)
+    if(page == "UserHome"){
+        router.push({name: 'Home'})
+    }
 }
 const groupByDates = (itemsObject) => {
     let matchingArrays = [];

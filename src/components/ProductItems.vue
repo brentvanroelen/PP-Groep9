@@ -1,10 +1,10 @@
 <template>
     <div class="items">
     <h1>Product Screen</h1>
+    <h2 v-if="getDate()[0]">From {{ formattedStartDate }} To {{ formattedEndDate }}</h2>
     <section class="itemslisting" v-if="results != 'nothing'">
-        <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
-           <Items :item="item" ></Items>
-    </router-link>
+        <Items v-for="item in results" :key="item.id" :item="item" :loan="true">
+        </Items>
     </section>
   </div>
 
@@ -12,13 +12,29 @@
 
 <script setup>
 
-import { useStore } from "@/Pinia/Store.js";
-import { computed } from "../main.js";
+import { useStore,useDates } from "@/Pinia/Store.js";
+import { computed,ref } from "../main.js";
 import Items from "@/components/Items.vue";
 
+let formattedStartDate = ref('');
+let formattedEndDate = ref('');
 const store = useStore();
 const results = computed(() => store.results);
-
+const getDate = () => {
+    if(useDates().general.length == 0){
+        return [false];
+    }
+    let dates = useDates().general;
+    let actualBeginDate = new Date();
+    let actualEndDate = new Date();
+    actualBeginDate.setDate(dates[0]);
+    actualBeginDate.setMonth(dates[1]);
+    actualEndDate.setDate(dates[2]);
+    actualEndDate.setMonth(dates[3]);
+    formattedStartDate.value = `${actualBeginDate.getDate()}/${actualBeginDate.getMonth()}/${actualBeginDate.getFullYear()}`;
+    formattedEndDate.value = `${actualEndDate.getDate()}/${actualEndDate.getMonth()}/${actualEndDate.getFullYear()}`;
+    return [true,formattedStartDate,formattedEndDate];
+}
 
 const updateStore = (item) => {
     store.updateResults([item]);

@@ -18,7 +18,7 @@
         </div>
         <div id="buttons">
         <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
-        <button @click="discardReservation(student)" class="deleteButton">Discard</button>
+        <button @click="discardReservation(student,false,false)" class="deleteButton">Discard</button>
         </div>
         <br>        
         <button @click="toggleOrders(student)" id="toggleMenu">&#129171;</button>
@@ -50,8 +50,8 @@
           <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
         </div>
         <button @click="markAsPickedUp(student)" class="readyButton">Loan picked up</button>
-        <button @click="discardReservation(student,false)" class="deleteButton">Discard</button>
-        <button @click="discardReservation(student,true)" class="deleteButton">Discard + warning</button>
+        <button @click="discardReservation(student,false,false)" class="deleteButton">Discard</button>
+        <button @click="discardReservation(student,true,false)" class="deleteButton">Discard + warning</button>
         <br>        
         <button @click="toggleOrders(student)">&#9776;</button>
         <!-- lijst met reservaties van de studenten-->
@@ -106,10 +106,12 @@ const getItems = async() =>{
   if(querySnapshot.empty){
     loading.value = false;
   }
+  console.log(querySnapshot.size)
   querySnapshot.forEach(async(doc) => {
     let itemsToPrepare = 0;
     let items = [];
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
+      console.log(doc.data()[`Item${i}`])
       items.push(doc.data()[`Item${i}`]);
       if(doc.data()[`Item${i}`].ItemPrepared == false){
           itemsToPrepare++;
@@ -342,8 +344,8 @@ const markAsPickedUp = async (reservation) => {
   };
 };
 
-const discardReservation = async (reservation,warning) => {
-  await reservationReturnedOrCanceled(reservation,warning);
+const discardReservation = async (reservation,warning,sendEmail) => {
+  await reservationReturnedOrCanceled(reservation,warning,sendEmail);
   deletedReservation.value.push(reservation);
   const index = students.value.findIndex(s => s.id === reservation.id);
   const indexLate = lateReservationArray.value.findIndex(s => s.id === reservation.id);
@@ -528,7 +530,6 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
       font-size: 36px;
 
   }
-  #buttons{
-  }
+
   </style>
   

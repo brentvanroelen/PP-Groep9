@@ -74,8 +74,7 @@ const addKit = async () => {
     alert('Please fill in all fields');
     return;
   }
-  const kitsCollection = collection(db, 'Kits');
-  const allkits = await getDocs(collection(db, 'Kits'));
+  /*allkits = await getDocs(collection(db, 'Kits'));
   for(let kit of allkits.docs){
     if(kit.data().Id >= kitId){
       kitId = kit.data().Id + 1;
@@ -87,8 +86,9 @@ const addKit = async () => {
     console.log('we got here')
     if(querySnapshot.size > 0){
         
-    }
-  }else{
+    } 
+    Code om bestaande kits aan te passen. Nog niet functioneel.*/
+  else{
     const kit = {
       Name: kitName.value,
       Description: kitDescription.value,
