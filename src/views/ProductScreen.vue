@@ -12,6 +12,7 @@ import { useStore } from "@/Pinia/Store.js";
 import {onMounted, useRoute} from "../main.js";
 import {ref,watch} from "../main.js";
 import { collection, db, getDocs, query, where } from '../Firebase/Index.js';
+import { watchEffect } from "vue";
 
 const props = defineProps({
     category: String
@@ -32,7 +33,11 @@ const loadCatalog = async() => {
     store.updateResults(items);
 }
 
-
+watchEffect(async () => {
+  if (category.value) {
+    await loadCatalog();
+  }
+});
 
 </script>
 
