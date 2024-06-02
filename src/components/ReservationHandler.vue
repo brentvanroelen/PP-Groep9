@@ -31,6 +31,7 @@ const itemsToGet = useItemsToGet();
 const Warned = ref();
 const popupVisible = ref(false);
 const popupMessage = ref('');
+const itemQuantity = ref(0);
 
 let  items = []
 let itemMaps = [];
@@ -84,9 +85,16 @@ const handleReservation = async() => {
                     if(quantity.getQuantity(singleItem.Items[i]) == 0){
                         quantity.setQuantity(singleItem.Items[i], 1)
                     }
+                    for (let k = 1; k <= quantity.getQuantity(singleItem.Items[i]); k++){
+                        itemQuantity.value = k;
+                    }
+                    try{
+                        await changeAmountAvailable(singleItem.Items[i],itemQuantity.value)
+                    }catch(e){
+                        console.error(e)
+                    }
                     for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
                         const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
-                        .then(() => changeAmountAvailable(singleItem.Items[i]))
                         promises.push(promise);
                     }
                 }
@@ -94,9 +102,17 @@ const handleReservation = async() => {
                 if(quantity.getQuantity(itemSelector.itemName) == 0){
                     quantity.setQuantity(itemSelector.itemName, 1)
                 }
+                for (let k = 1; k <= quantity.getQuantity(itemSelector.itemName); k++){
+                        itemQuantity.value = k;
+                    }
+                    try{
+                        await changeAmountAvailable(itemSelector.itemName,itemQuantity.value)
+                    }catch(e){
+                        console.error(e)
+                    }
                 for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                     const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
-                    .then(changeAmountAvailable(chosenitem.value.Name)).then(() => writeToHistory(chosenitem.value.Serial,dates.dates[singleItem.Name]));
+                    .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[singleItem.Name]));
                     promises.push(promise);
                 }
             }
@@ -138,6 +154,14 @@ const handleReservation = async() => {
                                 if(quantity.getQuantity(item.Items[i]) == 0){
                                     quantity.setQuantity(item.Items[i], 1)
                                 }
+                                for (let k = 1; k <= quantity.getQuantity(item.Items[i]); k++){
+                                    itemQuantity.value = k;
+                                }
+                                try{
+                                    await changeAmountAvailable(item.Items[i],itemQuantity.value)
+                                }catch(e){
+                                    console.error(e)
+                                }
                                 for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
                                     const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
                                     .then(() => changeAmountAvailable(item.Items[i]))
@@ -152,9 +176,17 @@ const handleReservation = async() => {
                             console.log(reservation)
                             itemSelector.setCollectionName(`${item.Name}`);
                             console.log(quantity.getQuantity(itemSelector.itemName))
+                            for (let k = 1; k <= quantity.getQuantity(itemSelector.itemName); k++){
+                                    itemQuantity.value = k;
+                                }
+                                try{
+                                    await changeAmountAvailable(item.Name,itemQuantity.value)
+                                }catch(e){
+                                    console.error(e)
+                                }
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
-                                .then(() => changeAmountAvailable(item.Name)).then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));
+                                .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));
                                 promises.push(promise);
                             }
                         }
@@ -226,11 +258,11 @@ const markInstancesAsUnavailable = async(name) => {
         Reserved: true
     });
 }
-const changeAmountAvailable = async(name) => {
+const changeAmountAvailable = async(name,amount) => {
     let databaseName = databaseFormatter(name);
     const docRef = doc(db, `Items/${databaseName}`);
     await updateDoc(docRef, {
-        AvailableAmount: increment(-1)
+        AvailableAmount: increment(-amount)
     });
 }
 const makeItemMap = (items) =>{
@@ -274,61 +306,65 @@ const MakeReservation = async(date) => {
     const docRefUserReservation = doc(collection(db, `Users/${selectedUser.user.uid}/Reservations`));
     const docRefGeneralReservation = doc(db, `Reservations/${docRefUserReservation.id}`);
     const docRefAdminReservation = doc(db, `/Utility/Reservations/All Reservations/${docRefUserReservation.id}`);
-    await setDoc(docRefUserReservation,{
-        id: docRefUserReservation.id, 
-        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
-        allItemSerials: items.map(item => item.Serial),
-        allItemNames: items.map(item => item.Name),
-        StartDate: date[0],
-        EndDate: date[2],
-        StartMonth: date[1],
-        EndMonth: date[3],
-        User: selectedUser.user.uid,
-        UserFirstName: selectedUser.user.firstName,
-        UserLastName: selectedUser.user.lastName,
-        ForProject: false,
-        Extended: false,
-        CurrentlyWithUser: false,
-        ReservationPrepared: false,
-        Warned: false,
-        ...Object.assign({}, ...itemMaps)
-    });
-    await setDoc(docRefGeneralReservation,{
-        id: docRefUserReservation.id, 
-        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
-        allItemSerials: items.map(item => item.Serial),
-        StartDate: date[0],
-        EndDate: date[2],
-        StartMonth: date[1],
-        EndMonth: date[3],
-        ...Object.assign({}, ...itemMaps)
-    });
+    try{
+        await setDoc(docRefUserReservation,{
+            id: docRefUserReservation.id, 
+            ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+            allItemSerials: items.map(item => item.Serial),
+            allItemNames: items.map(item => item.Name),
+            StartDate: date[0],
+            EndDate: date[2],
+            StartMonth: date[1],
+            EndMonth: date[3],
+            User: selectedUser.user.uid,
+            UserFirstName: selectedUser.user.firstName,
+            UserLastName: selectedUser.user.lastName,
+            ForProject: false,
+            Extended: false,
+            CurrentlyWithUser: false,
+            ReservationPrepared: false,
+            Warned: false,
+            ...Object.assign({}, ...itemMaps)
+        });
+        await setDoc(docRefGeneralReservation,{
+            id: docRefUserReservation.id, 
+            ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+            allItemSerials: items.map(item => item.Serial),
+            StartDate: date[0],
+            EndDate: date[2],
+            StartMonth: date[1],
+            EndMonth: date[3],
+            ...Object.assign({}, ...itemMaps)
+        });
+        
+        await setDoc(docRefAdminReservation,{
+            id: docRefUserReservation.id, 
+            ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
+            allItemSerials: items.map(item => item.Serial),
+            allItemNames: items.map(item => item.Name),
+            StartDate: date[0],
+            EndDate: date[2],
+            StartMonth: date[1],
+            EndMonth: date[3],
+            User: selectedUser.user.uid,
+            UserFirstName: selectedUser.user.firstName,
+            UserLastName: selectedUser.user.lastName,
+            ForProject: false,
+            Extended: false,
+            CurrentlyWithUser: false,
+            ReservationPrepared: false,
+            Warned: false,
+            ...Object.assign({}, ...itemMaps)
+        });
+        showPopup('The loan is succesfull!'); 
+        itemSelector.resetCollectionName();
+        dates.resetDates(true)
+        if(page == "UserHome"){
+            router.push({name: 'Home'})
+        }
+    }catch(e){
+        console.error(e)
     
-    await setDoc(docRefAdminReservation,{
-        id: docRefUserReservation.id, 
-        ItemSerials: items.map(item => item.Serial.split("-")[0]).filter((serial, index, self) => self.indexOf(serial) === index),
-        allItemSerials: items.map(item => item.Serial),
-        allItemNames: items.map(item => item.Name),
-        StartDate: date[0],
-        EndDate: date[2],
-        StartMonth: date[1],
-        EndMonth: date[3],
-        User: selectedUser.user.uid,
-        UserFirstName: selectedUser.user.firstName,
-        UserLastName: selectedUser.user.lastName,
-        ForProject: false,
-        Extended: false,
-        CurrentlyWithUser: false,
-        ReservationPrepared: false,
-        Warned: false,
-        ...Object.assign({}, ...itemMaps)
-    });
-    showPopup('The loan is succesfull!'); 
-    emit('reservationplaced');
-    itemSelector.resetCollectionName();
-    dates.resetDates(true)
-    if(page == "UserHome"){
-        router.push({name: 'Home'})
     }
 }
 const groupByDates = (itemsObject) => {
