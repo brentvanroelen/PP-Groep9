@@ -1,7 +1,23 @@
 # PP-Groep9
 <h2>Programming Project groep 9</h2>
 
-Dit is een programma geschreven voor de uitleendienst van het medialab van Erasmushogeschool Brussel. Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven van de code, onderverdeeld per teamlid
+Dit is een programma geschreven voor de uitleendienst van het medialab van Erasmushogeschool Brussel. <br>
+De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
+
+Basisversie:
+<ul>
+  <li>Download all bestanden in ZIP formaat</li>
+  <li>Pak de bestanden uit in een algemene folder</li>
+  <li>Open het project in visual studio code (of een andere IDE)</li>
+  <li>Open een terminal en run npm install</li>
+  <li>Run hierna npm run dev</li>
+  <li>Maak een account aan</li>
+  <li>Het project staat klaar!</li>
+</ul>
+
+
+
+Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven van de code, onderverdeeld per teamlid
 
 
 <h3>Team:</h3>
