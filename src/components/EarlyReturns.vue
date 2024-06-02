@@ -223,7 +223,8 @@ button {
   flex-direction: column;
   align-items: center;
   margin: 0 20px;
-  background: #e0e0e0;
+  background: #fff;
+  border-radius: 10px;
 }
 .itemInfoBox {
   padding: 10px;
