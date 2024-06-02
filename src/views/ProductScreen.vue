@@ -32,9 +32,6 @@ const loadCatalog = async() => {
     store.updateResults(items);
 }
 
-onMounted(() => {
-    loadCatalog();
-})
 
 
 </script>
