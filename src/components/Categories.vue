@@ -1,11 +1,11 @@
 <template>
     <h2>Categories</h2>
     <ul id="Categories" >
-        <li><router-link to="/productscreen"><img src="../assets/Audio.jpg" alt=""></router-link></li>
-        <li><router-link to="/productscreen"><img src="../assets/Lighting.jpg" alt=""></router-link></li>
-        <li><router-link to="/productscreen"><img src="../assets/Varia.jpg" alt=""></router-link></li>
-        <li><router-link to="/productscreen"><img src="../assets/video.png" alt=""></router-link></li>
-        <li><router-link to="/productscreen"><img src="../assets/XR.jpg" alt=""></router-link></li>
+        <li><router-link :to="{name: 'productscreen', params: {category: 'Audio'}}"><img src="../assets/Audio.jpg" alt=""></router-link></li>
+        <li><router-link :to="{name: 'productscreen', params: { category: 'Lighting'}}"><img src="../assets/Lighting.jpg" alt=""></router-link></li>
+        <li><router-link :to="{name: 'productscreen', params: { category: 'Varia'}}"><img src="../assets/Varia.jpg" alt=""></router-link></li>
+        <li><router-link :to="{name: 'productscreen', params: { category: 'Video'}}"><img src="../assets/video.png" alt=""></router-link></li>
+        <li><router-link :to="{name: 'productscreen', params: { category: 'XR'}}"><img src="../assets/XR.jpg" alt=""></router-link></li>
     </ul>
     <ul id="Names">
         <li>Audio</li>
@@ -16,13 +16,8 @@
     </ul>
 </template>
 
-<script>
-export default {
-    name: 'Categories',
-    components: {
-  
-    }
-  }
+<script setup>
+
 </script>
 
 <style scoped>
