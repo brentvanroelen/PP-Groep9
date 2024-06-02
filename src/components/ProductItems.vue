@@ -1,8 +1,8 @@
 <template>
     <div class="items">
     <h1>Product Screen</h1>
-    <section class="itemslisting" v-if="results != 'nothing'">
-        <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in results" :key="item.id">
+    <section class="itemslisting" v-if="filteredResults != 'nothing'">
+        <router-link @click="updateStore(item)" class="routerlink" :to="'/ItemScreen/' + item.Name"  v-for="item in filteredResults" :key="item.id">
            <Items :item="item" ></Items>
     </router-link>
     </section>
@@ -16,9 +16,28 @@ import { useStore } from "@/Pinia/Store.js";
 import { computed } from "../main.js";
 import Items from "@/components/Items.vue";
 
+const props = defineProps({
+    category: String
+});
+
 const store = useStore();
 const results = computed(() => store.results);
 
+console.log("Results: ", results.value); 
+console.log("Category: ", props.category); 
+
+if (results.value.length > 0) {
+    console.log("Category of first item: ", results.value[0].category); // Add this line
+}
+
+const filteredResults = computed(() => {
+    if (props.category){
+        const filtered = results.value.filter(item => item.Category === props.category);
+        console.log("Filtered results: ", filtered);
+        return filtered;
+    }
+    return results.value;
+})
 
 const updateStore = (item) => {
     store.updateResults([item]);

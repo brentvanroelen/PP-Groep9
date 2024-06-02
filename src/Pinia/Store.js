@@ -13,7 +13,10 @@ export const useStore = defineStore({
     updateResults(results) {
       this.results = results;
     }
-  }
+  },
+  persistedState: {
+    persist: false,
+  },
 });
 export const useDates = defineStore({
   id: 'Dates',
