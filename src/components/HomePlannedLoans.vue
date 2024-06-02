@@ -465,14 +465,14 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
     cursor: pointer;
     border: none;
     border-radius: 20px; 
-    background-color: #f44336; 
+    background-color: #dc3545; 
     color: #fff; 
     transition: background-color 0.3s;
     margin-bottom: 10px
   }
   
   .deleteButton:hover {
-    background-color: #d32f2f;
+    background-color: #c82333;
   }
   
   .items {

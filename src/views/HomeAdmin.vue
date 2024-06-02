@@ -299,14 +299,18 @@ label {
 }
 
 button {
-  background-color: #ff3333;
+  background-color: #dc3545;
   color: #fff;
   border: none;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
   margin-top: 10px;
   margin: 0.5em;
+}
+
+button:hover {
+  background-color: #c82333;
 }
 .head{
     display: flex;

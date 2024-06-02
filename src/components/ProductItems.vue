@@ -2,8 +2,8 @@
     <div class="items">
     <h1>Product Screen</h1>
     <h2 v-if="getDate()[0]">From {{ formattedStartDate }} To {{ formattedEndDate }}</h2>
-    <section class="itemslisting" v-if="results != 'nothing'">
-        <Items v-for="item in results" :key="item.id" :item="item" :loan="true">
+    <section class="itemslisting" v-if="filteredResults != 'nothing'">
+        <Items v-for="item in filteredResults" :key="item.id" :item="item" :loan="true">
         </Items>
     </section>
   </div>
@@ -15,6 +15,11 @@
 import { useStore,useDates } from "@/Pinia/Store.js";
 import { computed,ref } from "../main.js";
 import Items from "@/components/Items.vue";
+
+const props = defineProps({
+    category: String
+});
+
 
 let formattedStartDate = ref('');
 let formattedEndDate = ref('');
@@ -35,6 +40,21 @@ const getDate = () => {
     formattedEndDate.value = `${actualEndDate.getDate()}/${actualEndDate.getMonth()}/${actualEndDate.getFullYear()}`;
     return [true,formattedStartDate,formattedEndDate];
 }
+console.log("Results: ", results.value); 
+console.log("Category: ", props.category); 
+
+if (results.value.length > 0) {
+    console.log("Category of first item: ", results.value[0].category); // Add this line
+}
+
+const filteredResults = computed(() => {
+    if (props.category){
+        const filtered = results.value.filter(item => item.Category === props.category);
+        console.log("Filtered results: ", filtered);
+        return filtered;
+    }
+    return results.value;
+})
 
 const updateStore = (item) => {
     store.updateResults([item]);
