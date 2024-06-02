@@ -190,8 +190,8 @@ onMounted(() => {
 
 <style scoped>
 .calendar{
-  width: 60px;
-  height: 60px
+  width: 30px;
+  height: 30px
 }
   .search-container.HomeAdmin{
     max-height: fit-content;
@@ -216,8 +216,9 @@ onMounted(() => {
     height: fit-content;
   }
   img{
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
+    margin-top: 2px;
   }
   .search-bar input {
     padding: 8px;
