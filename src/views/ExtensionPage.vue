@@ -120,7 +120,7 @@ const fetchProductDetails = async () => {
 const extensionDuration = computed(() => {
     if (selectedDates.value.length === 2) {
         const [startDate, endDate] = selectedDates.value;
-        const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) - 1;
         return Math.ceil(duration); 
     }
     return 0;
@@ -168,8 +168,7 @@ const requestExtension = async () => {
             });
 
             console.log('End date updated successfully');
-            alert('End date updated successfully');
-
+            
             fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
             selectedDates.value = [fullDate.value]; 
         } else {
