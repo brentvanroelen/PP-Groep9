@@ -46,9 +46,10 @@ const routes = [
   }
   ,
   {
-    path: '/productscreen',
+    path: '/productscreen/:category?',
     name: 'productscreen',
     component: ProductScreen,
+    props: true
   },
   {
     path: '/cart',

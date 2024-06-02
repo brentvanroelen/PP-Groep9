@@ -2,18 +2,24 @@
     <div id="Search">
         <searchbar></searchbar>
     </div>
-    <ProductItems></ProductItems>
+    <ProductItems :category="category"></ProductItems>
 </template>
 
 <script setup>
 import Searchbar from "@/components/Searchbar.vue";
 import ProductItems from "@/components/ProductItems.vue";
 import { useStore } from "@/Pinia/Store.js";
-import {useRoute} from "../main.js";
+import {onMounted, useRoute} from "../main.js";
 import {ref,watch} from "../main.js";
 import { collection, db, getDocs, query, where } from '../Firebase/Index.js';
 
+const props = defineProps({
+    category: String
+});
 
+const route = useRoute();
+const category = ref(route.params.category || props.category);
+console.log("Category: ", category.value);
 const store = useStore();
 const loadCatalog = async() => {
     let items = [];
@@ -22,11 +28,13 @@ const loadCatalog = async() => {
     docs.forEach((doc) => {
         items.push(doc.data());
     })
+    console.log("Results in loadCatalog: ", items)
     store.updateResults(items);
 }
-if(store.results[0] == "nothing"){
+
+onMounted(() => {
     loadCatalog();
-}
+})
 
 
 </script>
