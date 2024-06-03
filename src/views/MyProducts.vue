@@ -53,9 +53,6 @@
             <br>
             Serial number: {{ item.Serial }}
             <div class="actions">
-              <button>
-                <router-link class="link" to="/ExtensionPage">Request singular extension</router-link>
-              </button>
               <button @click="getReportedItems(item)">
                 <router-link class="link" to="/ReportIssue">Report Issue</router-link>
               </button>

@@ -73,7 +73,6 @@ const updateStore = (item) => {
 
 
 onMounted(() => {
-  console.log(item.isKit)
   if(item.isKit){
     imageGetter(`KitImages/${item.KitImage}`).then((res) => {
       image.value = res;
@@ -104,13 +103,10 @@ const addItemToCart = () => {
       quantity.setQuantity(Item.Name, 1)
     }
     dates.updateDate(Item.Name, dates.general)
-    console.log(Item);
     cart.addItem(Item);
-    console.log(cart.items);
     showPopup('This item is added to your cart!');        
   }
 
-console.log(item.Name)
 }
 
 </script>

@@ -70,6 +70,7 @@
     </div>
 
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
   
     
@@ -77,7 +78,8 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc, setDoc } from '../Firebase/Index.js';
-import { reservationReturnedOrCanceled } from '@/js/functions.js';    
+import { reservationReturnedOrCanceled } from '@/js/functions.js';
+import Popup from '@/components/Popup.vue';
 
 let unsub = false;
 const students = ref([]) 
@@ -86,6 +88,15 @@ const allReservations = ref([]);
 const lateReservationArray = ref([]);
 const deletedReservation = ref([]);
 const runAlignFunction = ref(true);
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
@@ -106,12 +117,10 @@ const getItems = async() =>{
   if(querySnapshot.empty){
     loading.value = false;
   }
-  console.log(querySnapshot.size)
   querySnapshot.forEach(async(doc) => {
     let itemsToPrepare = 0;
     let items = [];
     for (let i = 1; i <= doc.data().allItemSerials.length; i++) {
-      console.log(doc.data()[`Item${i}`])
       items.push(doc.data()[`Item${i}`]);
       if(doc.data()[`Item${i}`].ItemPrepared == false){
           itemsToPrepare++;
@@ -168,7 +177,6 @@ const filterAllReservationsOnLateness = () =>{
   })
   const lateReservations = allReservations.value.filter(reservation => {
     let reservationDate = new Date(props.todayDate.getFullYear(), reservation.StartMonth - 1, reservation.StartDate);
-    console.log(new Date().setHours(0,0,0,0))
     return reservationDate.setHours(0,0,0,0) < new Date().setHours(0,0,0,0)
   });
   return [generalReservations, lateReservations]
@@ -196,8 +204,6 @@ const alignWithStudents = async() =>{
             let date = new Date();
             date.setDate(data.EndDate);
             date.setMonth(data.EndMonth - 1);
-            console.log(date)
-            console.log(props.todayDate)
             if(date < currentDate){
               const amountOfDaysLate = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
               items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
@@ -244,8 +250,6 @@ const alignWithStudents = async() =>{
             let date = new Date();
             date.setDate(data.StartDate);
             date.setMonth(data.StartMonth - 1);
-            console.log(date)
-            console.log(props.todayDate)
             if(date < currentDate){
               const amountOfDaysLate = Math.floor((props.todayDate - date) / (1000 * 60 * 60 * 24));
               items[i-1].itemStatus = `Item is with ${data.UserFirstName} ${data.UserLastName} and they are ${amountOfDaysLate} day${amountOfDaysLate > 1 ? 's' : ''} late in returning the item`;
@@ -278,8 +282,6 @@ const alignWithStudents = async() =>{
 
 
 const markItemAsPrepared = async(student, item) => {
-  console.log(student)
-  console.log(item)
   student.itemsToPrepare--;
   item.itemPrepared = true;
   const docRef = doc(db, `Utility/Reservations/All Reservations/${student.id}`);
@@ -296,6 +298,7 @@ const markItemAsPrepared = async(student, item) => {
       }
       );
   }
+  showPopup('Item prepared');
 }
 
 const markAllItemsAsPrepared = async(student) => {
@@ -312,6 +315,7 @@ const markAllItemsAsPrepared = async(student) => {
       ReservationPrepared : true,
     });;
   }
+  showPopup('All items prepared');
 }
 
 const isItemWithSomeoneElse = async(item) => {
@@ -342,6 +346,9 @@ const markAsPickedUp = async (reservation) => {
   if (index !== -1) {
     students.value.splice(index, 1);
   };
+  
+  showPopup('Item(s) picked up');
+ 
 };
 
 const discardReservation = async (reservation,warning,sendEmail) => {
@@ -355,6 +362,7 @@ const discardReservation = async (reservation,warning,sendEmail) => {
     lateReservationArray.value = [];
     allReservations.value = [];
   }
+  showPopup('Reservation discarded');
 };
 
 
@@ -376,7 +384,6 @@ const unsubscribe = onSnapshot(reservations, async(querySnapshot) => {
       }
     }
     allReservations.value.push(doc.data());
-    console.log(lateReservationArray.value)
   });
   if(unsub){
     unsubscribe();

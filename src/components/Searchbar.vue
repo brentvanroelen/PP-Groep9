@@ -89,7 +89,6 @@ const fetchData = async () => {
 }
 
 const Reload = () => {
-  console.log(date.value)
   let startDate = date.value[0];
   let endDate = date.value[1];
   let startDay = startDate.getDate();
@@ -135,11 +134,9 @@ const search = async() => {
     );
     const querySnapshot = await getDocs(itemquery);
       querySnapshot.forEach((snap) =>{
-        console.log(snap.data())
         results.push(snap.data())
     })
   }
-  console.log(results)
   store.updateResults(results)
   if(store.results.length == 0){
     trigger.fireTrigger();
@@ -174,7 +171,6 @@ if(props.page == "HomeAdmin"){
 const addToCart = (item) => {
   cart.addItem(item);
   querystring.value = '';
-  console.log(cart.items)
 }
 onMounted(() => {
   if(props.page == "HomeAdmin"){

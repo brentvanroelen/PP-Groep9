@@ -40,8 +40,6 @@ const getDate = () => {
     formattedEndDate.value = `${actualEndDate.getDate()}/${actualEndDate.getMonth()}/${actualEndDate.getFullYear()}`;
     return [true,formattedStartDate,formattedEndDate];
 }
-console.log("Results: ", results.value); 
-console.log("Category: ", props.category); 
 
 if (results.value.length > 0) {
     console.log("Category of first item: ", results.value[0].category); // Add this line

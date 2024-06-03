@@ -19,7 +19,6 @@ Basisversie:
 
 Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven van de code, onderverdeeld per teamlid
 
-
 <h3>Team:</h3>
 
 - De Youtube-playist om Vue 3 te leren: [Vue.js 3 Tutorial](https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ)
@@ -106,7 +105,25 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Sorteren op datum: [chatgpt](https://chatgpt.com/share/cbbf6210-994e-474f-95ad-9bdc6f0edfc0)
 - Hulp bij CSS: [chatgpt](https://chatgpt.com/share/0649a67f-2d41-4cc8-86b0-70dd0cd9c18b)
 
+<h3>Rayan Haddou</h3>
 
+- De Youtube-playist om Vue 3 te leren: [chatgpt]https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ
+- Blokkering na veel warnings: [chatgpt]https://chatgpt.com/share/a4efdad5-a6c4-4157-9cd0-16ceb00d732f
+- Product layout adjustement: [chatgpt]https://chatgpt.com/share/0dc12551-bc00-44b1-a4ed-358669e92b8a
+- Fetch users from firestore: [chatgpt]https://chatgpt.com/share/1df57dae-c5d8-4e02-9727-bc2551e75f4c
+- Gegevens uithalen uit document: [chatgpt]https://chatgpt.com/share/be5d4f68-417e-4a7b-bfa2-d8a4debb5a6f
+- Vue 3 aanpassingen: [chatgpt]https://chatgpt.com/share/60d60df0-0dc6-4946-8f5f-17f73ce7acdb
+- Blacklist gebruikerssadministrators controle: [chatgpt]https://chatgpt.com/share/e1a823ea-303a-4488-9305-755daf42cdfc
+- CSS invloed op de pagina: [chatgpt]https://chatgpt.com/share/bdacdc09-306b-4ce9-b76e-952797b7be20
+- Extension request link: [chatgpt]https://chatgpt.com/share/db9d39f0-9fe0-4ef4-a264-7d558766dd7b
+- UserId uit database ontvangen: [chatgpt]https://chatgpt.com/share/2cb69882-4bad-4ba4-ae8c-bd0a0d405438
+- Blacklist table JavaScript: [chatgpt]https://chatgpt.com/share/1ee455bd-7abf-4909-83ab-473596e293d1
+- Vergrote gecentreerde titels: [chatgpt]https://chatgpt.com/share/a2e1d697-d8d3-43f0-a9df-20e07c6d0889
+- Firebase data fetch fixes: [chatgpt]https://chatgpt.com/share/35abcfb2-6c38-4426-8295-4f83a336f366
+- Request deny: [chatgpt]https://chatgpt.com/share/728ce694-9eb7-4d01-80e9-0adeab1ae3d8
+- Filteren op conflicterende projecten: [chatgpt]https://chatgpt.com/share/39f8c8bb-ae07-423b-a1fc-201e127e04bf
+- HTML text zone: [chatgpt]https://chatgpt.com/share/6442f2bc-373f-4908-a241-07c2a5fc71a6
+- CSS aanpassingen: [chatgpt]https://chatgpt.com/share/741f1d0b-9c46-40a4-8bb0-161b2654e3b2
 
 
 

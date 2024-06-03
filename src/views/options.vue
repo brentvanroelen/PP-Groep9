@@ -8,35 +8,64 @@
             <div id="days">
             <h4>Available days: </h4>
                 <div class="dayContainer">
+                    <div class="day">
                     <label for="switch" class="days">Monday</label><label class="switch">
                         <input type="checkbox" v-model="monday">
                         <span class="slider round"></span>
                     </label>
-                    <br>
+                    </div>
+                    <div class="day">
                     <label for="switch" class="days">Tuesday</label><label class="switch">
                         <input type="checkbox" v-model="tuesday">
                         <span class="slider round"></span>
                     </label>
-                    <br>
+                    </div>
+                    <div class="day">
                     <label for="switch" class="days">Wednesday</label><label class="switch">
                         <input type="checkbox" v-model="wednesday">
                         <span class="slider round"></span>
                     </label>
-                    <br>
+                    </div>
+                    <div class="day">
                     <label for="switch" class="days">Thursday</label><label class="switch">
                         <input type="checkbox" v-model="thursday">
                         <span class="slider round"></span>
                     </label>
-                    <br>
+                    </div>
+                    <div class="day">
                     <label for="switch" class="days">Friday</label><label class="switch">
                         <input type="checkbox" v-model="friday">
                         <span class="slider round"></span>
-                    </label></div></div>
-
+                    </label>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="loanDuration">
-            <h2>Edit loans</h2>
+
+         </div>
+            
+            
+        <div class="warningSys">
+            <h2>Edit blacklist system</h2>
+            <div class="warningSystem">
+                <label for="switch" class="days">Automatic warnings:</label><label class="switch">
+                    <input type="checkbox" v-model="autoWarnings">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+                <div class="blacklistWarnings">
+                <h4>Required warnings to blacklist: </h4>
+                <select name="" id="blacklistSelect" v-model="requiredWarningsToBlacklist">
+                    <option value="1">1 warning</option>
+                    <option value="2">2 warnings</option>
+                    <option value="3">3 warnings</option>
+                    <option value="4">4 warnings</option>
+                    <option value="5">5 warnings</option></select>
+                </div>
+            </div>
+            <div class="loanDuration">
+            <h2>Edit loan duration</h2>
             <h4>Loan duration: </h4>
             <label for="student" class="student">Student: </label> 
             <select name="weken" id="wekenSelect" v-model="student">
@@ -70,57 +99,39 @@
                 <option value=4>4 weeks</option>
             </select>
         </div>
-            </div>
+    
             
-            
-        <div class="warningSys">
-            <h2>Edit blacklist system</h2>
-            <div class="warningSystem">
-                <label for="switch" class="days">Automatic warnings:</label><label class="switch">
-                    <input type="checkbox" v-model="autoWarnings">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-                <div class="blacklistWarnings">
-                <h4>Required warnings to blacklist: </h4>
-                <select name="" id="blacklistSelect" v-model="requiredWarningsToBlacklist">
-                    <option value="1">1 warning</option>
-                    <option value="2">2 warnings</option>
-                    <option value="3">3 warnings</option>
-                    <option value="4">4 warnings</option>
-                    <option value="5">5 warnings</option></select>
-                </div>
-            </div>
-            <div class="returns">
-                    <div class="editLoaning">
-                        <h2>Edit loaning</h2>
-                            <h4>User loan limit</h4>
-                            <select name="" id="loanLimit" v-model="userLoanLimit">
-                                <option value="1" >1 item</option>
-                                <option value="2">2 items</option>
-                                <option value="3">3 items</option>
-                                <option value="4">4 items</option>
-                                <option value="5">5 items</option>
-                                <option value="6">6 items</option>
-                                <option value="7">7 items</option>
-                                <option value="8">8 items</option>
-                                <option value="9">9 items</option>
-                                <option value="10">10 items</option></select>
-                                
-                            <h4>User kit limit</h4>
-                            <select name="" id="kitLimit" v-model="userKitLimit">
-                                <option value="1">1 kit</option>
-                                <option value="2">2 kits</option>
-                                <option value="3">3 kits</option>
-                                <option value="4">4 kits</option>
-                                <option value="5">5 kits</option>
-                                <option value="6">6 kits</option>
-                                <option value="7">7 kits</option>
-                                <option value="8">8 kits</option>
-                                <option value="9">9 kits</option>
-                                <option value="10">10 kits</option></select>
-                    </div>
-            </div>
+            <!-- optie om het limiet van uitleenbare items in te stellen maar dit valt weg door tijdsgebrek -->
+                <!-- <div class="returns">
+                        <div class="editLoaning">
+                            <h2>Edit loaning</h2>
+                                <h4>User loan limit</h4>
+                                <select name="" id="loanLimit" v-model="userLoanLimit">
+                                    <option value="1" >1 item</option>
+                                    <option value="2">2 items</option>
+                                    <option value="3">3 items</option>
+                                    <option value="4">4 items</option>
+                                    <option value="5">5 items</option>
+                                    <option value="6">6 items</option>
+                                    <option value="7">7 items</option>
+                                    <option value="8">8 items</option>
+                                    <option value="9">9 items</option>
+                                    <option value="10">10 items</option></select>
+                                    
+                                <h4>User kit limit</h4>
+                                <select name="" id="kitLimit" v-model="userKitLimit">
+                                    <option value="1">1 kit</option>
+                                    <option value="2">2 kits</option>
+                                    <option value="3">3 kits</option>
+                                    <option value="4">4 kits</option>
+                                    <option value="5">5 kits</option>
+                                    <option value="6">6 kits</option>
+                                    <option value="7">7 kits</option>
+                                    <option value="8">8 kits</option>
+                                    <option value="9">9 kits</option>
+                                    <option value="10">10 kits</option></select>
+                        </div>
+                </div> -->
     </section>
     <button @click="update()">Update Options</button>
     <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
@@ -230,6 +241,7 @@ h1 {
 .options {
     display: flex;
     justify-content: space-between;
+    margin: 1em;
 }
 
 /* Styling voor aparte sections */
@@ -248,11 +260,13 @@ h1 {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.options h2 {
-    margin-bottom: 20px;
-}
+
 .warningSystem{
-    margin: 1em;
+    margin: 0.5em;
+}
+h4{
+    margin: 0.5em;
+
 }
 
 .options label {
@@ -344,5 +358,11 @@ button:hover {
     background-color: #c82333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
-
+.day{
+    margin: 0.1em;
+}
+.dayContainer {
+    display: flex;
+    flex-direction: column;
+}
 </style>

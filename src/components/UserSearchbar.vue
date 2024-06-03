@@ -19,8 +19,6 @@ if(querystring.value.length >= 3){
 const confirmedSearch = async() => {
   let firstName = querystring.value.split(' ')[0];
   let lastName = querystring.value.split(' ')[1];
-  console.log(firstName)
-  console.log(lastName)
   if(firstName == undefined || lastName == undefined){
     selectedUser.selectUser(1)
   }else{
@@ -39,7 +37,6 @@ const confirmedSearch = async() => {
         selectedUser.selectUser(user) 
 
       });
-      console.log(selectedUser.user)
     }else{
       selectedUser.selectUser(1)
     }

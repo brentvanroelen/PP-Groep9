@@ -23,7 +23,6 @@ let existingItems = [];
 onMounted(() => {
     for(let i = 1; i <= kitToBeMade.kit.Items.length; i++){
         existingItems.push(kitToBeMade.kit[`Item${i}`]);
-        console.log(kitToBeMade.kit[`Item${i}`]);
     }
 });
 

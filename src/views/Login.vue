@@ -82,7 +82,6 @@ const onSubmit = () => {
             userIdentification.register(credentials)
         }
     }
-    console.log('Form submitted');
 }
 </script>
 

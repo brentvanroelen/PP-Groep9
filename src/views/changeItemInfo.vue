@@ -27,6 +27,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { db, updateDoc, doc } from "../Firebase/Index.js";
+import Popup from '@/components/Popup.vue';
 
 const route = useRoute();
 const item = ref(null);
@@ -35,6 +36,18 @@ const category = ref('');
 const brand = ref('');
 const description = ref('');
 const lastUpdated = ref('');
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+
+const showPopup = (message) => {
+ 
+//window.location.reload();
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const updateItem = async () => {
   if (!item.value) {
@@ -63,11 +76,15 @@ const updateItem = async () => {
       lastUpdated: new Date().toLocaleString() // Update lastUpdated with local time
     });
 
-    console.log('Item updated successfully.');
+    
+    showPopup('Item updated successfully.');  
     lastUpdated.value = new Date().toLocaleString(); // Update lastUpdated locally
   } catch (error) {
     console.error('Error updating item:', error);
+  
   }
+
+ 
 };
 
 const fetchItemData = () => {
@@ -80,8 +97,7 @@ const fetchItemData = () => {
     description.value = itemData.Description || '';
     lastUpdated.value = itemData.lastUpdated || '';
 
-    console.log('Item received:', item.value);
-    console.log('Name:', itemData.Name);
+    
   } else {
     console.error('No item data received.');
   }
