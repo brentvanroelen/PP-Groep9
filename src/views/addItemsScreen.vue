@@ -3,7 +3,7 @@
     <h1 v-if="!instance">Add item</h1>
     <h1 v-else>Add instance</h1>
     <form @submit.prevent="Makenewdoc">
-      <div v-if="!instance">
+      <div v-if="!instance" class="form">
         <div class="form-group">
           <label for="name">Name: </label>
           <input type="text" id="name" name="name" v-model="docdata.Name" required>
@@ -44,7 +44,7 @@
         <button type="button" class="btn" @click="setInstance(true)">Add Instance</button>
       </div>
       <button type="submit" class="btn">Add item</button>
-      <button type="button" class="btn">
+      <button type="button" class="btn-close">
         <router-link class="link" to="/ManageItems">Close</router-link>
       </button>
     </form>
@@ -280,29 +280,34 @@ const getImage = async (queryname) => {
 
   
   
-  <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-  }
+  <style scoped>
+  .label{
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
   
   h1 {
     color: #444;
     text-align: center;
+    margin-top:5px;
   }
   
-  form {
+  .form {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
+    border: 1px solid #ccc;
     max-width: 500px;
     margin: 20px auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
   }
   
+  .form:hover {
+  transform: translateY(-5px);
+}
   .form-group {
     margin-bottom: 15px;
   }
@@ -325,15 +330,40 @@ const getImage = async (queryname) => {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
-    background-color: #007BFF;
+    background-color: #4caf50;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
-    margin: 4px;
+    margin: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
   }
-  
   .btn:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
   }
+  .btn-close {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-close:hover {
+  background-color: #c82333;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 20px;
+}
   </style>
   
