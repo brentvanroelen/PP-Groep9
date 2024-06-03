@@ -177,6 +177,7 @@ const addItemToCart = () => {
 .unavailable #itemInfo p{
     color: #dc3545; 
 }
+
 #cartbutton{
   background-color: #dc3545;
   border: none;

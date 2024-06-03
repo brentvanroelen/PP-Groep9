@@ -197,7 +197,6 @@ export const useUserIdentification = defineStore({
     initialize(){
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log('user:' , user)
           this.user.id = user.uid
           this.user.email = user.email
           const docreference = doc(db, 'Users', user.uid)
@@ -294,6 +293,7 @@ export const useReportedItems = defineStore({
     itemImage: '',
     itemName: '',
     itemSerial: '',
+    loadedImage: ''
   }),
   actions: {
     addName(itemName){

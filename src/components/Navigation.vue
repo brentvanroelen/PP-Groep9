@@ -6,7 +6,6 @@
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/Myproducts">My products</router-link></li>
       <li><router-link class="link" to="/cart">Cart</router-link></li>
-      <li><router-link class="link" to="/Additem">Additem</router-link></li>
       <li><router-link class="link" to ="/ReportIssue">Report Issue</router-link></li>
       <li><button class="loginPageBtn" @click="logOut"> log out</button></li>
     </div>

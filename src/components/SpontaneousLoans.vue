@@ -153,6 +153,7 @@ button {
 }
 #calender{
   max-width: 100px;
+  margin-top: 10px;
 }
 .ordersList {
   list-style-type: none;
@@ -168,8 +169,9 @@ button {
   display: relative;
   align-items: center;
   margin-bottom: 10px;
-  width: 100%;
+  width: 90%;
   justify-content: center;
+  margin-left: 0;
 }
 
 .itemContent {

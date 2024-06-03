@@ -37,7 +37,7 @@
             <img src="../assets/calendar.png" alt="">
           </template>
         </VueDatePicker>
-        <div class="item-trash" @click="removeItem()">
+        <div class="item-trash" @click="removeItem(index)">
             <img src="../assets/trash.png" alt="">
         </div>
       </div>
@@ -75,7 +75,7 @@
     const endDate = ref();
     const cart = useCart();
     const items = ref(cart.items);
-    const itemCount = ref(0);
+    const itemCount = computed(() => items.value.length);
     let length = ref();
     const student = ref();
     const teacher = ref();
@@ -137,9 +137,7 @@
     return futureDate;
   });
 
-    for (let i = 0; i < items.length; i++) {
-        itemCount.value += 1;
-    }
+
 
     const removeItem = (index) => {
         cart.removeItem(index);
@@ -165,6 +163,7 @@
 
     onMounted(() => {
     fetchData();
+    console.log(itemCount.value)
   });
 
 const getImage = async(result) => {
@@ -293,8 +292,9 @@ const getImage = async(result) => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 90%;
+            width: 85%;
             margin: 20px 0;
+            margin-left: 7.5%;
         }
 
         #item-count {
@@ -326,5 +326,9 @@ const getImage = async(result) => {
             cursor: pointer;
             outline: none;
             margin: 16px;
+        }
+
+        #buttons{
+          margin: 0;
         }
 </style>

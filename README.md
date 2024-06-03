@@ -104,6 +104,20 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Problemen met icoontjes: [chatgpt](https://chatgpt.com/share/59c7f479-d3f2-4b74-b1ed-23bb6143d104)
 - Sorteren op datum: [chatgpt](https://chatgpt.com/share/cbbf6210-994e-474f-95ad-9bdc6f0edfc0)
 - Hulp bij CSS: [chatgpt](https://chatgpt.com/share/0649a67f-2d41-4cc8-86b0-70dd0cd9c18b)
+- Hulp bij het uploaden van een image naar de storage: [chatgpt](https://chatgpt.com/share/73586585-d269-464f-88d8-964e6dae7b3b)
+
+<h3> Aikarose Mwasha: </h3>
+
+- Opfrisser selectors: [Youtube] (https://www.youtube.com/watch?v=l1mER1bV0N0), [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child)
+- Calendar icon/emoji:[Compart](https://www.compart.com/en/unicode/U+1F4C5)
+- Hover: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover) 
+- Before: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/::before)
+- Trashcan icon/emoji: [Compart](https://www.compart.com/en/unicode/U+1F5D1)
+- Focus: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus)
+- Animaties: [Youtube](https://www.youtube.com/watch?v=PH35-BDak0M), [Youtube](https://www.youtube.com/watch?v=oYlJR4Le228), [Youtube](https://www.youtube.com/watch?v=rzD-cPhq02E), [Youtube](https://www.youtube.com/watch?v=aii2itPgRVs), [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translateY)
+- Box-shadow: [Youtube](https://www.youtube.com/watch?v=-JNRQ5HjNeI)
+- Box-sizing: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing)
+-Basics Pinia: [Pinia](https://pinia.vuejs.org/introduction)
 
 <h3>Rayan Haddou</h3>
 
@@ -124,8 +138,6 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Filteren op conflicterende projecten: [chatgpt]https://chatgpt.com/share/39f8c8bb-ae07-423b-a1fc-201e127e04bf
 - HTML text zone: [chatgpt]https://chatgpt.com/share/6442f2bc-373f-4908-a241-07c2a5fc71a6
 - CSS aanpassingen: [chatgpt]https://chatgpt.com/share/741f1d0b-9c46-40a4-8bb0-161b2654e3b2
-
-
 
 
 
