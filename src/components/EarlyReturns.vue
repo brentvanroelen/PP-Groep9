@@ -41,7 +41,6 @@ import { reservationReturnedOrCanceled } from '@/js/functions';
 import { collection, db,deleteField,doc,getDoc, getDocs, updateDoc,query,increment,where } from '../Firebase/Index.js';
 
 const EarlyReservations = useEarlyReturnsReservations();
-console.log(EarlyReservations.Reservations)
 const stashedReservations = ref([])
 let chosenReservation = ref(null)
 let selectedItems = ref([])

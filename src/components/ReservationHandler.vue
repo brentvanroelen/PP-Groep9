@@ -74,14 +74,12 @@ const handleReservation = async() => {
         itemSelector.setCollectionName(`${singleItem.Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
             if(singleItem.isKit){
-                console.log(singleItem)
                 if(!quantity.available[singleItem.Name]){
                     console.log("Kit is not available")
                     return
                 }
                 for(let i = 0; i < singleItem.Items.length; i++){
                     itemSelector.setCollectionName(`${singleItem.Items[i]}kit${singleItem.Id}`);
-                    console.log(itemSelector.itemName)
                     if(quantity.getQuantity(singleItem.Items[i]) == 0){
                         quantity.setQuantity(singleItem.Items[i], 1)
                     }
@@ -116,8 +114,6 @@ const handleReservation = async() => {
                     promises.push(promise);
                 }
             }
-            console.log(items)
-            console.log(promises)
             Promise.all(promises)
             .then(() => {
                 makeItemMap(items);
@@ -143,7 +139,6 @@ const handleReservation = async() => {
             orderCart();
             if(Object.keys(dates.dates).length != 0){
                 for(let reservation of cart.items){
-                    console.log(reservation)
                     items = [];
                     promises = [];
                     itemMaps = [];
@@ -172,10 +167,7 @@ const handleReservation = async() => {
                             if(quantity.getQuantity(item.Name) == 0){
                                 quantity.setQuantity(item.Name, 1)
                             }
-                            console.log(item)
-                            console.log(reservation)
                             itemSelector.setCollectionName(`${item.Name}`);
-                            console.log(quantity.getQuantity(itemSelector.itemName))
                             for (let k = 1; k <= quantity.getQuantity(itemSelector.itemName); k++){
                                     itemQuantity.value = k;
                                 }
@@ -191,7 +183,6 @@ const handleReservation = async() => {
                             }
                         }
                     }
-                    console.log(items)
                     await Promise.all(promises)
                     .then(() => {
                         makeItemMap(items);
@@ -239,17 +230,13 @@ const writeToHistory = async(serial,date) => {
 
 
 const getItem = async() => {
-    console.log(availableInstances)
     chosenitem.value = availableInstances.getInstance(itemSelector.itemName,[0]);
-    console.log(chosenitem.value)
     availableInstances.getCollection(itemSelector.itemName).shift();
     console.log(availableInstances.getInstance(itemSelector.itemName,[0]));
     items.push(chosenitem.value);
     if(page == "HomeAdmin"){
         itemsToGet.addItem(chosenitem.value)
     }
-    console.log(items)
-    console.log(chosenitem.value)
 }
 const markInstancesAsUnavailable = async(name) => {
     let databaseName = databaseFormatter(name);
@@ -396,7 +383,6 @@ const groupByDates = (itemsObject) => {
             matchingArrays.push([key]);
         }
     });
-    console.log(matchingArrays);
     return matchingArrays;
 }
 const orderCart = () => {
@@ -406,7 +392,6 @@ const orderCart = () => {
             return cart.items.find(obj => obj.Name === name);
         });
     });
-    console.log(orderedCart);
     cart.items = orderedCart;
     return orderedCart;
 }

@@ -44,7 +44,6 @@ const router = useRouter();
 const selectedItems = ref(kitItems.selectedItems);
 let kitDescription = ref('');
 let kitId = computed(() => {
-  console.log(kitToBeMade.kit.Id)
   return kitToBeMade.kit.Id;
 })
 let kitName = computed(() =>{
@@ -98,7 +97,6 @@ const addKit = async () => {
       Id: kitId,
       isKit: true
     };
-    console.log(selectedItems.value)
     for(let item of selectedItems.value){
         generateSubstrings(item.Name).forEach((substring) => {
             kit.SubStrings.push(substring);
@@ -118,7 +116,6 @@ const addKit = async () => {
         }
         kit[`Item${index + 1}`] = changeableItem;
     });
-    console.log(kit)
     setDoc(doc(collection(db, 'Kits')),{
       ...kit
     })
@@ -132,7 +129,6 @@ onMounted(() => {
       item.loadedImage = res;
     })
   }
-  console.log(selectedItems.value)
 });
 
 
