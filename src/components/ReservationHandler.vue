@@ -87,9 +87,11 @@ const handleReservation = async() => {
                         itemQuantity.value = k;
                     }
                     try{
+                    console.log('we got here')
                         await changeAmountAvailable(singleItem.Items[i],itemQuantity.value)
                     }catch(e){
                         console.error(e)
+                        throw e
                     }
                     for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
                         const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
@@ -104,9 +106,11 @@ const handleReservation = async() => {
                         itemQuantity.value = k;
                     }
                     try{
+                        console.log('we got here')
                         await changeAmountAvailable(itemSelector.itemName,itemQuantity.value)
                     }catch(e){
                         console.error(e)
+                        throw e
                     }
                 for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                     const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
@@ -156,6 +160,7 @@ const handleReservation = async() => {
                                     await changeAmountAvailable(item.Items[i],itemQuantity.value)
                                 }catch(e){
                                     console.error(e)
+                                    throw e
                                 }
                                 for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
                                     const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
@@ -169,13 +174,15 @@ const handleReservation = async() => {
                             }
                             itemSelector.setCollectionName(`${item.Name}`);
                             for (let k = 1; k <= quantity.getQuantity(itemSelector.itemName); k++){
-                                    itemQuantity.value = k;
-                                }
-                                try{
-                                    await changeAmountAvailable(item.Name,itemQuantity.value)
-                                }catch(e){
-                                    console.error(e)
-                                }
+                                itemQuantity.value = k;
+                            }
+                            try{
+                                console.log('we got here')
+                                await changeAmountAvailable(item.Name,itemQuantity.value)
+                            }catch(e){
+                                console.error(e)
+                                throw e
+                            }
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
                                 .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));

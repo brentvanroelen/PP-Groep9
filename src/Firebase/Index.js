@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { getStorage, ref,uploadBytes,getDownloadURL } from "firebase/storage";
+import dotenv from 'dotenv'
 
 
 import {Firestore,collection, 
@@ -14,16 +15,15 @@ deleteDoc,deleteField, and} from  'firebase/firestore'
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAACnnlYY-Lb0SFdkgDbe8DveHhoM0Lu2c",
-  authDomain: "fir-newtech.firebaseapp.com",
-  databaseURL: "https://fir-newtech-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "fir-newtech",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTHDOMAIN,
+  databaseURL: import.meta.env.VITE_DATABASE_URL,
+  projectId: import.meta.env.VITE_PROJECT_ID,
   grpc: true,
-  storageBucket: "fir-newtech.appspot.com",
-  messagingSenderId: "646664658925",
-  appId: "1:646664658925:web:3cc3a1377ab76d7100d1e4",
-  measurementId: "G-DH8VH2X17Z",
-  storageBucket: 'gs://fir-newtech.appspot.com'
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET
 };
 
 // Initialize Firebase
