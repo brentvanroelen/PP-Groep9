@@ -55,13 +55,11 @@ const fetchUserExtensionsData = async () => {
       for (const extensionDoc of userExtensionsQuerySnapshot.docs) {
         const extensionData = extensionDoc.data();
 
-        // Fetch reservatie data
         const reservationId = extensionData.reservationId;
         const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         const reservationData = reservationDoc.data();
 
-        // Check if ForProject is true in the reservation
         const forProject = reservationData.ForProject || false;
 
         allExtensionsData.push({

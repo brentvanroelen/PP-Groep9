@@ -16,6 +16,7 @@ import { useStore,useDates } from "@/Pinia/Store.js";
 import { computed,ref } from "../main.js";
 import Items from "@/components/Items.vue";
 
+
 const props = defineProps({
     category: String
 });
@@ -40,6 +41,7 @@ const getDate = () => {
     formattedEndDate.value = `${actualEndDate.getDate()}/${actualEndDate.getMonth()}/${actualEndDate.getFullYear()}`;
     return [true,formattedStartDate,formattedEndDate];
 }
+
 
 if (results.value.length > 0) {
     console.log("Category of first item: ", results.value[0].category); // Add this line
