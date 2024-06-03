@@ -6,9 +6,9 @@
                 {{ ItemName }}
             </h1>
         </div>
-        <div class="image"></div>
+       <!--  <div class="image"></div>
         <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
-        <p v-else>Image not available</p>
+        <p v-else>Image not available</p> -->
     </div>
     <div class="info">
         <div class="date">
