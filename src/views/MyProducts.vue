@@ -53,6 +53,7 @@
             <br>
             Serial number: {{ item.Serial }}
             <div class="actions">
+
               <button @click="getReportedItems(item)">
                 <router-link class="link" to="/ReportIssue">Report Issue</router-link>
               </button>
