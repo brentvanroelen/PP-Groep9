@@ -6,7 +6,6 @@
       <li><router-link class="link" to="/">Home</router-link></li>
       <li><router-link class="link" to="/Myproducts">My products</router-link></li>
       <li><router-link class="link" to="/cart">Cart</router-link></li>
-      <li><router-link class="link" to ="/ReportIssue">Report Issue</router-link></li>
       <li><button class="loginPageBtn" @click="logOut"> log out</button></li>
     </div>
     </ul>
@@ -60,5 +59,16 @@ const logOut = () => {
 .img{
   width: 20px;
   height: 20px;
+}
+.loginPageBtn{
+  background-color: #D9D9D9;
+  border: none;
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>

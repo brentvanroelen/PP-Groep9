@@ -1,6 +1,6 @@
 <template>
     <div id="Search">
-        <searchbar></searchbar>
+        <searchbar :page="'UserHome'"></searchbar>
     </div>
     <ProductItems :category="category"></ProductItems>
 </template>

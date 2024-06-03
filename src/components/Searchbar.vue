@@ -3,20 +3,22 @@
     <div class="search-bar">
       <input id="input" type="text" v-model="querystring" @keyup.enter="confirmedSearch" :placeholder="placeholder">
       <span v-if="props.page != 'HomeAdmin'" class="calendar">
-        <VueDatePicker v-model="date" 
+        <VueDatePicker class="datepicker" v-model="date" 
           :min-date="new Date()" 
           :teleport="true"
           :max-date="maxDate"
           :enable-time-picker="false"
           :disabled-week-days="[6,0]"
+          :clearable="true"
           @update:model-value="Reload"
+          :auto-apply="true"
           :range="{ maxRange: maxSelect, minMaxRawRange:true }">
           <template #trigger>
             <img src="../assets/calendar.png" alt="">
           </template>
         </VueDatePicker>
       </span>
-      <div class="kitoptions">
+      <div class="kitoptions" v-if="props.page != 'HomeAdmin' ">
         <label for="kits">See kits:</label>
         <input type="checkbox" v-model="seeKits">
       </div>
@@ -24,23 +26,23 @@
     </div>
   </div>
     <div class="search-results" v-if="showResults">
-      <div v-for="result in store.results" :key="result.id">
+      <div v-for="result in spontaneousLoans.results" :key="result.id">
         <div class="iteminfo">
           <img :src="result.Image" alt="item">
           <p>{{ result.Name }}</p>
-          <button @click="addToCart(result)">Add to loan</button>
+          <button class="cartButton" @click="addToCart(result)">Add to loan</button>
         </div>
       </div>
     </div>
 
-  <AvailabilityHandler :page="'UserHome'"></AvailabilityHandler>
+  <AvailabilityHandler v-if="props.page == 'UserHome'" :page="'UserHome'"></AvailabilityHandler>
   </template>
   
 <script setup>
 import {onMounted, ref, watch, computed} from '../main.js'
 import {collection,where,db,query,getDocs,doc, getDoc,} from '../Firebase/Index.js'
 import router from '@/router';
-import { useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger} from '@/Pinia/Store.js';
+import { useSpontaneousLoans,useDates,useStore,useCart,useCategories, useUserIdentification,useTrigger, useItemsToGet} from '@/Pinia/Store.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import AvailabilityHandler from './AvailabilityHandler.vue';
@@ -68,8 +70,9 @@ const props = defineProps({
 });
 const querystring = ref('');
 const store = useStore();
+const spontaneousLoans = useSpontaneousLoans();
 let searchBarText = computed(() => {
-  if(querystring.value.length == 0){
+  if(querystring.value.length == 0 && props.page != "HomeAdmin"){
     return "catalog"
   }else{
     return "Search"
@@ -91,6 +94,8 @@ const fetchData = async () => {
 }
 
 const Reload = () => {
+  console.log(props.page)
+  console.log(date.value)
   let startDate = date.value[0];
   let endDate = date.value[1];
   let startDay = startDate.getDate();
@@ -99,6 +104,7 @@ const Reload = () => {
   let endMonth = endDate.getMonth() + 1;
   datesStore.updateGeneralDates([startDay, startMonth, endDay, endMonth])
   if(store.results.length > 0 ){
+    console.log("triggering")
     trigger.fireTrigger();
   }
 }
@@ -119,6 +125,7 @@ const maxDate = computed(() => {
 });
 
 const search = async() => {
+  console.log(props.page)
   let results = [];
   store.updateResults([]);
   if(seeKits.value){
@@ -131,6 +138,7 @@ const search = async() => {
       results.push(snap.data())
     })
   }else{
+    console.log("searching")
     const itemquery = query(collection(db, "Items"), 
     where('SubStrings', 'array-contains', querystring.value.toLowerCase()),
     );
@@ -139,8 +147,13 @@ const search = async() => {
         results.push(snap.data())
     })
   }
-  store.updateResults(results)
-  if(store.results.length == 0){
+  if(props.page == "HomeAdmin"){
+    spontaneousLoans.updateResults(results)
+    console.log(spontaneousLoans.results)
+  }else{
+    store.updateResults(results)
+  }
+  if(store.results.length == 0 && props.page == "UserHome"){
     trigger.fireTrigger();
   }
 };
@@ -158,13 +171,14 @@ if(props.page == "HomeAdmin"){
   watch(querystring, async(newVal, oldVal) => {
     // If the new value has 3 or more characters, trigger the search
     if (newVal.length >= 3) {
+      console.log("searching")
       await search();
-      for (let item of store.results){
+      for (let item of spontaneousLoans.results){
         imageGetter(`ItemImages/${item.Image}`).then((res) => {
           item.Image = res;
         })
       }
-      showResults.value = store.results.length > 0;
+      showResults.value = spontaneousLoans.results.length > 0;
     }else{
       showResults.value = false;
     }
@@ -176,6 +190,7 @@ const addToCart = (item) => {
 }
 onMounted(() => {
   if(props.page == "HomeAdmin"){
+    useItemsToGet().items = [];
     placeholder.value = "Add items to the reservation"
   }
   fetchData();
@@ -187,9 +202,10 @@ onMounted(() => {
   
 
 <style scoped>
+
 .calendar{
-  width: 30px;
-  height: 30px
+  width: 50px;
+  height: 50px
 }
   .search-container.HomeAdmin{
     max-height: fit-content;
@@ -214,8 +230,8 @@ onMounted(() => {
     height: fit-content;
   }
   img{
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
     margin-top: 2px;
   }
   .search-bar input {
@@ -242,7 +258,7 @@ onMounted(() => {
   .search-results {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: space-between;
   max-height: 400px;
   overflow-y: auto;
   background-color: #fff;
@@ -279,6 +295,14 @@ img{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.cartButton{
+  background-color: #ff3333;
+  color: #fff;
+  border: none;
+  padding: 5px 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 

@@ -12,11 +12,6 @@
         <p v-if="available == undefined"></p>
         <p v-if="Item.isKit && !available"> Kit is Unavailable</p>
       </section>
-  <div id="checkbox">
-    <label for="checkbox1"><b>For project:</b></label>
-    <input type="checkbox" id="checkbox1" v-model="checked">
-    <a href="">&#9432;</a>
-  </div>
 </div>
   </div>
   </div>
@@ -108,17 +103,18 @@ const addItemToCart = () => {
     width: 500px;
     margin: 2em;
   }
-  button {
+  button{
     background-color: #dc3545;
-    margin-top: 20px;
-    color: white;
-    padding: 10px 20px;
     border: none;
-    border-radius: 20px;
+    padding: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin: 1em;
+    color: white;
+    border-radius: 20px;
+    width: 300px;
+    height: 50px;
   }
-  button:hover {
+  button:hover{
     background-color: #c82333;
   }
   #quantity{
@@ -132,12 +128,6 @@ const addItemToCart = () => {
     flex-direction: row;
     justify-content: space-between;
     width: 140px;
-  }
-  #buttons{
-    width: 500px;
-    display: flex;
-    justify-content: center;
-    margin: auto;
   }
   .item{
     width: 500px;

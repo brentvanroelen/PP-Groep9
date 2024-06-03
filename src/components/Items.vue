@@ -10,9 +10,9 @@
         <p><b>Brand: </b>{{ item.Brand }}</p>
         <p><b>Item description: </b>{{item.Description}}</p>
         <p><b>Categorie:</b> {{item.Category}}</p>
-        <p v-if="item.Available"><b>Beschikbaarheid: </b>Available 
+        <p v-if="item.Available"><b>Availability: </b>Available 
         </p>
-        <p v-else><b>Beschikbaarheid:</b> Item niet beschikbaar</p>
+        <p v-else><b>Availability:</b> Item niet beschikbaar</p>
       </div>
     </router-link>
       <div v-if="loan == true && dates.general.length != 0" id="quantity">

@@ -1,7 +1,10 @@
 <template>
     <div class="items">
     <h1>Product Screen</h1>
-    <h2 v-if="getDate()[0]">From {{ formattedStartDate }} To {{ formattedEndDate }}</h2>
+    <div class="dates">
+        <h2 v-if="getDate()[0]">From {{ formattedStartDate }} To {{ formattedEndDate }}</h2>
+        <button v-if="getDate()[0]" @click="useDates().resetGeneralDates()">X</button>
+    </div>
     <section class="itemslisting" v-if="filteredResults != 'nothing'">
         <Items v-for="item in filteredResults" :key="item.id" :item="item" :loan="true">
         </Items>
@@ -93,6 +96,20 @@ const updateStore = (item) => {
     width: 150px;
     align-self: center; /* Center image horizontally */
 }
+button{
+    background-color: #dc3545;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 1em;
+    color: white;
+    border-radius: 200px;
+    width: 50px;
+    height: 50px;
+  }
+  button:hover{
+    background-color: #c82333;
+  }
 
 .item p {
     flex: 1;
@@ -116,6 +133,11 @@ const updateStore = (item) => {
 
 .available {
     background: rgb(82, 129, 12);
+}
+.dates{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

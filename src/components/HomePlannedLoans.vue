@@ -12,7 +12,6 @@
         <div class="studentInfo">
           <p>Student: {{ student.name }}</p>
           <p>Pick-up date: {{ student.pickUpDate }}</p>
-          <p>Pick-up time: {{ student.pickUpTime }}</p>
           <p v-if="student.reservationPrepared">The reservation is prepared</p>
           <p v-else>Status: {{ student.itemsToPrepare }} item{{ student.itemsToPrepare > 1 ? 's' : '' }} left to prepare</p>
         </div>
@@ -25,7 +24,6 @@
         <!-- lijst met reservaties van de studenten-->
         <ul v-if="student.showOrders" class="ordersList">
           <button @click="markAllItemsAsPrepared(student)" class="readyButton">Everything is ready</button>
-        <button class="adjustButton">Adjustments</button>
           <!-- Loept door de reservaties -->
           <li v-for="item in student.orders" :key="item.id" class="items">
             <p>Name: {{ item.ItemName }}</p>
@@ -70,7 +68,7 @@
     </div>
 
   </div>
-  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+  <Popup v-if="popupVisible" :message="popupMessage" @closepopup="popupVisible = false" />
 </template>
   
     

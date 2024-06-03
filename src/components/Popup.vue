@@ -5,7 +5,7 @@
         <slot>
           {{ message }}
         </slot>
-        <!-- <button @click="closePopup" class="popupButton">Close</button> -->
+        <button v-if="props.page =='HomeAdmin'" @click="closePopup" class="popupButton">Close</button>
       </div>
     </div>
   </div>
@@ -19,8 +19,10 @@ const props = defineProps({
   message: {
     type: String,
     default: 'Dit is een popup'
-  }
+  },
+  page: String
 });
+const emit = defineEmits(['closepopup']);
 
 const isVisible = ref(true);
 
@@ -28,12 +30,19 @@ const isVisible = ref(true);
 const closePopupAfterDelay = () => {
   setTimeout(() => {
     isVisible.value = false;
+    emit('closepopup');
   }, 1500); // Adjust the delay as needed (2000 milliseconds = 2 seconds)
+};
+const closePopup = () => {
+  isVisible.value = false;
+  emit('closepopup');
 };
 
 // Call the method when the component is mounted
 onMounted(() => {
-  closePopupAfterDelay();
+  if(props.page != "HomeAdmin"){
+    closePopupAfterDelay();
+  }
 });
 
 </script>

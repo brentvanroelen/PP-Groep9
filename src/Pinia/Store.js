@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { auth,createUserWithEmailAndPassword,signInWithEmailAndPassword, collection, setDoc, db,doc, getDoc } from '@/Firebase/Index.js';
 import { signOut,onAuthStateChanged } from 'firebase/auth';
+import SpontaneousLoans from '@/components/SpontaneousLoans.vue';
 
 
 export const useStore = defineStore({
@@ -30,6 +31,7 @@ export const useDates = defineStore({
   }),
   actions: {
     updateDate(item, datearray) {
+      console.log(item)
       this.dates[item] = datearray;
     },
     resetDates(all){
@@ -378,6 +380,17 @@ export const useKitToBeMade = defineStore({
     },
     getKitName(){
       return this.kit.Name
+    }
+  }
+});
+export const useSpontaneousLoans = defineStore({
+  id: 'SpontaneousLoans',
+  state: () => ({
+    results: []
+  }),
+  actions: {
+    updateResults(results){
+      this.results = results
     }
   }
 });

@@ -14,13 +14,16 @@
         </select></li>
       
         <li><router-link class="link" to="/options">Options</router-link></li>
+        <li><button class="loginPageBtn" @click="logOut"> log out</button></li>
     </div>
     </ul>
   </nav>
 </template>
 <script setup lang="ts">
   import { useRouter } from 'vue-router';
+  import { useUserIdentification } from '@/Pinia/Store';
 
+  const userIdentification = useUserIdentification();
   const router = useRouter();
 
   const navigateToRoute = (event) => {
@@ -29,6 +32,9 @@
       router.push(selectedRoute);
     }
   }
+  const logOut = () => {
+    userIdentification.logOut();
+}
 </script>
 
 
@@ -53,6 +59,17 @@
 .link{
   text-decoration: none !important;
   padding: 0 1em 0 1em !important;
+}
+.loginPageBtn{
+  background-color: #c1c1c1;
+  border: none;
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
 }
 #links{
   display: flex !important;

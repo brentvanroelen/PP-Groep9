@@ -353,8 +353,9 @@ const MakeReservation = async(date) => {
         });
         showPopup('The loan is succesfull!'); 
         itemSelector.resetCollectionName();
-        dates.resetDates(true)
-
+        if(page == "UserHome"){
+            dates.resetDates();
+        }
     }catch(e){
         console.error(e)
     

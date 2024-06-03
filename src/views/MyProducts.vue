@@ -2,16 +2,11 @@
   <template v-for="(cancellableReservation, index) in displayReservations[0]" :key="index+10000">
     <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
       <div class="kolom1">
-        <p>Serial: {{ cancellableReservation.id }}</p>
         <div class="actions">
-          <!-- Dit moet nog aangepast worden, dit gaat misschien weg -->
-          <!-- <button @click="reservationReturnedOrCanceled(cancellableReservation); cancelRes(cancellableReservation)">
+           <button @click="reservationReturnedOrCanceled(cancellableReservation,false,false);">
             Cancel Reservation
-          </button> -->
+          </button> 
           <button @click="toggleReservationDetails(index+10000)">See Items</button>
-          <button>
-                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
-          </button>
         </div>
         <div v-if="isReservationVisible(index+10000)" class="reservation-details">
           <ul>
@@ -40,7 +35,6 @@
   </template>
   <div v-for="(reservation, index) in displayReservations[1]" :key="index" class="product1">
     <div class="kolom1">
-      <p>Serial: {{ reservation.id }}</p>
       <div class="actions">
         <button @click="toggleReservationDetails(index)">See Items</button>
         <button v-if="!reservation.Extended">

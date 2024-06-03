@@ -35,9 +35,9 @@
           <ReservationHandler v-if="allowLoan" :check-user-cart="true" :button-text="'Place loan'" :page="'HomeAdmin'"></ReservationHandler>
         </div>
     </div>
-    <AvailabilityHandler :page="'HomeAdmin'"></AvailabilityHandler>
+    <AvailabilityHandler :page="page"></AvailabilityHandler>
     <Teleport to="body">
-      <Popup v-if="itemsToGet.items.length != 0">
+      <Popup :page="'HomeAdmin'" v-if="itemsToGet.items.length != 0">
         <ul>
           <h1>Items to get:</h1>
           <li v-for="item in itemsToGet.items">{{ item.Serial }}</li>
@@ -109,6 +109,7 @@ const handleDateGlobal = () => {
   trigger.fireTrigger()
 }
 const handleDateSpecific = (item) => {
+  console.log(item)
   dates.updateDate(item.Name, 
   [selectedDate.value[0].getDate(), 
   selectedDate.value[0].getMonth() + 1,

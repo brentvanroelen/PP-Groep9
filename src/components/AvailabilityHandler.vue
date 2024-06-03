@@ -6,6 +6,7 @@ import { useStore,useDates,useQuantity, useChoiceOfItems, useTrigger, useCart } 
 import { collection, getDocs, query, db, where} from '../Firebase/Index.js';
 import { watch,ref, computed } from 'vue';
 import { databaseFormatter } from '@/js/functions.js';
+import SpontaneousLoans from './SpontaneousLoans.vue';
 
 
 const store = useStore();
@@ -31,7 +32,8 @@ watch(triggergetter, async() => {
 });
 
 const handleAvailability = async() => {
-    dates.resetDates()
+    console.log(page)
+    console.log('we are running')
     if(page == "UserHome" || page == "checkPage"){
         if(store.results.length == 0){
             const snapshot =  await getDocs(collection(db, "Items"))
@@ -53,6 +55,7 @@ const handleAvailability = async() => {
         }
     }else if(page == "HomeAdmin"){
         for (let item of cart.items) {
+            console.log(item)
             if(Object.keys(dates.dates).length != 0){
                 if(availableInstances.items[item.Name] !== undefined){
                     availableInstances.resetCollection(item.Name);
@@ -99,7 +102,7 @@ const getAvailableItems = async(name,serial,kitId) => {
     const reservedSnapshot = await getDocs(creference);
     reservedSnapshot.forEach((doc) => {
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
-            if(kitId != 0){
+            if(kitId != 0 && kitId != undefined){
                 console.log(doc.data().Name)
                 availableInstances.addKitInstance(`${doc.data().Name}kit${kitId}`, doc.data());
                 console.log('kitrunning')
@@ -143,7 +146,9 @@ const getNonConflictingReservedItems = async(name,serialseries) => {
     });
 }
 const itemAvailability = async(SerialSeriesDefined) => {
-for (let item of store.results) {
+    console.log(page)
+if(page == "HomeAdmin"){
+    for (let item of SpontaneousLoans.results) {
         if( availableInstances.items[`${item.Name}`] !== undefined){
             availableInstances.items[`${item.Name}`] = [];
         }
@@ -161,6 +166,28 @@ for (let item of store.results) {
             /* CALL RESERVATION HANDLER*/
         }else{
             console.log("Please select a date range")
+        }
+    }
+}else{
+    for (let item of store.results) {
+            if( availableInstances.items[`${item.Name}`] !== undefined){
+                availableInstances.items[`${item.Name}`] = [];
+            }
+            if(Object.keys(dates.general).length != 0){
+                console.log(item)
+                if(SerialSeriesDefined){
+                    await getAvailableItems(item.Name,item.SerialSeries,0);
+                }else{
+                    let serialseries = item.Serial.split("-")[0];
+                    await getAvailableItems(item.Name,serialseries,0);
+                    console.log(availableInstances);
+                }   
+            
+                
+                /* CALL RESERVATION HANDLER*/
+            }else{
+                console.log("Please select a date range")
+            }
         }
     }
 }
