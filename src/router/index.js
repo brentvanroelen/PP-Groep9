@@ -26,6 +26,7 @@ import changeItemInfo from '@/views/changeItemInfo.vue'
 import historyPage from '@/views/historyPage.vue'
 import ReportIssue from '@/views/ReportIssue.vue'
 import { useUserIdentification } from '@/Pinia/Store'
+import { auth } from '@/Firebase/Index'
 
 
 const routes = [
@@ -165,16 +166,24 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  const store = useUserIdentification();
-  //console.log(store)
-  const isLoggedIn = store.isLoggedIn;
-  //console.log(isLoggedIn)
-
-  if (!isLoggedIn && to.name !== 'Login') {
-    next({ name: 'Login' });
-  } else {
-    next();
+router.beforeEach(async (to, from, next) => {
+  try {
+    const user = auth.currentUser;
+    
+    if (user) {
+      // User is authenticated, proceed to the next route
+      next();
+    } else {
+      // User is not authenticated, redirect to login or another page
+      if (to.path !== '/login') {
+        next({ path: '/login' });
+      } else {
+        next();
+      }
+    }
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    next(false); // Halt navigation
   }
 });
 export default router

@@ -74,14 +74,12 @@ const handleReservation = async() => {
         itemSelector.setCollectionName(`${singleItem.Name}`);
         if(dates.dates[itemSelector.itemName] !== undefined){
             if(singleItem.isKit){
-                console.log(singleItem)
                 if(!quantity.available[singleItem.Name]){
                     console.log("Kit is not available")
                     return
                 }
                 for(let i = 0; i < singleItem.Items.length; i++){
                     itemSelector.setCollectionName(`${singleItem.Items[i]}kit${singleItem.Id}`);
-                    console.log(itemSelector.itemName)
                     if(quantity.getQuantity(singleItem.Items[i]) == 0){
                         quantity.setQuantity(singleItem.Items[i], 1)
                     }
@@ -89,9 +87,11 @@ const handleReservation = async() => {
                         itemQuantity.value = k;
                     }
                     try{
+                    console.log('we got here')
                         await changeAmountAvailable(singleItem.Items[i],itemQuantity.value)
                     }catch(e){
                         console.error(e)
+                        throw e
                     }
                     for(let j = 0; j < quantity.getQuantity(singleItem.Items[i]); j++){
                         const promise = await getItem().then(() =>markInstancesAsUnavailable(singleItem.Items[i]))
@@ -106,9 +106,11 @@ const handleReservation = async() => {
                         itemQuantity.value = k;
                     }
                     try{
+                        console.log('we got here')
                         await changeAmountAvailable(itemSelector.itemName,itemQuantity.value)
                     }catch(e){
                         console.error(e)
+                        throw e
                     }
                 for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                     const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
@@ -116,8 +118,6 @@ const handleReservation = async() => {
                     promises.push(promise);
                 }
             }
-            console.log(items)
-            console.log(promises)
             Promise.all(promises)
             .then(() => {
                 makeItemMap(items);
@@ -143,7 +143,6 @@ const handleReservation = async() => {
             orderCart();
             if(Object.keys(dates.dates).length != 0){
                 for(let reservation of cart.items){
-                    console.log(reservation)
                     items = [];
                     promises = [];
                     itemMaps = [];
@@ -161,6 +160,7 @@ const handleReservation = async() => {
                                     await changeAmountAvailable(item.Items[i],itemQuantity.value)
                                 }catch(e){
                                     console.error(e)
+                                    throw e
                                 }
                                 for(let j = 0; j < quantity.getQuantity(item.Items[i]); j++){
                                     const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Items[i]))
@@ -172,18 +172,17 @@ const handleReservation = async() => {
                             if(quantity.getQuantity(item.Name) == 0){
                                 quantity.setQuantity(item.Name, 1)
                             }
-                            console.log(item)
-                            console.log(reservation)
                             itemSelector.setCollectionName(`${item.Name}`);
-                            console.log(quantity.getQuantity(itemSelector.itemName))
                             for (let k = 1; k <= quantity.getQuantity(itemSelector.itemName); k++){
-                                    itemQuantity.value = k;
-                                }
-                                try{
-                                    await changeAmountAvailable(item.Name,itemQuantity.value)
-                                }catch(e){
-                                    console.error(e)
-                                }
+                                itemQuantity.value = k;
+                            }
+                            try{
+                                console.log('we got here')
+                                await changeAmountAvailable(item.Name,itemQuantity.value)
+                            }catch(e){
+                                console.error(e)
+                                throw e
+                            }
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
                                 .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));
@@ -191,7 +190,6 @@ const handleReservation = async() => {
                             }
                         }
                     }
-                    console.log(items)
                     await Promise.all(promises)
                     .then(() => {
                         makeItemMap(items);
@@ -239,17 +237,13 @@ const writeToHistory = async(serial,date) => {
 
 
 const getItem = async() => {
-    console.log(availableInstances)
     chosenitem.value = availableInstances.getInstance(itemSelector.itemName,[0]);
-    console.log(chosenitem.value)
     availableInstances.getCollection(itemSelector.itemName).shift();
     console.log(availableInstances.getInstance(itemSelector.itemName,[0]));
     items.push(chosenitem.value);
     if(page == "HomeAdmin"){
         itemsToGet.addItem(chosenitem.value)
     }
-    console.log(items)
-    console.log(chosenitem.value)
 }
 const markInstancesAsUnavailable = async(name) => {
     let databaseName = databaseFormatter(name);
@@ -396,7 +390,6 @@ const groupByDates = (itemsObject) => {
             matchingArrays.push([key]);
         }
     });
-    console.log(matchingArrays);
     return matchingArrays;
 }
 const orderCart = () => {
@@ -406,7 +399,6 @@ const orderCart = () => {
             return cart.items.find(obj => obj.Name === name);
         });
     });
-    console.log(orderedCart);
     cart.items = orderedCart;
     return orderedCart;
 }

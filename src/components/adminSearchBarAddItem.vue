@@ -28,9 +28,7 @@ const kitItems = useKitItems();
 
 const store = useStore();
 const addToSelectedKit = (item) => {
-  console.log(selectedItems.value);
     kitItems.addItem(selectedItems.value);
-  console.log(kitItems);
 
 
 };

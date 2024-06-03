@@ -127,14 +127,12 @@ const getItems = async() =>{
 }
 
 watchEffect(() => {
-  console.log(props.todayDate)
   const reservations = collection(db, 'Utility/Reservations/All Reservations');
   const unsubscribe = onSnapshot(reservations, (querySnapshot) => {
     querySnapshot.forEach((doc) => {
       allReservations.value.push(doc.data());
     });
     alignWithStudents();
-    console.log(lateReservationArray.value)
     if(unsub){
       unsubscribe();
     }

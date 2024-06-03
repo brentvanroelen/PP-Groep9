@@ -113,7 +113,6 @@ const search = async () => {
   if (props.page === 'HomeAdmin') {
     searchAdmin();
   } else {
-    console.log(querystring.value);
     store.updateResults([]);
     await querySnapshot1().then(() => {
       querySnapshot2();
@@ -121,7 +120,6 @@ const search = async () => {
     });
 
     store.updateResults(results.value);
-    console.log(results.value);
   }
 };
 
@@ -131,12 +129,10 @@ const querySnapshotByName = async () => {
   snapshot.forEach((doc) => {
     results.value.push({ id: doc.id, ...doc.data() });
   });
-  console.log(results.value);
 };
 
 const deleteItem = async (index) => {
   const itemToDelete = results.value[index];
-  console.log('Item to delete:', itemToDelete);
   try {
     const collectionName = capitalizeEachWord(generalItem.Name);
     const docRef = doc(db, `Items/${collectionName}/${collectionName} items`, itemToDelete.id);
@@ -177,7 +173,6 @@ const searchAdmin = async () => {
 
     reservationsAdmin.addReservation(reservation);
   });
-  console.log(reservationsAdmin.Reservations);
 };
 
 const searchKit = async () => {
@@ -196,12 +191,10 @@ const searchKit = async () => {
     kits.push(doc.data());
     store.updateResults(kits);
   });
-  console.log(store.results);
 };
 
 const setPage = (result) => {
   kitToBeMade.addKit(result);
-  console.log(kitToBeMade.kit);
   querystring.value = '';
 };
 
@@ -237,7 +230,6 @@ const getImage = async (result) => {
     await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
       result.loadedImage = res;
     });
-    console.log(result);
     return true;
   } else {
     return false;

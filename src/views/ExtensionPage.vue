@@ -1,7 +1,10 @@
 <template>
     <div class="product">
         <div class="title">
-            <h1>{{ ItemName }}</h1>
+            <h1>
+                <br>
+                {{ ItemName }}
+            </h1>
         </div>
         <div class="image"></div>
         <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
@@ -135,8 +138,7 @@ watch(selectedDates, (newDates) => {
 });
 
 const requestExtension = async () => {
-    console.log('Selected Dates:', selectedDates.value);
-    console.log('Extension Duration:', extensionDuration.value);
+    
 
     try {
         const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
@@ -144,7 +146,7 @@ const requestExtension = async () => {
         
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
-            console.log('Reservation Data:', reservationData);
+            
             
             let { EndDate, EndMonth } = reservationData;
             let newEndDate = EndDate + extensionDuration.value;
@@ -167,7 +169,7 @@ const requestExtension = async () => {
                 Extended: true,
             });
 
-            console.log('End date updated successfully');
+            
             
             fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
             selectedDates.value = [fullDate.value]; 
@@ -188,11 +190,17 @@ onMounted(fetchReservationDetails);
 <style scoped>
 .product {
     margin-bottom: 20px;
-    text-align: center
+    text-align: center;
+    display: flex;
+    margin-left: 600px;    
 }
 .title h1 {
     font-size: 24px;
     margin-bottom: 10px;
+}
+
+.title{
+    margin-right: 50px;
 }
 
 .info{
@@ -304,6 +312,10 @@ button:hover {
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
+}
+
+img{
+    max-width: 150px;
 }
 
 </style>

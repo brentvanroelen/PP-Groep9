@@ -100,7 +100,6 @@
   const setCurrentMonth = () => {
     currentMonth.value = currentDate.getMonth();
     currentYear.value = currentDate.getFullYear();
-   console.log(currentMonth.value)
     return monthNames[currentMonth.value];
   };
 
@@ -203,7 +202,6 @@
           selectedEndDate.value = selectedDateStartOfDay;
           let dateInfo = [selectedStartDate.value.getDate(), selectedStartDate.value.getMonth() + 1, selectedEndDate.value.getDate(), selectedEndDate.value.getMonth() + 1]
           dates.updateGeneralDates(dateInfo)
-          console.log(dates.dates)
           useTrigger().fireTrigger();
           displayDate.value = [
             selectedStartDate.value.getDate(),
