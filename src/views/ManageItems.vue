@@ -1,7 +1,16 @@
 <template>
     <h1>Manage Items</h1>
     <SearchBarAdmin></SearchBarAdmin>
-
+    <div class="buttons">
+        <router-link class="link" to="/modifyItemScreen">
+        <button class="buttonsClass">
+           <p>Add new kit</p>
+        </button></router-link>
+        <router-link class="link" to="/addItemsScreen">
+        <button class="buttonsClass">
+            <p>Add item</p>
+        </button></router-link>
+    </div>
     <div class="items-grid">
         <div v-for="(item, index) in items" :key="index" class="item">
             <div class="icons">  
@@ -16,16 +25,7 @@
         </div>
     </div>
 
-    <div class="buttons">
-        <router-link class="link" to="/modifyItemScreen">
-        <button class="buttonsClass">
-           <p>Add new kit</p>
-        </button></router-link>
-        <router-link class="link" to="/addItemsScreen">
-        <button class="buttonsClass">
-            <p>Add item</p>
-        </button></router-link>
-    </div>
+    
 </template>
 
 <script setup>

@@ -122,7 +122,7 @@ const handleDateSpecific = (item) => {
 </script>
 <style scoped>
 button {
-  background-color: #ff3333;
+  background-color: #dc3545;
   color: #fff;
   border: none;
   padding: 10px 20px;

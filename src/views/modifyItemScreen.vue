@@ -1,6 +1,11 @@
 <template>
     <h1>Modify item</h1>
     <adminSearchBarAddItem/>
+    <div class="buttons">
+        <button class="buttonsClass" @click="addToSelectedKit">
+            Add to selected kit
+        </button>
+    </div>
     <div class="modifyItems">
         <div v-for="(item, index) in items" :key="index" class="item">
             <h2>{{ item.Name }}</h2>
@@ -10,12 +15,7 @@
 
         </div>
     </div>
-  
-    <div class="buttons">
-        <button class="buttonsClass" @click="addToSelectedKit">
-            Add to selected kit
-        </button>
-    </div>
+
   </template>
   
 <script setup>
