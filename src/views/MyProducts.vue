@@ -1,5 +1,4 @@
 <template>
-  <button @click="log">Test</button>
   <template v-for="(cancellableReservation, index) in displayReservations[0]" :key="index+10000">
     <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
       <div class="kolom1">
