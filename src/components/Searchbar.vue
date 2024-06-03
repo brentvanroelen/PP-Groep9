@@ -26,7 +26,7 @@
         <label for="kits">See kits:</label>
         <input type="checkbox" v-model="seeKits">
       </div>
-      <button class="searchbutton"@click="confirmedSearch">Search</button>
+      <button class="searchbutton" @click="confirmedSearch">{{ searchBarText }}</button>
     </div>
   </div>
     <div class="search-results" v-if="showResults">
@@ -74,6 +74,14 @@ const props = defineProps({
 });
 const querystring = ref('');
 const store = useStore();
+let searchBarText = computed(() => {
+  if(querystring.value.length == 0){
+    return "catalog"
+  }else{
+    return "Search"
+  }
+});
+
 
 
 const fetchData = async () => {

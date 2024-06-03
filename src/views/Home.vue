@@ -11,7 +11,7 @@
         </div>
       </div>
       </div>
-      <button @click="goProductScreen">See catalog</button>
+      <!-- <button @click="goProductScreen">See catalog</button> -->
       <Categories></Categories>
       <br>
       <br>
