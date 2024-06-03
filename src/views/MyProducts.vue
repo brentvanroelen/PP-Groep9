@@ -9,6 +9,9 @@
             Cancel Reservation
           </button> -->
           <button @click="toggleReservationDetails(index+10000)">See Items</button>
+          <button>
+                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
+          </button>
         </div>
         <div v-if="isReservationVisible(index+10000)" class="reservation-details">
           <ul>
@@ -18,9 +21,6 @@
               <br>
               Serial number: {{ item.Serial }}
               <div class="actions">
-                <button>
-                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
-                </button>
                 <button @click="getReportedItems">
                   <router-link class="link" to="/ReportIssue">Report Issue</router-link>
                 </button>
