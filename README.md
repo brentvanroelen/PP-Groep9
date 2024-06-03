@@ -48,7 +48,7 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Lege pagina trouble shooting: [chatgpt](https://chatgpt.com/share/6727e2e7-6139-419f-b303-e867c5b74adc)
 - Toegang tot de database: [chatgpt](https://chatgpt.com/share/47325710-5fdb-4735-ac15-610c198cc704)
 - Dynamische dropdown voor quantity: [chatgpt](https://chatgpt.com/share/71559c8d-cbcc-4b10-9b4e-5460060ad905)
-- ParseInt gebruiken om data van de options page op te slaan: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt), [chatgpt](https://chatgpt.com/share/01bec154-2b2d-4578-931d-6ee9070737a4)
+- ParseInt gebruiken om data van de options page op te slaan: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt) + [chatgpt](https://chatgpt.com/share/01bec154-2b2d-4578-931d-6ee9070737a4)
 - Pinia store stare persistence: [chatgpt](https://chatgpt.com/share/b5c11ca2-ccd6-4e0c-9da0-e3a655868cea)
 - Vue kalender template: [chatgpt](https://chatgpt.com/share/be925a11-62e0-4fca-9fac-faa689cb8bcf)
 - Kalender layout verbeteren: [chatgpt](https://chatgpt.com/share/7636ba18-08c7-408c-a252-b6ed7693f78b)
@@ -59,7 +59,11 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Wat is Vue CLI: [chatgpt](https://chatgpt.com/share/d81fdeed-a79b-437f-918f-1395dd974ef4)
 - Logo in footer verplaasten: [chatgpt](https://chatgpt.com/share/8708af81-e2e9-46e5-b256-43efeacca272)
 - De pinia stores persistent maken: [pinia-plugin-persistedstate-2](https://www.npmjs.com/package/pinia-plugin-persistedstate-2)
-
+- Firebase error om document te updaten: [chatgpt](https://chatgpt.com/share/01a9b43c-9779-484f-b2a6-abb9a77b4f5c)
+- Firebase set persistence: [Authentication State Persistence](https://firebase.google.com/docs/auth/web/auth-state-persistence) + Uitleg Jessy + [chatgpt](https://chatgpt.com/share/fb13dd43-2812-4b30-b48b-5b081983ed16)
+- README structuur: [chatgpt](https://chatgpt.com/share/4854c620-dc6b-40fb-8e0c-5d66024e27fb)
+- Copilot chat
+- pinia-plugin-persistedstate vs pinia-plugin-persistedstate-2: [chatgpt](https://chatgpt.com/share/721c7228-c062-4634-b32a-f43bcbc6e660)
 
 <h3>Brent Vanroelen:</h3>
 
