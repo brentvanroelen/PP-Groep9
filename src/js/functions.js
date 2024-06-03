@@ -44,7 +44,6 @@ export const reservationReturnedOrCanceled = async(reservation,warning,email) =>
 }
 export const imageGetter = async (image) =>{
     const imageref = ref(storage, `${image}`);
-    console.log(imageref)
     try{
         const url = await getDownloadURL(imageref);
         return url;

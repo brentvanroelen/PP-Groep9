@@ -79,16 +79,15 @@ const fetchSettings = async () => {
   if (settingDocSnap.exists()) {
     const data = settingDocSnap.data();
     autoWarnings.value = data.autoWarnings;
-    console.log(autoWarnings.value)
+
   }}
 
 const fetchReservations = async () => {
    const reservation = collection(db, 'Utility', 'Reservations', 'All Reservations' );
    const reservationSnapshots = await getDocs(reservation);
-   console.log(reservationSnapshots.size)
+   
    reservationSnapshots.forEach(doc => {
     const data = doc.data();
-      console.log(data);
       reservations.value.push({
       endDate: data.EndDate,
       endMonth: data.EndMonth,
@@ -96,7 +95,6 @@ const fetchReservations = async () => {
       warned: data.Warned,
       id: data.id
       })
-      console.log(reservations.value)
     });
   }
 
@@ -137,8 +135,7 @@ const incrementDate = () => {
 }
 
 const Warn = async () => {
-  console.log(autoWarnings.value)
-  console.log(warningcount.value)
+  
   if(autoWarnings.value === true){
     reservations.value.forEach(async reservation => {
       console.log(reservation.returnUser + " is the user")
@@ -174,7 +171,7 @@ const Warn = async () => {
       console.log("___________________________________")
     });
   }else{
-    console.log("Auto warnings are off")
+   
   }
 }
 

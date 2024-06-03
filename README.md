@@ -104,6 +104,7 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Problemen met icoontjes: [chatgpt](https://chatgpt.com/share/59c7f479-d3f2-4b74-b1ed-23bb6143d104)
 - Sorteren op datum: [chatgpt](https://chatgpt.com/share/cbbf6210-994e-474f-95ad-9bdc6f0edfc0)
 - Hulp bij CSS: [chatgpt](https://chatgpt.com/share/0649a67f-2d41-4cc8-86b0-70dd0cd9c18b)
+- Hulp bij het uploaden van een image naar de storage: [chatgpt](https://chatgpt.com/share/73586585-d269-464f-88d8-964e6dae7b3b)
 
 <h3> Aikarose Mwasha: </h3>
 
