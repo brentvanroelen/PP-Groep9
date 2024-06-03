@@ -26,7 +26,8 @@ import changeItemInfo from '@/views/changeItemInfo.vue'
 import historyPage from '@/views/historyPage.vue'
 import ReportIssue from '@/views/ReportIssue.vue'
 import { useUserIdentification } from '@/Pinia/Store'
-import { auth } from '@/Firebase/Index'
+import { auth, getDoc,getDocs,query,where } from '@/Firebase/Index'
+import { DocumentReference } from 'firebase/firestore'
 
 
 const routes = [
@@ -161,6 +162,7 @@ const routes = [
   
 ]
 
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes
@@ -169,9 +171,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   try {
     const user = auth.currentUser;
-    
     if (user) {
-      // User is authenticated, proceed to the next route
       next();
     } else {
       // User is not authenticated, redirect to login or another page

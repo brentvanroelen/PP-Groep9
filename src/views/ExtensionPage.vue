@@ -20,7 +20,7 @@
                     auto-apply
                     :min-date="fullDate"
                     :clearable="false"
-                    :range="true"
+                    :range="{fixedStart: true }"
                 />
             </div>
             
