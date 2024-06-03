@@ -23,7 +23,8 @@
       </div>
       <h2>{{ item.Name }}</h2>
       <h3>{{ item.Serial }}</h3>
-      <img :src="item.Image" alt="Item Image" id="img" />
+      <img v-if="getImage(item)" :src="item.loadedImage" alt="Item Image" id="img" />
+      
       <p>{{ item.Description }}</p>
     </div>
   </div>
@@ -203,6 +204,7 @@ const querySnapshot1 = async () => {
   const doc = await getDocs(itemQuery1);
   doc.forEach((doc) => {
     generalItem = doc.data();
+    console.log(generalItem);
   });
   return generalItem;
 };
@@ -221,20 +223,31 @@ const querySnapshot2 = async () => {
   snapshot.forEach((doc) => {
     results.value.push({ id: doc.id, ...doc.data() });
   });
-  console.log(results.value);
+  
 };
 
 const getImage = async (result) => {
+  
   console.log(result);
-  if (result != undefined && result.id != 10000) {
+  
+  if(result !== undefined && result.id !== 10000 && generalItem === undefined) {
+    
     await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
       result.loadedImage = res;
     });
+    return true;
+  } else if ( generalItem.IsInKit === false)  {
+    await imageGetter(`ItemImages/${result.Image}`).then((res) => {
+      result.loadedImage = res;
+    });
+
     return true;
   } else {
     return false;
   }
 };
+
+
 
 onMounted(() => {
   placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
