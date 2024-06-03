@@ -1,6 +1,5 @@
 <template>
 
-    <div v-if="aantalWaarschuwingen <= maxWaarschuwingen">
       <div class="searchcontainer">
         
         
@@ -15,14 +14,6 @@
       <Categories></Categories>
       <br>
       <br>
-      
-    </div>
-
-    <div class="waarschuwing" v-else>
-      <h1>Waarschuwing</h1>
-      <p>Je hebt te veel waarschuwingen ontvangen om toegang te krijgen tot deze website.</p>
-    </div>
-
 
 </template>
 

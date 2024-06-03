@@ -3,9 +3,8 @@
     <p>loading...</p>
   </div>
   <div v-else-if="warningCount < requiredWarningsToBlacklist">
-    <NavigationAdmin v-if="adminButton == true"></NavigationAdmin>
+    <NavigationAdmin v-if="uid.user.type === 'admin'"></NavigationAdmin>
     <Navigation v-else></Navigation >
-    <button @click="adminButton = !adminButton">Admin </button>
     <router-view/>
     <Footer></Footer>
   </div>
@@ -30,7 +29,9 @@ import { onMounted, ref, watchEffect } from 'vue'
 import { useCart,useDates,useQuantity, useUserIdentification } from './Pinia/Store'
 import { db } from './Firebase/Index.js'
 import { getDoc, doc, updateDoc } from 'firebase/firestore'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const cart = useCart()
 const adminButton = ref(false)
 let message = ref('')
@@ -38,7 +39,26 @@ const warningCount = ref(0);
 const uid = useUserIdentification()
 const requiredWarningsToBlacklist = ref(3);
 const isLoading = ref(true);
+const userType = ref(null);
 
+watchEffect(() => {
+  if (uid.user.type){
+    userType.value = uid.user.type
+    console.log(userType.value)
+  }
+})
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (userType.value !== 'admin') {
+      next({ name: 'home'})
+    } else {
+      next()
+    }
+  }else{
+    next()
+  }
+
+})
 
 const fetchData = async () => {
   const docRef = doc(db, 'Users', uid.user.id)

@@ -71,37 +71,48 @@ const routes = [
   },
   { path: '/HomeAdmin',
     name: 'HomeAdmin',
-    component: HomeAdmin
+    component: HomeAdmin,
+    meta: {requiresAuth: true}
   },
   {
     path: '/ItemPreparationScreen',
     name: 'ItemPreparationScreen',
-    component: ItemPreparationScreen
+    component: ItemPreparationScreen,
+    meta: {requiresAuth: true}
   },
   {
     path: '/Blacklist',
     name: 'Blacklist',
-    component: Blacklist
+    component: Blacklist,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/UserExtensions',
     name: 'UserExtensions',
-    component: UserExtensions
+    component: UserExtensions,
+    meta: {requiresAuth: true}
   },
   {
     path: '/ManageItems',
     name: 'ManageItems',
-    component: ManageItems
+    component: ManageItems,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/modifyItemScreen',
     name: 'modifyItemScreen',
     component: modifyItemScreen,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/addKitScreen',
     name: 'addKitScreen',
     component: addKitScreen,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/Popup',
@@ -112,6 +123,8 @@ const routes = [
     path: '/options',
     name: 'options',
     component: options,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/Myproducts',
@@ -122,11 +135,15 @@ const routes = [
     path: '/addItemsScreen',
     name: 'addItemsScreen',
     component: addItemsScreen,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/ManageItems',
     name: 'ManageItems',
-    component: ManageItems
+    component: ManageItems,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/ExtensionPage',
@@ -146,12 +163,16 @@ const routes = [
   {
     path: '/changeItemInfo',
     name: 'changeItemInfo',
-    component: changeItemInfo
+    component: changeItemInfo,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/historyPage',
     name: 'historyPage',
-    component: historyPage
+    component: historyPage,
+    meta: {requiresAuth: true}
+
   },
   {
     path: '/ReportIssue',
