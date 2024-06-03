@@ -135,8 +135,7 @@ watch(selectedDates, (newDates) => {
 });
 
 const requestExtension = async () => {
-    console.log('Selected Dates:', selectedDates.value);
-    console.log('Extension Duration:', extensionDuration.value);
+    
 
     try {
         const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
@@ -144,7 +143,7 @@ const requestExtension = async () => {
         
         if (reservationDoc.exists()) {
             const reservationData = reservationDoc.data();
-            console.log('Reservation Data:', reservationData);
+            
             
             let { EndDate, EndMonth } = reservationData;
             let newEndDate = EndDate + extensionDuration.value;
@@ -167,7 +166,7 @@ const requestExtension = async () => {
                 Extended: true,
             });
 
-            console.log('End date updated successfully');
+            
             
             fullDate.value = new Date(year, newEndMonth - 1, newEndDate);
             selectedDates.value = [fullDate.value]; 

@@ -20,7 +20,7 @@ const props = defineProps({
 
 const route = useRoute();
 const category = ref(route.params.category || props.category);
-console.log("Category: ", category.value);
+
 const store = useStore();
 const loadCatalog = async() => {
     let items = [];
@@ -29,7 +29,7 @@ const loadCatalog = async() => {
     docs.forEach((doc) => {
         items.push(doc.data());
     })
-    console.log("Results in loadCatalog: ", items)
+    
     store.updateResults(items);
 }
 

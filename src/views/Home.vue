@@ -43,7 +43,7 @@ const router = useRouter()
 const testing = true
 if(testing == false){
   if (user.user.id == "" || user.user.id == undefined){
-    console.log("User not logged in")
+    
     user.logOut()
   }else if(user.user.type == "admin"){
     router.push({name: "HomeAdmin"})

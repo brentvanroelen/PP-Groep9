@@ -134,7 +134,7 @@ const fetchInstanceItemData = async (Serial) => {
 
     if (docSnap.exists()) {
       const itemData = docSnap.data();
-      console.log('Document data:', itemData);
+  
 
       if (itemData.DateAdded) {
         addedItem.value = itemData.DateAdded;

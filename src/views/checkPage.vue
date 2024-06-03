@@ -57,7 +57,7 @@ onMounted(() => {
   const itemData = route.query.item ? JSON.parse(route.query.item) : null;
   if (itemData) {
     item.value = itemData;
-    console.log('Item received:', item.value);
+    
   } else {
     console.error('No item data received.');
   }
@@ -124,7 +124,7 @@ const reportIssueToDatabase = async (issueData, Serial) => {
 
     const itemData = itemDocSnapshot.data();
 
-    console.log('Current item data:', itemData);
+  
 
     // Determine the next issue number
     const currentIssues = itemData.Issues || {};
@@ -150,12 +150,10 @@ const reportIssueToDatabase = async (issueData, Serial) => {
 
     await updateDoc(itemDocRef, updateData);
 
-    console.log('Issue reported successfully and item availability updated.');
     showPopup('Issue reported successfully!');
   } catch (error) {
     console.error('Error reporting issue:', error);
-  }
-};
+}};
 
 
 const checkAvailability = async (Serial) => {
@@ -168,16 +166,16 @@ const checkAvailability = async (Serial) => {
 
     
     // Log de query voor debugging
-    console.log('Query:', q);
+    
     
     const querySnapshot = await getDocs(q);
 
     // Log de querySnapshot voor debugging
-    console.log('Query Snapshot:', querySnapshot);
+   
 
     const currentDate = new Date();
     const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    console.log(`Today's date: ${today}`);
+    
 
     let hasFutureReservation = false;
 
@@ -187,8 +185,7 @@ const checkAvailability = async (Serial) => {
       const reservationDate = new Date();
       reservationDate.setDate(reservationData.StartDate);
       reservationDate.setMonth(reservationData.StartMonth);
-      console.log(`Reservation date: ${reservationDate}`);
-      console.log(`Today's date: ${today}`);
+      
 
       
       if (reservationDate > today){
