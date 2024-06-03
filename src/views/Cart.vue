@@ -292,8 +292,9 @@ const getImage = async(result) => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 90%;
+            width: 85%;
             margin: 20px 0;
+            margin-left: 7.5%;
         }
 
         #item-count {
@@ -325,5 +326,9 @@ const getImage = async(result) => {
             cursor: pointer;
             outline: none;
             margin: 16px;
+        }
+
+        #buttons{
+          margin: 0;
         }
 </style>
