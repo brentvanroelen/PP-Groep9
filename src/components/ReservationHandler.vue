@@ -114,7 +114,7 @@ const handleReservation = async() => {
                     }
                 for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                     const promise = getItem().then(markInstancesAsUnavailable(chosenitem.value.Name))
-                    .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[singleItem.Name]));
+                    .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[singleItem.Name],user.user.firstName,user.user.lastName));
                     promises.push(promise);
                 }
             }
@@ -185,7 +185,7 @@ const handleReservation = async() => {
                             }
                             for(let i = 0; i < quantity.getQuantity(itemSelector.itemName); i++){
                                 const promise = await getItem().then(() =>markInstancesAsUnavailable(item.Name))
-                                .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name]));
+                                .then(() => writeToHistory(chosenitem.value.Serial,dates.dates[item.Name],user.user.firstName,user.user.lastName));
                                 promises.push(promise);
                             }
                         }
@@ -205,7 +205,7 @@ const handleReservation = async() => {
 
 }
 
-const writeToHistory = async(serial,date) => {
+const writeToHistory = async(serial,date,User,user) => {
   const docRef = doc(db, `Utility/History/Item History/${serial}`);
   
   // Haal de huidige staat van de Reservations-array op
@@ -218,7 +218,8 @@ const writeToHistory = async(serial,date) => {
     EndDate: date[2],
     StartMonth: date[1],
     EndMonth: date[3],
-    User: selectedUser.user.uid,
+    firstName: User,
+    lastName: user
   };
 
   // Voeg het nieuwe reserveringsobject toe aan de array

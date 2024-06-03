@@ -293,6 +293,7 @@ export const useReportedItems = defineStore({
     itemImage: '',
     itemName: '',
     itemSerial: '',
+    loadedImage: ''
   }),
   actions: {
     addName(itemName){
