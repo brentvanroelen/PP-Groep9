@@ -109,7 +109,6 @@ const testing = true
 const emits = defineEmits(["incrementDate", "decrementDate"]);
 if(testing == false){
   if (user.user.id == "" || user.user.id == undefined){
-    console.log("User not logged in")
     user.logOut()
   }else if(user.user.type !== "admin"){
     router.push({name: "Home"})
@@ -141,7 +140,6 @@ const Warn = async () => {
   console.log(autoWarnings.value)
   console.log(warningcount.value)
   if(autoWarnings.value === true){
-    console.log("Auto warnings are on")
     reservations.value.forEach(async reservation => {
       console.log(reservation.returnUser + " is the user")
       if(todayDate.value.getMonth() + 1 >= reservation.endMonth){
@@ -149,7 +147,7 @@ const Warn = async () => {
         if(reservation.endDate < todayDate.value.getDate()){
           console.log("Date is over")
           if(reservation.warned === false){
-            console.log("Warning")
+            
             reservation.warned = true;
             const userref = doc(db, 'Users', reservation.returnUser );
             const userSnap = await getDoc(userref);

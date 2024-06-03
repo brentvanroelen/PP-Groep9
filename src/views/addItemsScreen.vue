@@ -62,6 +62,8 @@ import Popup from '@/components/Popup.vue';
 
 
 
+
+
 const popupVisible = ref(false);
 const popupMessage = ref('');
 
@@ -69,6 +71,8 @@ const popupMessage = ref('');
 
 
 const showPopup = (message) => {
+ 
+//window.location.reload();
 popupMessage.value = message;
 popupVisible.value = true;
 };
@@ -229,10 +233,7 @@ const addNewInstance = async () => {
     showPopup('Instance added successfully!');
     await changeAmountAvailable(instanceName);
     return serial;
-  } else {
-    console.log(`Item with name ${instanceName} does not exist.`);
-    return;
-  }
+  } 
  
 };
 
@@ -259,7 +260,7 @@ const changeAmountAvailable = async (instanceName) => {
       AvailableAmount: updatedAmount
     });
 
-    console.log(`Available amount for item ${instanceName} updated to ${updatedAmount}.`);
+    
   } else {
     console.log(`Item with name ${instanceName} does not exist.`);
   }

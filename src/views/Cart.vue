@@ -168,18 +168,18 @@
   });
 
 const getImage = async(result) => {
-  console.log(result)
+  
   if(result.Id == undefined){
     await imageGetter(`ItemImages/${result.Image}`).then((res) => {
       result.loadedImage = res;
     });
-    console.log(result)
+    
     return true;
   }else if(result != undefined && result.Id != 10000){
     await imageGetter(`KitImages/${result.KitImage}`).then((res) => {
       result.loadedImage = res;
     });
-    console.log(result)
+    
     return true;
 
   }else{

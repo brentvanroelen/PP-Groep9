@@ -70,6 +70,7 @@
     </div>
 
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
 </template>
   
     
@@ -77,7 +78,8 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { getDocs,getDoc, collection, onSnapshot,db,where,query, updateDoc, doc, setDoc } from '../Firebase/Index.js';
-import { reservationReturnedOrCanceled } from '@/js/functions.js';    
+import { reservationReturnedOrCanceled } from '@/js/functions.js';
+import Popup from '@/components/Popup.vue';
 
 let unsub = false;
 const students = ref([]) 
@@ -86,6 +88,15 @@ const allReservations = ref([]);
 const lateReservationArray = ref([]);
 const deletedReservation = ref([]);
 const runAlignFunction = ref(true);
+const popupVisible = ref(false);
+const popupMessage = ref('');
+
+
+
+const showPopup = (message) => {
+popupMessage.value = message;
+popupVisible.value = true;
+};
 
 const toggleOrders = (student) => {
   student.showOrders = !student.showOrders;
@@ -296,6 +307,7 @@ const markItemAsPrepared = async(student, item) => {
       }
       );
   }
+  showPopup('Item prepared');
 }
 
 const markAllItemsAsPrepared = async(student) => {
@@ -312,6 +324,7 @@ const markAllItemsAsPrepared = async(student) => {
       ReservationPrepared : true,
     });;
   }
+  showPopup('All items prepared');
 }
 
 const isItemWithSomeoneElse = async(item) => {
@@ -342,6 +355,9 @@ const markAsPickedUp = async (reservation) => {
   if (index !== -1) {
     students.value.splice(index, 1);
   };
+  
+  showPopup('Item(s) picked up');
+ 
 };
 
 const discardReservation = async (reservation,warning,sendEmail) => {
@@ -355,6 +371,7 @@ const discardReservation = async (reservation,warning,sendEmail) => {
     lateReservationArray.value = [];
     allReservations.value = [];
   }
+  showPopup('Reservation discarded');
 };
 
 

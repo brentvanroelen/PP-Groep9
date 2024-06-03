@@ -75,7 +75,6 @@
     await updateDoc(userRef, {
       warningCount: newWarningCount
     });
-    console.log('Warning count updated in database:', userId, newWarningCount);
   } catch (error) {
     console.error('Error updating warning count in database:', error);
   }
@@ -186,7 +185,6 @@
       filteredUsers.value = users.value.filter(user =>
         user.name.toLowerCase().includes(searchTerm)
       );
-      console.log('test')
     }
     
   </script>
