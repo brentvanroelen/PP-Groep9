@@ -6,9 +6,9 @@
                 {{ ItemName }}
             </h1>
         </div>
-        <div class="image"></div>
+       <!--  <div class="image"></div>
         <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
-        <p v-else>Image not available</p>
+        <p v-else>Image not available</p> -->
     </div>
     <div class="info">
         <div class="date">
@@ -20,7 +20,7 @@
                     auto-apply
                     :min-date="fullDate"
                     :clearable="false"
-                    :range="true"
+                    :range="{fixedStart: true }"
                 />
             </div>
             
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted, computed, watch } from 'vue';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/Firebase/Index.js';
@@ -55,6 +55,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Popup from "@/components/Popup.vue";
 
+const router = useRouter();
 const route = useRoute();
 const reason = ref('');
 const selectedDates = ref([]);
@@ -65,9 +66,6 @@ const reservationId = route.query.reservationId;
 const userId = route.query.userId
 const popupVisible = ref(false);
 const popupMessage = ref('');
-
-
-
 
   const showPopup = (message) => {
   popupMessage.value = message;
@@ -180,6 +178,7 @@ const requestExtension = async () => {
         console.error('Error processing extension request:', error);
     }
     showPopup('Your extension request has been submitted successfully!'); 
+    setTimeout(() => {router.push({ name: 'Myproducts' })} ,500)
 };
 
 onMounted(fetchReservationDetails);

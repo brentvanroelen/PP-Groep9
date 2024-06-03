@@ -16,11 +16,14 @@
         <div v-if="isReservationVisible(index+10000)" class="reservation-details">
           <ul>
             <li v-for="(item, index) in getItems(cancellableReservation)" :key="index" class="reservation-item">
-              <img :src="item.ItemImage" alt="picture">
+              <img v-if="getImage(item)" :src="item.loadedImage" alt="Item Image" id="img" />
               Name: {{ item.ItemName }}
               <br>
               Serial number: {{ item.Serial }}
               <div class="actions">
+                <button v-if="!cancellableReservation.Extended">
+                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
+                </button>
                 <button @click="getReportedItems">
                   <router-link class="link" to="/ReportIssue">Report Issue</router-link>
                 </button>
@@ -40,14 +43,14 @@
       <p>Serial: {{ reservation.id }}</p>
       <div class="actions">
         <button @click="toggleReservationDetails(index)">See Items</button>
-        <button>
+        <button v-if="!reservation.Extended">
           <router-link class="link" :to="{ name: 'ExtensionPage', query: { reservationId: reservation.id, userId: user.user.id}}">Request extension</router-link>
         </button>
       </div>
       <div v-if="isReservationVisible(index)" class="reservation-details">
         <ul>
           <li v-for="(item, index) in getItems(reservation)" :key="index" class="reservation-item">
-            <img :src="item.ItemImage" alt="picture">
+            <img v-if="getImage(item)" :src="item.loadedImage" alt="Item Image" id="img" />
             Name: {{ item.ItemName }}
             <br>
             Serial number: {{ item.Serial }}
@@ -73,6 +76,7 @@ import { computed, onMounted, ref } from "vue";
 import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
 import { reservationReturnedOrCanceled } from "../js/functions.js";
 import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
+import { imageGetter } from "../js/functions.js";
 import axios from 'axios';
 
 const report = useReportedItems();
@@ -96,7 +100,7 @@ const displayReservations = computed(() => {
 const arrayifier = computed(() => {
   let array = [];
   for (let reservation of reservations.value){
-      console.log(reservations.value)
+      
       for (let i = 1; i <= 10; i++){
           if (reservation[`Item${i}`] != undefined){
               array.push(reservation[`Item${i}`]);
@@ -108,10 +112,23 @@ const arrayifier = computed(() => {
   return array;
 });
 
+const getImage = async (item) => {
+  console.log(item);
+  
+   if ( item.ItemImage != undefined)  {
+    await imageGetter(`ItemImages/${item.ItemImage}`).then((res) => {
+      item.loadedImage = res;
+    });
 
+    return true;
+  } else {
+    return false;
+  }
+};
 
 
 const getItems = (reservation) => {
+
   const items = [];
   if (reservation) {
     for (let i = 1; i <= 10; i++) {
@@ -130,12 +147,12 @@ const cancelRes = (reservation) => {
 };
 
 const getReportedItems =(item) => {
-  report.addImage(item.ItemImage);
-  console.log(report.itemImage);
+  report.addImage(item.testImage);
+  
   report.addName(item.ItemName);
-  console.log(report.itemName);
+  
   report.addSerial(item.Serial);
-  console.log(report.itemSerial);
+  
 };
 
 

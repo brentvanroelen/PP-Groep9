@@ -34,10 +34,11 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore'
 const cart = useCart()
 const adminButton = ref(false)
 let message = ref('')
-const warningCount = ref();
+const warningCount = ref(0);
 const uid = useUserIdentification()
 const requiredWarningsToBlacklist = ref(3);
 const isLoading = ref(true);
+
 
 const fetchData = async () => {
   const docRef = doc(db, 'Users', uid.user.id)
@@ -61,10 +62,13 @@ const fetchSettings = async () => {
   }
 }
 
+
 watchEffect(() => {
   if (uid.user.id) {
     fetchData();
     fetchSettings();
+  }else{
+    isLoading.value = false;
   }
 })
 /* export default {

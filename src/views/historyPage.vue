@@ -10,6 +10,7 @@
       <p><strong>Description:</strong> {{ issueHistory[key].description }}</p>
       <p><strong>Type:</strong> {{ issueHistory[key].type }}</p>
       <img v-if="issueHistory[key].image" :src="issueHistory[key].image" alt="Issue image" class="issue-image">
+      
     </li>
   </ul>
 </div>
@@ -19,7 +20,7 @@
       <ul>
         <li v-for="(reservation, index) in reservationHistory" :key="index" class="reservation-item">
           <h3>Reservation {{ index + 1 }}</h3>
-          <p><strong>User:</strong> {{ reservation.UserFirstName }} {{ reservation.UserLastName }}</p>
+          <p><strong>User:</strong> {{ reservation.firstName }} {{ reservation.lastName }}</p>
           <p><strong>Start Date:</strong> {{ reservation.StartDate }}/{{ reservation.StartMonth }}</p>
           <p><strong>End Date:</strong> {{ reservation.EndDate }}/{{ reservation.EndMonth }}</p>
           <!-- If you want to display item image -->
@@ -68,7 +69,7 @@ onMounted(async () => {
   const itemData = route.query.item ? JSON.parse(route.query.item) : null;
   if (itemData) {
     item.value = itemData;
-    console.log('Item received:', item.value);
+    
     if (item.value.Serial) {
       await fetchItem(item.value.Serial);
       await fetchInstanceItemData(item.value.Serial);
@@ -128,7 +129,7 @@ const fetchInstanceItemData = async (Serial) => {
   try {
     const itemName = formatItemName(item.value.Name); // itemName invoeren
     const itemBundleName = formatItemBundleName(itemName);
-    console.log(itemBundleName);
+    
     const docRef = doc(db, `Items/${itemName}/${itemBundleName}/${Serial}`);
     const docSnap = await getDoc(docRef);
 
@@ -151,18 +152,16 @@ const fetchItem = async (Serial) => {
   try {
     const itemName = formatItemName(item.value.Name); // itemName invoeren
     const itemBundleName = formatItemBundleName(itemName);
-    console.log(itemBundleName);
-    console.log(Serial);
-    console.log(itemName);
+    
     const docRef = doc(db, `Utility/History/Item History/${Serial}`);
-    console.log(docRef);
+    
     
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const itemData = docSnap.data();
       if (itemData.Issues) {
-        console.log('Issues:', itemData.Issues);
+        
         issueHistory.value = itemData.Issues;
         hasIssues.value = true;
       } else {
