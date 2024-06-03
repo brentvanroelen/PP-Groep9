@@ -1,7 +1,10 @@
 <template>
     <div class="product">
         <div class="title">
-            <h1>{{ ItemName }}</h1>
+            <h1>
+                <br>
+                {{ ItemName }}
+            </h1>
         </div>
         <div class="image"></div>
         <img :src="ItemImage" alt="Product Image" v-if="ItemImage"/>
@@ -187,11 +190,17 @@ onMounted(fetchReservationDetails);
 <style scoped>
 .product {
     margin-bottom: 20px;
-    text-align: center
+    text-align: center;
+    display: flex;
+    margin-left: 600px;    
 }
 .title h1 {
     font-size: 24px;
     margin-bottom: 10px;
+}
+
+.title{
+    margin-right: 50px;
 }
 
 .info{
@@ -303,6 +312,10 @@ button:hover {
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
+}
+
+img{
+    max-width: 150px;
 }
 
 </style>
