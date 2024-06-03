@@ -143,7 +143,7 @@ body{
 
 .submit-button button {
   padding: 10px 20px;
-  background-color: #f00;
+  background-color: #cd3545;
   color: white;
   border: none;
   cursor: pointer;
@@ -152,6 +152,6 @@ body{
 }
 
 .submit-button button:hover {
-  background-color: #900; 
+  background-color: #c82333; 
 }
 </style>

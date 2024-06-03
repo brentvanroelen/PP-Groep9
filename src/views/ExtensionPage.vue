@@ -186,87 +186,123 @@ onMounted(fetchReservationDetails);
 
 <style scoped>
 .product {
+    margin-bottom: 20px;
+    text-align: center
+}
+.title h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.info{
     display: flex;
-    text-align: center;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.title {
-    margin-left: 30em;
-    margin-top: 1.2em;
+.date, 
+.reason{
+   border: 1px solid #ccc;
+   padding: 20px;
+   border-radius: 10px;
+   transition: transform 0.3s ease;
 }
 
-.image {
-    margin-left: auto;
-    padding-right: 26em;
-    padding-top: 2em;
+.reason:hover{
+    transform: trasformY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
-
-h1, h4 {
-    margin: 3px;
-}
-
-h1 {
-    margin-left: 4em;
-}
-
-.info {
-    display: flex;
-    margin-top: 1em;
-    margin-left: 2em;
-}
-
-.reason {
-    padding-right: 15em;
-}
-
-.text {
-    width: 400px;
-    height: 250px;
-}
-
-p {
-    text-align: center;
-}
-
 .date {
-    margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 20px;
 }
 
-button {
-    flex: 1;
-    height: 40px;
-    padding: 5px 20px;
-    border: none;
-    border-radius: 20px;
-    background-color: red;
-    color: white;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-.how {
-    padding-bottom: 1em;
-    margin-left: 2em;
-}
-
-.why {
-    margin-top: 4em;
-}
+.date:hover{
+    transform: translateY(-5px);
+} 
 
 .calendar {
-    margin-left: 2em;
+  margin: 0 auto; 
+  border-radius: 10px;
+  transition: transform 0.3s ease;
 }
 
-input {
-    background-color: #c1c1c1;
+.calendar:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-img{
-    max-width: 100px;
+
+.how, 
+.why{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom:10px;
 }
 
-.duration{
-    text-align: left;
-    margin-left: 90px;
+  
+.reason {
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 10px; 
 }
+
+.reason:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.text input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+.text input::placeholder {
+  text-align: center; 
+}
+button {
+  padding: 10px 20px;
+  background-color: #cd3545;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #c82333;
+}
+
+
+.duration {
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
 </style>

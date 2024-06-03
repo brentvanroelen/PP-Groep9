@@ -32,7 +32,6 @@ watch(triggergetter, async() => {
 
 const handleAvailability = async() => {
     dates.resetDates()
-    console.log(page)
     if(page == "UserHome" || page == "checkPage"){
         if(store.results.length == 0){
             const snapshot =  await getDocs(collection(db, "Items"))
@@ -55,12 +54,10 @@ const handleAvailability = async() => {
     }else if(page == "HomeAdmin"){
         for (let item of cart.items) {
             if(Object.keys(dates.dates).length != 0){
-                console.log(item)
                 if(availableInstances.items[item.Name] !== undefined){
                     availableInstances.resetCollection(item.Name);
                 }
                 await getAvailableItems(item.Name,item.SerialSeries);
-                console.log(availableInstances)
             }else{
                 console.log("Please select a date range")
             }
@@ -89,9 +86,6 @@ const dateifierRes = (startdateres,startmonthres,enddateres,endmonthres) => {
     return [startres, endres];
 }
 const getAvailableItems = async(name,serial,kitId) => {
-    console.log(serial)
-    console.log(name)
-    console.log(kitId)
     let databaseSearch = databaseFormatter(name)
     if(availableInstances.getCollection(name + "kit" + `${kitId}`) == undefined && isKit==true){
         availableInstances.createCollection(name + "kit" + `${kitId}`);
@@ -102,7 +96,6 @@ const getAvailableItems = async(name,serial,kitId) => {
     console.log(databaseSearch)
     const creference = collection(db, `Items/${databaseSearch}/${databaseSearch} items`);
     await getNonConflictingReservedItems(name,serial)
-    console.log('WHOEHOE')
     const reservedSnapshot = await getDocs(creference);
     reservedSnapshot.forEach((doc) => {
         if(doc.data().Reserved == false || Nonconflictingreserveditems.includes(doc.data().Serial)){
@@ -158,7 +151,6 @@ for (let item of store.results) {
             console.log(item)
             if(SerialSeriesDefined){
                 await getAvailableItems(item.Name,item.SerialSeries,0);
-                console.log(availableInstances);
             }else{
                 let serialseries = item.Serial.split("-")[0];
                 await getAvailableItems(item.Name,serialseries,0);
@@ -176,14 +168,11 @@ const kitAvailability = async() => {
     for (let kit of store.results) {
         quantity.setavailable(kit.Name,'We raaaaaaaaviniiiing')
         for(let i = 1; i <= kit.Items.length; i++){
-            console.log(kit.Items[i-1])
-            console.log(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`])
             if( availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`] !== undefined){
                 availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`] = [];
             }
             if(Object.keys(dates.general).length != 0){
                 await getAvailableItems(kit.Items[i-1],kit[`Item${i}`].SerialSeries,kit.Id);
-                console.log(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`] )
                 if(availableInstances.items[`${kit.Items[i-1]}kit${kit.Id}`].length == 0){
                     console.log("Kit is not available")
                     quantity.setavailable(kit.Name,false)

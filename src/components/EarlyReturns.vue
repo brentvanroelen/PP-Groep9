@@ -41,7 +41,6 @@ import { reservationReturnedOrCanceled } from '@/js/functions';
 import { collection, db,deleteField,doc,getDoc, getDocs, updateDoc,query,increment,where } from '../Firebase/Index.js';
 
 const EarlyReservations = useEarlyReturnsReservations();
-console.log(EarlyReservations.Reservations)
 const stashedReservations = ref([])
 let chosenReservation = ref(null)
 let selectedItems = ref([])
@@ -223,7 +222,8 @@ button {
   flex-direction: column;
   align-items: center;
   margin: 0 20px;
-  background: #e0e0e0;
+  background: #fff;
+  border-radius: 10px;
 }
 .itemInfoBox {
   padding: 10px;
