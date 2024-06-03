@@ -2,12 +2,6 @@
   <div class="search-container" :class="props.page">
     <div class="search-bar">
       <input id="input" type="text" v-model="querystring" @keyup.enter="confirmedSearch" :placeholder="placeholder">
-      <div v-if="props.page != 'HomeAdmin'">
-        <select v-model="selectedCategory">
-          <option value="" disabled>Categories</option>
-          <option v-for="(option, index) in dropdownOptions" :key="index" :value="option" >{{ option }}</option>
-        </select>
-      </div>
       <span v-if="props.page != 'HomeAdmin'" class="calendar">
         <VueDatePicker v-model="date" 
           :min-date="new Date()" 

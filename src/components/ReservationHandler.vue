@@ -354,9 +354,7 @@ const MakeReservation = async(date) => {
         showPopup('The loan is succesfull!'); 
         itemSelector.resetCollectionName();
         dates.resetDates(true)
-        if(page == "UserHome"){
-            router.push({name: 'Home'})
-        }
+
     }catch(e){
         console.error(e)
     

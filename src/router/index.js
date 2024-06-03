@@ -189,22 +189,5 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async (to, from, next) => {
-  try {
-    const user = auth.currentUser;
-    if (user) {
-      next();
-    } else {
-      // User is not authenticated, redirect to login or another page
-      if (to.path !== '/login') {
-        next({ path: '/login' });
-      } else {
-        next();
-      }
-    }
-  } catch (error) {
-    console.error('Error checking authentication:', error);
-    next(false); // Halt navigation
-  }
-});
+
 export default router
