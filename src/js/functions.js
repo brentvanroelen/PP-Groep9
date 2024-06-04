@@ -133,3 +133,35 @@ const determinMessageValues = (type,user,reservation) => {
     return dataToSend
 
 }
+
+
+export const userReservationReturnedOrCanceled = async(reservation) => {
+    const Serialseries = reservation.ItemSerials
+    const Serialnumbers = reservation.allItemSerials
+    const itemnames = reservation.allItemNames
+    const uid = reservation.userid
+    console.log(Serialseries)
+    let itemdoc = 0
+    for (let serialserie of Serialseries) {
+        for (let serialnumber of Serialnumbers.filter((serial) => serial.split("-")[0] === serialserie)) {
+            let cref = collection(db, `Users/${uid}/All Reservations`)
+            let q = query(cref, where("allItemSerials", "array-contains-any", [serialnumber])) 
+            let snapshot = await getDocs(q)
+            if(snapshot.size === 1) {
+                let databaseFormat = databaseFormatter(itemnames[itemdoc])
+                await updateDoc(doc(db, `Items/${databaseFormat}/${databaseFormat} items/${serialnumber}`), {
+                Reserved: false
+                }).then(
+                    updateDoc(doc(db, `Items/${databaseFormat}`), {
+                    AvailableAmount: increment(1)
+                    })
+                )
+            }
+            itemdoc++
+        }
+    }
+    await deleteDoc(doc(db, `Reservations/${reservation.id}`))
+    await deleteDoc(doc(db, `Users/${reservation.userid}/Reservations/${reservation.id}`))
+    await deleteDoc(doc(db, `Utility/Reservations/All Reservations/${reservation.id}`))
+
+}

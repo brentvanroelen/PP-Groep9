@@ -31,7 +31,6 @@
   <div class="search-results" v-if="showResults">
     <div v-for="result in store.results" :key="result.id">
       <div class="iteminfo" @click="setPage(result)">
-        <img v-if="getImage(result)" :src="result.loadedImage" alt="item" class="kitImage" />
         <p v-if="result.id != 10000 ">{{ result.Name }}</p>
         <p v-else>Make a new kit with name: {{ result.Name }}</p>
         <p></p>

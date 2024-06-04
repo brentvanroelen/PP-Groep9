@@ -3,9 +3,6 @@
     <div class="product1" v-if="!cancelledReservations.includes(cancellableReservation)">
       <div class="kolom1">
         <div class="actions">
-           <button @click="reservationReturnedOrCanceled(cancellableReservation,false,false);">
-            Cancel Reservation
-          </button> 
           <button @click="toggleReservationDetails(index+10000)">See Items</button>
         </div>
         <div v-if="isReservationVisible(index+10000)" class="reservation-details">
@@ -15,14 +12,6 @@
               Name: {{ item.ItemName }}
               <br>
               Serial number: {{ item.Serial }}
-              <div class="actions">
-                <button v-if="!cancellableReservation.Extended">
-                  <router-link v-if="cancellableReservation.id != undefined" class="link" :to="{ name: 'ExtensionPage', query: { reservationId: cancellableReservation.id, userId: user.user.id}}">Request extension</router-link>
-                </button>
-                <button @click="getReportedItems">
-                  <router-link class="link" to="/ReportIssue">Report Issue</router-link>
-                </button>
-              </div>
             </li>
           </ul>
         </div>
@@ -71,6 +60,7 @@ import { db, collection,query, getDocs,where,doc } from "../Firebase/Index.js";
 import { reservationReturnedOrCanceled } from "../js/functions.js";
 import { useUserIdentification, useReportedItems } from "@/Pinia/Store.js";
 import { imageGetter } from "../js/functions.js";
+import { userReservationReturnedOrCanceled } from "../js/functions.js";
 import axios from 'axios';
 
 const report = useReportedItems();

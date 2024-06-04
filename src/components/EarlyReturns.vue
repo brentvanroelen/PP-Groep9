@@ -32,6 +32,7 @@
       <button @click="everythingReturned(true)">Everything returned + check</button>
     </div>
   </div>
+  <Popup v-if="popupVisible" :message="popupMessage" @closepopup="popupVisible = false" />
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -39,11 +40,18 @@ import SearchBarAdmin from './SearchBarAdmin.vue';
 import { useEarlyReturnsReservations} from '@/Pinia/Store.js';
 import { reservationReturnedOrCanceled } from '@/js/functions';
 import { collection, db,deleteField,doc,getDoc, getDocs, updateDoc,query,increment,where } from '../Firebase/Index.js';
+import Popup from './Popup.vue';
 
 const EarlyReservations = useEarlyReturnsReservations();
 const stashedReservations = ref([])
 let chosenReservation = ref(null)
 let selectedItems = ref([])
+const popupVisible = ref(false);
+const popupMessage = ref('');
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 
 const log = () => {
@@ -104,7 +112,7 @@ const selectionReturnedHandler = async() => {
     for(let i = 1; i <= chosenReservation.value.allItemSerials.length; i++){
       if(chosenReservation.value.allItemSerials.length == 1){
         await reservationReturnedOrCanceled(chosenReservation.value, false,false)
-        window.location.reload()
+        showPopup('Items returned successfully');
         return
       }else{
         if(chosenReservation.value.allItemSerials[i-1] == item.Serial){
@@ -152,7 +160,7 @@ const selectionReturnedHandler = async() => {
     }
   }
   await refactorReservation()
-  window.location.reload()
+  showPopup('Items returned successfully');
 }
 
 const refactorReservation =  async() => {

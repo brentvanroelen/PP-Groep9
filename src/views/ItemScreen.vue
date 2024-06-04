@@ -20,7 +20,7 @@
       <button @click="addItemToCart()">Add to cart</button>
       <ReservationHandler :check-user-cart="false" :button-text="'Reserve item'"></ReservationHandler>
   </div>
-  <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" />
+  <Popup v-if="popupVisible" :message="popupMessage" @closepopup="popupVisible = false" />
 </template>
   
   

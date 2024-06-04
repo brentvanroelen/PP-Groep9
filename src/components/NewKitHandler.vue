@@ -21,11 +21,12 @@
             </div>
             <button class="buttonsClass largerButton" @click="addKit">
                 <p v-if="kitToBeMade.kit.Id == 10000">Add new Kit</p>
-                <p v-else>Add to existing Kit</p>
+                <p v-else>Add new kit</p>
             </button>
             <button @click="log">test</button>
         </div>
     </div>
+    <Popup v-if="popupVisible" :message="popupMessage" @closepopup="popupVisible = false"></Popup>
 </template>
 <script setup>
 import { ref, onMounted,computed,watch } from 'vue';
@@ -37,6 +38,14 @@ import SearchBarAdmin from '@/components/SearchBarAdmin.vue';
 import NewKitHandler from '@/components/NewKitHandler.vue';
 import { generateSubstrings } from '@/js/functions.js';
 import ExistingKitItems from '@/components/ExistingKitItems.vue';
+import Popup from './Popup.vue';
+
+const popupVisible = ref(false);
+const popupMessage = ref('');
+const showPopup = (message) => {
+  popupMessage.value = message;
+  popupVisible.value = true;
+};
 
 const kitItems = useKitItems();
 const kitToBeMade = useKitToBeMade();
@@ -119,6 +128,7 @@ const addKit = async () => {
     setDoc(doc(collection(db, 'Kits')),{
       ...kit
     })
+    showPopup('Kit added successfully');
   }
   
 };

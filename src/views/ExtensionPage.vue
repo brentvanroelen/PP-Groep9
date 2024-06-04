@@ -2,7 +2,6 @@
     <div class="product">
         <div class="title">
             <h1>
-                <br>
                 {{ ItemName }}
             </h1>
         </div>
@@ -20,7 +19,9 @@
                     auto-apply
                     :min-date="fullDate"
                     :clearable="false"
-                    :range="{fixedStart: true }"
+                    :range="{fixedStart: true,maxRange: 6 }"
+                    :disabled-week-days="[6,0]"
+                    :max-date="new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)"
                 />
             </div>
             
@@ -74,8 +75,6 @@ const popupMessage = ref('');
 
 const fetchReservationDetails = async () => {
     try {
-        console.log(reservationId)
-        console.log(userId)
         const reservationDocRef = doc(db, `Users/${userId}/Reservations/${reservationId}`);
         const reservationDoc = await getDoc(reservationDocRef);
         
@@ -188,18 +187,21 @@ onMounted(fetchReservationDetails);
 
 <style scoped>
 .product {
-    margin-bottom: 20px;
+    width: 100%;
     text-align: center;
-    display: flex;
-    margin-left: 600px;    
+    justify-content: center;
+    display: flex;  
+    text-align: center;
 }
 .title h1 {
     font-size: 24px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .title{
-    margin-right: 50px;
+    padding: 42px;
+    text-align: center;
 }
 
 .info{
