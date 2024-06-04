@@ -2,6 +2,15 @@
 <h2>Programming Project groep 9</h2>
 
 Dit is een programma geschreven voor de uitleendienst van het medialab van Erasmushogeschool Brussel. <br>
+
+
+Technology stack:
+- Vue.js
+- Firebase
+- Pinia state management
+- Vite
+- express (begin van email functionaliteit)
+
 De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
 
 
