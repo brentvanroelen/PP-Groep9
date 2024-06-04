@@ -38,6 +38,13 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 
 - Werking van de geimporteerde date picker: [Vue date picker team](https://vue3datepicker.com/installation/)
 
+- ChatGPTlinks: [GoogleDrivelink ChatGPT](https://docs.google.com/document/d/1RBjeRgCfscwq2AJVDOmb-P3UjD38mV1Z/edit?usp=sharing&ouid=110618404478427787920&rtpof=true&sd=true)
+
+- Copilotlinks: [GoogleDrivelink Copilot1](https://drive.google.com/file/d/1wGMhcWe5-fU67K-j7VclszSbMsL1wvks/view?usp=sharing)
+                -[GoogleDrivelink Copilot2](https://drive.google.com/file/d/1MaEdRpdEm2bpw_1GQvAd33p8dCKcUXnF/view?usp=sharing)
+
+- Stack Overflowlinks: [GoogleDrivelink Stack Overflow](https://docs.google.com/document/d/14trKgVzxZd0ETIXcGLzPfCRuLkmr2R0z/edit?usp=sharing&ouid=110618404478427787920&rtpof=true&sd=true)                   
+
 
 
 <h3>Brent Devroey:</h3>
