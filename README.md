@@ -8,7 +8,7 @@ De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
   1. Om dit project te runnen moeten node en npm geïnstalleerd zijn. Dit kan gecheckt worden door in een terminal de commando's "node -v" en "npm -v" te runnen. Indien een versienummer verschijnt zijn de programma's geïnstalleerd. Is dit niet het geval dan kunnen de nodige programma's [hier](https://nodejs.org/en/download/package-manager) gedownload worden.
   2. Download alle bestanden in ZIP formaat van GitHub (klik op de groene code knop en selecteer download als ZIP)
   3. Pak de bestanden uit in een algemene folder
-  Open het project in Visual Studio Code of een andere IDE. (installeer VSC indien nodig via deze [link](https://code.visualstudio.com/download'))
+  Open het project in Visual Studio Code of een andere IDE. (installeer VSC indien nodig via deze [link](https://code.visualstudio.com/download))
   4. Open een terminal in Visual Studio Code en run npm install
   5. Vraag toegang aan een van de developers tot het benodigde .env bestand 
   6. Run hierna npm run dev
