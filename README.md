@@ -45,7 +45,7 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Hoe een popup op de body van een pagina getoont wordt: [Vue.js guide](https://vuejs.org/guide/built-ins/teleport.html)
 - Vue cart page met pinia: [chatgpt](https://chatgpt.com/share/7181079a-5e92-4717-aefe-514313cd2f58)
 - Firebase database of pinia voor de cart: [chatgpt](https://chatgpt.com/share/c962b214-bff3-4dd5-9410-4c27d9efa20d)
-- Lege dagen in de kalender: [chatgpt](https://chatgpt.com/share/1c29aafe-a8f2-46df-98c9-60e0cf59f808)
+- Lege dagen in de kalender: [chatgpt](https://chatgpt.com/share/1c29aafe-a8f2-46df-98c9-60e0cf59f808) + Jessy
 - Lege pagina trouble shooting: [chatgpt](https://chatgpt.com/share/6727e2e7-6139-419f-b303-e867c5b74adc)
 - Toegang tot de database: [chatgpt](https://chatgpt.com/share/47325710-5fdb-4735-ac15-610c198cc704)
 - Dynamische dropdown voor quantity: [chatgpt](https://chatgpt.com/share/71559c8d-cbcc-4b10-9b4e-5460060ad905)
@@ -68,32 +68,31 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 
 <h3>Brent Vanroelen:</h3>
 
-- De Youtube-playist om Vue 3 te leren: https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ
-- Netjes maken van form: [chatgpt]https://chatgpt.com/share/992394f4-89ff-4654-a0c5-9df343233239
-- Add item & ass instance uit elkaar halen: [chatgpt]https://chatgpt.com/share/24a6983a-5cf7-49bb-ad6b-d09674d07613
-- Items in een nette grid krijgen: [chatgpt]https://chatgpt.com/share/722014ea-5c0e-4acd-ad0a-9081a4be285c , https://chatgpt.com/share/d0364cec-613c-4339-a20e-1392aa49e63e
-- Opgezochte items in dezelfde stijl krijgen: [chatgpt]https://chatgpt.com/share/7a80ab33-7a26-4384-b903-d03d6286166d
-- Lelijke bug van router-link proberen oplossen: [chatgpt]https://chatgpt.com/share/371253e3-f6ef-4358-b760-565d00560f73
-- Isuues report: [chatgpt]https://chatgpt.com/share/69b5fd5e-daed-4a06-8944-70814155c5c1
-- Nog steeds lelijke bug: [chatgpt]https://chatgpt.com/share/2a988002-3735-467c-9fc5-72a1d1d15cf6
-- Extra info bij het updaten van een doc in firebase: [chatgpt]https://chatgpt.com/share/b516e5d6-935d-41d6-ba66-3eaef897f08b
-- Add items verbeteren: https://chatgpt.com/share/f53c8702-1051-4ee1-bcb4-9a7dff1c1047
-- Serienummers automatiseren: [chatgpt]https://chatgpt.com/share/98d72dad-b6b1-4c61-9770-135f60235280
+- Netjes maken van form: [chatgpt](https://chatgpt.com/share/992394f4-89ff-4654-a0c5-9df343233239)
+- Add item & ass instance uit elkaar halen: [chatgpt](https://chatgpt.com/share/24a6983a-5cf7-49bb-ad6b-d09674d07613)
+- Items in een nette grid krijgen: [chatgpt](https://chatgpt.com/share/722014ea-5c0e-4acd-ad0a-9081a4be285c) , [chatgpt](https://chatgpt.com/share/d0364cec-613c-4339-a20e-1392aa49e63e)
+- Opgezochte items in dezelfde stijl krijgen: [chatgpt](https://chatgpt.com/share/7a80ab33-7a26-4384-b903-d03d6286166d)
+- Lelijke bug van router-link proberen oplossen: [chatgpt](https://chatgpt.com/share/371253e3-f6ef-4358-b760-565d00560f73)
+- Isuues report: [chatgpt](https://chatgpt.com/share/69b5fd5e-daed-4a06-8944-70814155c5c1)
+- Nog steeds lelijke bug: [chatgpt](https://chatgpt.com/share/2a988002-3735-467c-9fc5-72a1d1d15cf6)
+- Extra info bij het updaten van een doc in firebase: [chatgpt](https://chatgpt.com/share/b516e5d6-935d-41d6-ba66-3eaef897f08b)
+- Add items verbeteren: [chatgpt](https://chatgpt.com/share/f53c8702-1051-4ee1-bcb4-9a7dff1c1047)
+- Serienummers automatiseren: [chatgpt](https://chatgpt.com/share/98d72dad-b6b1-4c61-9770-135f60235280)
 - Verschillende pages indezelfde stijl laten opmaken: [chatgpt](https://chatgpt.com/share/c25d990c-5214-4d81-93d1-069aa82cc625)
 - Automatiseren van serienummers: [chatgpt](https://chatgpt.com/share/98ed5bd9-75a4-49fc-a220-e94709c32f7e)
 - Nieuwe objecten aanmaken binnen een bestaande map in firebase: [chatgpt](https://chatgpt.com/share/e7d65fad-1b34-4d07-b89c-a5f75244423d)
 - Hulp bij het verbeteren van reeds bestaande code: [chatgpt](https://chatgpt.com/share/f6e60cc1-d6a5-4df4-86bc-0221f3cf5a04)
 - Bug uit de code halen: [chatgpt](https://chatgpt.com/share/f38c0bbf-bf4a-4f1a-95e4-17d7a226e288)
-- Video met de basics van Firebase: https://www.youtube.com/watch?v=84mhLKUM04E&ab_channel=MakeAppswithDanny
-- Het hele gevonden Object van reservations: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
-- Een array omdraaien: https://www.freecodecamp.org/news/how-to-reverse-an-array-in-javascript-js-reverse-function/#:~:text=You%20can%20use%20the%20reverse,is%20used%20on%20is%20modified.&text=As%20you%20can%20see%20in,method%20is%20applied%20to%20it.
-- Functie om de datum van vandaag aan te maken: https://blog.devops.dev/vue-js-get-current-date-and-time-e748c5191025
-- Dynamic route params: https://router.vuejs.org/guide/essentials/dynamic-matching
-- How to stringify: https://www.w3schools.com/js/js_json_stringify.asp
-- Een image als URL opslaan: https://www.w3docs.com/learn-javascript/file-and-filereader.html
-- Info over Objec.keys: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-- Extra info over LocalDateString ( na tip van Jessy):https://stackoverflow.com/questions/27939773/tolocaledatestring-short-format ,
-- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+- Video met de basics van Firebase: [Youtube](https://www.youtube.com/watch?v=84mhLKUM04E&ab_channel=MakeAppswithDanny)
+- Het hele gevonden Object van reservations: [mdn web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values)
+- Een array omdraaien: [JS .reverse() Function](https://www.freecodecamp.org/news/how-to-reverse-an-array-in-javascript-js-reverse-function/#:~:text=You%20can%20use%20the%20reverse,is%20used%20on%20is%20modified.&text=As%20you%20can%20see%20in,method%20is%20applied%20to%20it.)
+- Functie om de datum van vandaag aan te maken: [Medium](https://blog.devops.dev/vue-js-get-current-date-and-time-e748c5191025)
+- Dynamic route params: [Vue Router](https://router.vuejs.org/guide/essentials/dynamic-matching)
+- How to stringify: [w3school](https://www.w3schools.com/js/js_json_stringify.asp)
+- Een image als URL opslaan: [w3schools](https://www.w3docs.com/learn-javascript/file-and-filereader.html)
+- Info over Objec.keys: [mdn web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
+- Extra info over LocalDateString ( na tip van Jessy): [stackoverflow](https://stackoverflow.com/questions/27939773/tolocaledatestring-short-format) ,
+- [mdn web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString)
 - Troubleshooten over code: [chatgpt](https://chatgpt.com/share/504a19cb-b26f-473f-8c46-71a68fb200a3)
 - Vragen over dropdown router-Links: [chatgpt](https://chatgpt.com/share/82768e62-2592-49a9-8d98-9a61379014e4) , [chatgpt](https://chatgpt.com/share/f3b03082-ee68-470d-971b-0a93e52797ea)
 - Vragen over pop-ups in vue: [chatgpt](https://chatgpt.com/share/6f2ace3e-494a-4a16-8c46-3a23f0bff2a0) , [chatgpt](https://chatgpt.com/share/ec08d56d-56bb-4148-ad00-bbe3b4fdff0a)
@@ -115,7 +114,7 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 
 <h3> Aikarose Mwasha: </h3>
 
-- Opfrisser selectors: [Youtube] (https://www.youtube.com/watch?v=l1mER1bV0N0), [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child)
+- Opfrisser selectors: [Youtube](https://www.youtube.com/watch?v=l1mER1bV0N0), [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child)
 - Calendar icon/emoji:[Compart](https://www.compart.com/en/unicode/U+1F4C5)
 - Hover: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover) 
 - Before: [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/::before)
@@ -128,23 +127,23 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 
 <h3>Rayan Haddou</h3>
 
-- De Youtube-playist om Vue 3 te leren: [chatgpt]https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ
-- Blokkering na veel warnings: [chatgpt]https://chatgpt.com/share/a4efdad5-a6c4-4157-9cd0-16ceb00d732f
-- Product layout adjustement: [chatgpt]https://chatgpt.com/share/0dc12551-bc00-44b1-a4ed-358669e92b8a
-- Fetch users from firestore: [chatgpt]https://chatgpt.com/share/1df57dae-c5d8-4e02-9727-bc2551e75f4c
-- Gegevens uithalen uit document: [chatgpt]https://chatgpt.com/share/be5d4f68-417e-4a7b-bfa2-d8a4debb5a6f
-- Vue 3 aanpassingen: [chatgpt]https://chatgpt.com/share/60d60df0-0dc6-4946-8f5f-17f73ce7acdb
-- Blacklist gebruikerssadministrators controle: [chatgpt]https://chatgpt.com/share/e1a823ea-303a-4488-9305-755daf42cdfc
-- CSS invloed op de pagina: [chatgpt]https://chatgpt.com/share/bdacdc09-306b-4ce9-b76e-952797b7be20
-- Extension request link: [chatgpt]https://chatgpt.com/share/db9d39f0-9fe0-4ef4-a264-7d558766dd7b
-- UserId uit database ontvangen: [chatgpt]https://chatgpt.com/share/2cb69882-4bad-4ba4-ae8c-bd0a0d405438
-- Blacklist table JavaScript: [chatgpt]https://chatgpt.com/share/1ee455bd-7abf-4909-83ab-473596e293d1
-- Vergrote gecentreerde titels: [chatgpt]https://chatgpt.com/share/a2e1d697-d8d3-43f0-a9df-20e07c6d0889
-- Firebase data fetch fixes: [chatgpt]https://chatgpt.com/share/35abcfb2-6c38-4426-8295-4f83a336f366
-- Request deny: [chatgpt]https://chatgpt.com/share/728ce694-9eb7-4d01-80e9-0adeab1ae3d8
-- Filteren op conflicterende projecten: [chatgpt]https://chatgpt.com/share/39f8c8bb-ae07-423b-a1fc-201e127e04bf
-- HTML text zone: [chatgpt]https://chatgpt.com/share/6442f2bc-373f-4908-a241-07c2a5fc71a6
-- CSS aanpassingen: [chatgpt]https://chatgpt.com/share/741f1d0b-9c46-40a4-8bb0-161b2654e3b2
+- De Youtube-playist om Vue 3 te leren: [chatgpt](https://youtube.com/playlist?list=PL4cUxeGkcC9hYYGbV60Vq3IXYNfDk8At1&si=u8ZxM7clIH1x0TjZ)
+- Blokkering na veel warnings: [chatgpt](https://chatgpt.com/share/a4efdad5-a6c4-4157-9cd0-16ceb00d732f)
+- Product layout adjustement: [chatgpt](https://chatgpt.com/share/0dc12551-bc00-44b1-a4ed-358669e92b8a)
+- Fetch users from firestore: [chatgpt](https://chatgpt.com/share/1df57dae-c5d8-4e02-9727-bc2551e75f4c)
+- Gegevens uithalen uit document: [chatgpt](https://chatgpt.com/share/be5d4f68-417e-4a7b-bfa2-d8a4debb5a6f)
+- Vue 3 aanpassingen: [chatgpt](https://chatgpt.com/share/60d60df0-0dc6-4946-8f5f-17f73ce7acdb)
+- Blacklist gebruikerssadministrators controle: [chatgpt](https://chatgpt.com/share/e1a823ea-303a-4488-9305-755daf42cdfc)
+- CSS invloed op de pagina: [chatgpt](https://chatgpt.com/share/bdacdc09-306b-4ce9-b76e-952797b7be20)
+- Extension request link: [chatgpt](https://chatgpt.com/share/db9d39f0-9fe0-4ef4-a264-7d558766dd7b)
+- UserId uit database ontvangen: [chatgpt](https://chatgpt.com/share/2cb69882-4bad-4ba4-ae8c-bd0a0d405438)
+- Blacklist table JavaScript: [chatgpt](https://chatgpt.com/share/1ee455bd-7abf-4909-83ab-473596e293d1)
+- Vergrote gecentreerde titels: [chatgpt](https://chatgpt.com/share/a2e1d697-d8d3-43f0-a9df-20e07c6d0889)
+- Firebase data fetch fixes: [chatgpt](https://chatgpt.com/share/35abcfb2-6c38-4426-8295-4f83a336f366)
+- Request deny: [chatgpt](https://chatgpt.com/share/728ce694-9eb7-4d01-80e9-0adeab1ae3d8)
+- Filteren op conflicterende projecten: [chatgpt](https://chatgpt.com/share/39f8c8bb-ae07-423b-a1fc-201e127e04bf)
+- HTML text zone: [chatgpt](https://chatgpt.com/share/6442f2bc-373f-4908-a241-07c2a5fc71a6)
+- CSS aanpassingen: [chatgpt](https://chatgpt.com/share/741f1d0b-9c46-40a4-8bb0-161b2654e3b2)
 
 
 
