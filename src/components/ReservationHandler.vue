@@ -1,8 +1,10 @@
 <template>
     <div id="buttons">
     <button @click="handleReservation()">{{ buttonText }}</button>
-   <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" /> </div>
-    
+    <Teleport to="body" v-if="popupVisible">
+   <Popup v-if="popupVisible" :message="popupMessage" @close="popupVisible = false" class="Popup"/> 
+    </Teleport>
+</div>
 </template>
 <script setup>
 import { useItemsToGet,useSelectedUser,useStore,useDates,useCart, useQuantity, useChoiceOfItems, useItemSelector, useUserIdentification } from '@/Pinia/Store';
@@ -46,6 +48,10 @@ const emit = defineEmits(['reservationplaced']);
 const showPopup = (message) => {
   popupMessage.value = message;
   popupVisible.value = true;
+
+  setTimeout(() => {
+    popupVisible.value = false;
+  }, 1000);
 };
 
 const updateStore = (item) => {
@@ -429,4 +435,12 @@ const filterUnnecessaryDates = () => {
     justify-content: center;
     margin: auto;
   }
+  .Popup{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
   </style>

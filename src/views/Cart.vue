@@ -52,6 +52,8 @@
             </div>
             <ReservationHandler @click="emptyCart" :check-user-cart="true" :button-text="'Place Reservation'"></ReservationHandler>
         </section>
+
+        <Popup v-if="popupVisible" message="Your cart has been loaned" @close="popupVisible = false" />
     </main>
 
 </template>
@@ -68,8 +70,11 @@
     import Popup from '@/components/Popup.vue';
 
 
+    const popupVisible = ref(false);
 
-    
+    const showPopup = () => {
+    popupVisible.value = true;
+};
 
     const beginDate = ref();
     const endDate = ref();
@@ -85,16 +90,7 @@
     const currentDate = new Date();
     const itemDate = useDates();
     let maxSelect = ref(7);
-/*     const popupVisible = ref(false);
-  const popupMessage = ref('');
 
-
-
-
-  const showPopup = (message) => {
-  popupMessage.value = message;
-  popupVisible.value = true;
-}; */
 
 
 
@@ -104,6 +100,7 @@
       items.value = []
       itemCount.value = 0;
     }, 1000);
+    showPopup("Your cart has been loaned");
   }
     const fetchData = async () => {
   const docRef = doc(db, "Settings", "Options");

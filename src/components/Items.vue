@@ -40,7 +40,9 @@
      </div>
     </div>
   </router-link>
-
+  <Teleport to="body" v-if="popupVisible">
+     <Popup :message="popupMessage" @close="popupVisible = false"  class="Popup" />
+  </Teleport>
 </template>
 
 <script setup>
@@ -49,6 +51,8 @@ import Quantity from './Quantity.vue';
 import ReservationHandler from './ReservationHandler.vue';
 import { useChoiceOfItems,useDates,useStore,useQuantity,useCart } from '@/Pinia/Store';
 import { imageGetter } from '@/js/functions';
+import Popup from '@/components/Popup.vue';
+
 
 const store = useStore();
 const image = vueRef('');
@@ -72,6 +76,7 @@ const updateStore = (item) => {
 }
 
 
+
 onMounted(() => {
   if(item.isKit){
     imageGetter(`KitImages/${item.KitImage}`).then((res) => {
@@ -86,6 +91,10 @@ onMounted(() => {
 const showPopup = (message) => {
   popupMessage.value = message;
   popupVisible.value = true;
+
+  setTimeout(() => {
+    popupVisible.value = false;
+  }, 1000);
 };
 
 const addItemToCart = () => {
@@ -104,7 +113,7 @@ const addItemToCart = () => {
     }
     dates.updateDate(Item.Name, dates.general)
     cart.addItem(Item);
-    showPopup('This item is added to your cart!');        
+    showPopup('This item is added to your cart!');
   }
 
 }
@@ -196,4 +205,14 @@ const addItemToCart = () => {
   width: 200px;
   height: 200px;
 }
+.Popup{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  
+}
+
 </style>
