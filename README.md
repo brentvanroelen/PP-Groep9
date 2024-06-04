@@ -144,6 +144,8 @@ Hieronder worden alle bronnen vermeld die gebruikt werden tijdens het shrijven v
 - Filteren op conflicterende projecten: [chatgpt](https://chatgpt.com/share/39f8c8bb-ae07-423b-a1fc-201e127e04bf)
 - HTML text zone: [chatgpt](https://chatgpt.com/share/6442f2bc-373f-4908-a241-07c2a5fc71a6)
 - CSS aanpassingen: [chatgpt](https://chatgpt.com/share/741f1d0b-9c46-40a4-8bb0-161b2654e3b2)
+- Vue Router navigatie: https://chatgpt.com/share/9087be90-ab4e-40c6-9db0-ec08804c3572
+- Undefined property issue: [chatgpt]https://chatgpt.com/share/35def32a-4161-4ef3-8a8c-68d881c1a493
 
 
 
