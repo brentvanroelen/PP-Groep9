@@ -249,7 +249,7 @@ const getImage = async (result) => {
 
 
 onMounted(() => {
-  placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for items';
+  placeholder.value = props.page == 'AddKit' ? 'Type name of Kit you want to add items to' : 'Search for serialnumbers';
 });
 </script>
 
