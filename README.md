@@ -8,12 +8,14 @@ De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
   1. Om dit project te runnen moeten node en npm geïnstalleerd zijn. Dit kan gecheckt worden door in een terminal de commando's "node -v" en "npm -v" te runnen. Indien een versienummer verschijnt zijn de programma's geïnstalleerd. Is dit niet het geval dan kunnen de nodige programma's [hier](https://nodejs.org/en/download/package-manager) gedownload worden.
   2. Download alle bestanden in ZIP formaat van GitHub (klik op de groene code knop en selecteer download als ZIP)
   3. Pak de bestanden uit in een algemene folder
-  Open het project in Visual Studio Code of een andere IDE. (installeer VSC indien nodig via deze [link](https://code.visualstudio.com/download))
-  4. Open een terminal in Visual Studio Code en run npm install
-  5. Vraag toegang aan een van de developers tot het benodigde .env bestand 
-  6. Run hierna npm run dev
-  7. Maak een account aan
-  8. Het project staat klaar!
+  4. Open het project in Visual Studio Code of een andere IDE. (installeer VSC indien nodig via deze [link](https://code.visualstudio.com/download))
+  5. Open een terminal in Visual Studio Code en run npm install
+  6. Vraag toegang aan een van de developers tot het benodigde .env bestand (voor de leerkrachten is dit beschikbaar via het teams kanaal onder files)
+  7. Run hierna npm run dev
+  8. Maak een account aan om als student de website te gebruiken
+  9. Vraag toegang aan een van de developpers om de admin kant uit te testen (voor de leerkrachten zijn de nodige credentials te vinden in de folder finale bestanden)
+  10. Het project staat klaar!
+  11. PS: adblocker kunnen het gebruik van deze website verstoren. Gelieve deze uit te zetten tijdens het gebruik van de website 
 
 
 
