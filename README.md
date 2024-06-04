@@ -4,12 +4,14 @@
 Dit is een programma geschreven voor de uitleendienst van het medialab van Erasmushogeschool Brussel. <br>
 De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
 
-Basisversie:
 <ul>
-  <li>Download all bestanden in ZIP formaat</li>
+  <li>Om dit project te runnen moeten node en npm geïnstalleerd zijn. Dit kan gecheckt worden door in een terminal de commando's "node -v" en "npm -v" te runnen. Indien een versienummer verschijnt zijn de programma's geïnstalleerd. Is dit niet het geval dan kunnen de nodige programma's <a src='https://nodejs.org/en/download/package-manager'>hier</a> gedownload worden.
+  </li>
+  <li>Download alle bestanden in ZIP formaat van GitHub (klik op de groene code knop en selecteer download als ZIP)</li>
   <li>Pak de bestanden uit in een algemene folder</li>
-  <li>Open het project in visual studio code (of een andere IDE)</li>
-  <li>Open een terminal en run npm install</li>
+  <li>Open het project in Visual Studio Code of een andere IDE. (installeer VSC indien nodig via deze <a src='https://code.visualstudio.com/download'>link</a>)</li>
+  <li>Open een terminal in Visual Studio Code en run npm install</li>
+  <li>Vraag toegang aan een van de developers tot het benodigde .env bestand </li>
   <li>Run hierna npm run dev</li>
   <li>Maak een account aan</li>
   <li>Het project staat klaar!</li>
