@@ -90,16 +90,7 @@
     const currentDate = new Date();
     const itemDate = useDates();
     let maxSelect = ref(7);
-/*     const popupVisible = ref(false);
-  const popupMessage = ref('');
 
-
-
-
-  const showPopup = (message) => {
-  popupMessage.value = message;
-  popupVisible.value = true;
-}; */
 
 
 
