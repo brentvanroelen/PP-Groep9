@@ -15,7 +15,7 @@ De benodigde stappen om aan de slag te gaan met dit project zijn als volgt:
   8. Maak een account aan om als student de website te gebruiken
   9. Vraag toegang aan een van de developpers om de admin kant uit te testen (voor de leerkrachten zijn de nodige credentials te vinden in de folder finale bestanden)
   10. Het project staat klaar!
-  11. PS: adblocker kunnen het gebruik van deze website verstoren. Gelieve deze uit te zetten tijdens het gebruik van de website 
+  11. PS: adblockers kunnen het gebruik van deze website verstoren. Gelieve deze uit te zetten tijdens het gebruik van de website 
 
 
 
